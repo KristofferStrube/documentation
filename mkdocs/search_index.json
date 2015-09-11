@@ -3,7 +3,7 @@
         {
             "location": "/", 
             "text": "Welcome to the elmah.io documentation\n\n\nHere you will find updated documentation on how to use elmah.io.\n\n\nTo get started using elmah.io with ELMAH, please follow the \nLogging to elmah.io from ELMAH\n.\n\n\nNot using ASP.NET MVC? Browse through one of our tutorials beneath the Installation menu.\n\n\nWe integrate with various third party systems. To check out of to do this, select one of the links beneath the Integrations menu.\n\n\nNeed help with something else related to elmah.io? We've collected help articles beneath the Help menu.\n\n\nThis documentation site is built using the wonderful MkDocs. To check out the source, check out the \nelmah.io/documentation repository\n on GitHub.", 
-            "title": "Welcome"
+            "title": "Start"
         }, 
         {
             "location": "/#welcome-to-the-elmahio-documentation", 
