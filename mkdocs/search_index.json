@@ -2,8 +2,13 @@
     "docs": [
         {
             "location": "/", 
-            "text": "\ufeff# Welcome to the elmah.io documentation\n\n\nHere you will find updated documentation on how to use elmah.io.\n\n\nTo get started using elmah.io with ELMAH, please follow the \nLogging to elmah.io from ELMAH\n.\n\n\nNot using ASP.NET MVC? Browse through one of our tutorials beneath the Installation menu.\n\n\nWe integrate with various third party systems. To check out of to do this, select one of the links beneath the Integrations menu.\n\n\nNeed help with something else related to elmah.io? We've collected help articles beneath the Help menu.\n\n\nThis documentation site is built using the wonderful MkDocs. To check out the source, check out the \nelmah.io/documentation repository\n on GitHub.", 
+            "text": "Welcome to the elmah.io documentation\n\n\nHere you will find updated documentation on how to use elmah.io.\n\n\nTo get started using elmah.io with ELMAH, please follow the \nLogging to elmah.io from ELMAH\n.\n\n\nNot using ASP.NET MVC? Browse through one of our tutorials beneath the Installation menu.\n\n\nWe integrate with various third party systems. To check out of to do this, select one of the links beneath the Integrations menu.\n\n\nNeed help with something else related to elmah.io? We've collected help articles beneath the Help menu.\n\n\nThis documentation site is built using the wonderful MkDocs. To check out the source, check out the \nelmah.io/documentation repository\n on GitHub.", 
             "title": "Start"
+        }, 
+        {
+            "location": "/#welcome-to-the-elmahio-documentation", 
+            "text": "Here you will find updated documentation on how to use elmah.io.  To get started using elmah.io with ELMAH, please follow the  Logging to elmah.io from ELMAH .  Not using ASP.NET MVC? Browse through one of our tutorials beneath the Installation menu.  We integrate with various third party systems. To check out of to do this, select one of the links beneath the Integrations menu.  Need help with something else related to elmah.io? We've collected help articles beneath the Help menu.  This documentation site is built using the wonderful MkDocs. To check out the source, check out the  elmah.io/documentation repository  on GitHub.", 
+            "title": "Welcome to the elmah.io documentation"
         }, 
         {
             "location": "/logging-to-elmah-io-from-elmah/", 
