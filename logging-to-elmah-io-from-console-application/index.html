@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from JSNLog - elmah.io Documentation</title>
+	<title>Logging from Console - elmah.io Documentation</title>
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -119,12 +119,12 @@
 				<a href="../logging-to-elmah-io-from-umbraco/">Logging from Umbraco</a>
 			</li>
 		
-			<li class="active">
-				<a href="./">Logging from JSNLog</a>
+			<li >
+				<a href="../logging-to-elmah-io-from-jsnlog/">Logging from JSNLog</a>
 			</li>
 		
-			<li >
-				<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
+			<li class="active">
+				<a href="./">Logging from Console</a>
 			</li>
 		
 			<li >
@@ -186,40 +186,24 @@
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="logging-from-jsnlog">Logging from JSNLog</h1>
-<p>Using JSNLog you will be able to log JavaScript errors to elmah.io. In this sample, we will focus about logging JavaScript errors from a ASP.NET MVC web application, but you can use JSNLog to log anything to elmah.io, so please check out their documentation.</p>
-<p>Start by installing the JSNLog.Elmah package:</p>
-<pre><code class="powershell">Install-Package JSNLog.Elmah
+<h1 id="logging-from-console">Logging from Console</h1>
+<p>Even though elmah.io support various logging frameworks like <a href="../logging-to-elmah-io-from-serilog">Serilog</a>, <a href="../logging-to-elmah-io-from-log4net">log4net</a> and <a href="../logging-to-elmah-io-from-nlog">NLog</a>, logging from a simple console application is dead simple.</p>
+<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package:</p>
+<pre><code class="powershell">Install-Package elmah.io.client
 </code></pre>
 
-<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then install elmah.io:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<p>Create a new <code>Logger</code>and assign it to a variable of type <code>ILogger</code>:</p>
+<pre><code class="csharp">Elmah.Io.Client.ILogger logger = new Elmah.Io.Client.Logger(new Guid(&quot;LOGID&quot;));
 </code></pre>
 
-<p>Remember to input a valid log id during the installation. Add the JSNLog code before any script imports in your _Layout.cshtml file:</p>
-<pre><code class="csharp">@Html.Raw(JSNLog.JavascriptLogging.Configure())
-</code></pre>
-
-<p>You are ready to log errors from JavaScript til elmah.io. To test that everything is installed correctly, launch your web application and execute the following JavaScript using Chrome Developer Tools or similar:</p>
-<pre><code class="javascript">JL().fatal(&quot;log message&quot;);
-</code></pre>
-
-<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be build into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
-<pre><code class="javascript">&lt;script&gt;
-window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-
-    // Send object with all data to server side log, using severity fatal,
-    // from logger &quot;onerrorLogger&quot;
-    JL(&quot;onerrorLogger&quot;).fatalException({
-        &quot;msg&quot;: &quot;Exception!&quot;,
-        &quot;errorMsg&quot;: errorMsg, &quot;url&quot;: url,
-        &quot;line number&quot;: lineNumber, &quot;column&quot;: column
-    }, errorObj);
-
-    // Tell browser to run its own error handler as well  
-    return false;
-}
-&lt;/script&gt;
+<p>Replace <code>LOGID</code> with your log ID from elmah.io.</p>
+<p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
+<pre><code class="csharp">logger.Verbose(&quot;Verbose message&quot;);
+logger.Debug(&quot;Debug message&quot;);
+logger.Information(&quot;Information message&quot;);
+logger.Warning(&quot;Warning message&quot;);
+logger.Error(&quot;Error message&quot;);
+logger.Fatal(&quot;Fatal message&quot;);
 </code></pre></div>
         </div>
 
