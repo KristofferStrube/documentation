@@ -247,7 +247,7 @@
 }
 </code></pre>
 
-<p>This time we only begin logging to elmah.io, if the thrown exception is of type <code>HttpException</code> and contains a HTTP status code of <code>500</code>.</p>
+<p>This time we only begin logging to elmah.io, if the thrown exception is of type <code>HttpException</code> and contains a HTTP status code of <code>500</code>. This example only logs errors with status code 500 in elmah.io and all errors in your normal error log. If you want to create this filter on all logs, you should use the <code>ErrorLog_Filtering</code> method instead. This method is called before <code>ErrorLog_Logged</code> and before actually logging the error to your normal error log.</p>
 
 
 <br/><br/>
