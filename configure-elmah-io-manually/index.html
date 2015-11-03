@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from NLog - elmah.io Documentation</title>
+	<title>Configure elmah.io manually - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -131,8 +131,8 @@
 					<a href="../logging-to-elmah-io-from-log4net/">Logging from log4net</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from NLog</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-nlog/">Logging from NLog</a>
 				</li>
 			
 				<li >
@@ -159,8 +159,8 @@
 					<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
 				</li>
 			
-				<li >
-					<a href="../configure-elmah-io-manually/">Configure elmah.io manually</a>
+				<li class="active">
+					<a href="./">Configure elmah.io manually</a>
 				</li>
 			
 				<li >
@@ -224,30 +224,56 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="logging-from-nlog">Logging from NLog</h1>
-<p>NLog is one of the most popular logging frameworks for .NET. With an active history on almost 10 years, the possibilities with NLog are many and it’s easy to find documentation on how to use it.</p>
-<p>To start logging messages from NLog to elmah.io, you need to install the elmah.io.nlog NuGet package:</p>
-<pre><code class="powershell">Install-Package elmah.io.nlog
+<h1 id="configure-elmahio-manually">Configure elmah.io manually</h1>
+<p>The <a href="https://www.nuget.org/packages/elmah.io/">elmah.io NuGet package</a> normally adds all of the necessary configuration, in order to get up and running with elmah.io. In fact this is one of our killer features and our customers tells us, that we have the simplest installer on the market. In some cases you may experience problems with the automatic configuration, though. Different reasons can cause the configuration not to be added automatically. The most common reason is restrictions to executing PowerShell inside Visual Studio.</p>
+<p>Start by installing the elmah.io package:</p>
+<pre><code class="powershell">Install-Package elmah.io
 </code></pre>
 
-<p>To configure the elmah.io target, add the following configuration to your app.config/web.config/nlog.config depending on what kind of project you’ve created:</p>
-<pre><code class="xml">&lt;extensions&gt;
-  &lt;add assembly=&quot;Elmah.Io.NLog&quot;/&gt;
-&lt;/extensions&gt;
-
-&lt;targets&gt;
-  &lt;target name=&quot;elmahio&quot; type=&quot;elmah.io&quot; logId=&quot;cc6043e9-5d7b-4986-8056-cb76d4d52e5e&quot;/&gt;
-&lt;/targets&gt;
-
-&lt;rules&gt;
-  &lt;logger name=&quot;*&quot; minlevel=&quot;Info&quot; writeTo=&quot;elmahio&quot; /&gt;
-&lt;/rules&gt;
+<p>Input your log ID during the installation. Don't worry if the configuration isn't added, since we will verify this later.</p>
+<p>Add the following to the <code>&lt;configSections&gt;</code> element in your web.config:</p>
+<pre><code class="xml">&lt;sectionGroup name=&quot;elmah&quot;&gt;
+  &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
+  &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
+  &lt;section name=&quot;errorMail&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorMailSectionHandler, Elmah&quot; /&gt;
+  &lt;section name=&quot;errorFilter&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorFilterSectionHandler, Elmah&quot; /&gt;
+&lt;/sectionGroup&gt;
 </code></pre>
 
-<p>In the example we specify the level minimum as Info. This tells NLog to log only information, warning, error and fatal messages. You may adjust this but be aware, that your elmah.io log may run full pretty fast, if you log thousands and thousands of trace and debug messages.</p>
-<p>Log messages to elmah.io, just as with every other target and NLog:</p>
-<pre><code class="csharp">log.Warn(&quot;This is a warning message&quot;);
-log.Error(new Exception(), &quot;This is an error message&quot;);
+<p>Add the following to the <code>&lt;httpModules&gt;</code> element (inside <code>&lt;system.web&gt;</code>) in your web.config:</p>
+<pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; /&gt;
+&lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; /&gt;
+&lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot;/&gt;
+</code></pre>
+
+<p>Add the following to the <code>&lt;modules&gt;</code> element (inside <code>&lt;system.webServer&gt;</code>) in your web.config:</p>
+<pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
+&lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
+&lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
+</code></pre>
+
+<p>Add the following as a root element beneath the <code>&lt;configuration&gt;</code> element in your web.config:</p>
+<pre><code class="xml">&lt;elmah&gt;
+    &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
+    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;INSERT_LOG_ID&quot; /&gt;
+&lt;/elmah&gt;
+</code></pre>
+
+<p>Replace <code>INSERT_LOG_ID</code> with your log ID from the elmah.io website.</p>
+<p>That's it. You managed to install elmah.io manually and you should go to your LinkedIn profile and update with a new certification called "Certified elmah.io installer" :)</p>
+<p>In case you need to access your error log on /elmah.axd, you need to add the following to the <code>&lt;configuration&gt;</code> element in your web.config:</p>
+<pre><code class="xml">&lt;location path=&quot;elmah.axd&quot; inheritInChildApplications=&quot;false&quot;&gt;
+    &lt;system.web&gt;
+        &lt;httpHandlers&gt;
+            &lt;add verb=&quot;POST,GET,HEAD&quot; path=&quot;elmah.axd&quot; type=&quot;Elmah.ErrorLogPageFactory, Elmah&quot; /&gt;
+        &lt;/httpHandlers&gt;
+    &lt;/system.web&gt;
+    &lt;system.webServer&gt;
+        &lt;handlers&gt;
+            &lt;add name=&quot;ELMAH&quot; verb=&quot;POST,GET,HEAD&quot; path=&quot;elmah.axd&quot; type=&quot;Elmah.ErrorLogPageFactory, Elmah&quot; preCondition=&quot;integratedMode&quot; /&gt;
+        &lt;/handlers&gt;
+    &lt;/system.webServer&gt;
+&lt;/location&gt;
 </code></pre>
 
 
