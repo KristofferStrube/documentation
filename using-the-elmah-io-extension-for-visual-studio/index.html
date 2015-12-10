@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Handle elmah.io downtime - elmah.io Documentation</title>
+	<title>Using the elmah.io extension for Visual Studio - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -219,12 +219,12 @@
 					<a href="../use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>
 				</li>
 			
-				<li >
-					<a href="../using-the-elmah-io-extension-for-visual-studio/">Using the elmah.io extension for Visual Studio</a>
+				<li class="active">
+					<a href="./">Using the elmah.io extension for Visual Studio</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Handle elmah.io downtime</a>
+				<li >
+					<a href="../handle-elmah-io-downtime/">Handle elmah.io downtime</a>
 				</li>
 			
 			</ul>
@@ -232,31 +232,25 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="handle-elmahio-downtime">Handle elmah.io downtime</h1>
-<p>Like every other SaaS product out there, we cannot promise you 100 % uptime on elmah.io. We understand, that your logging data is extremely important for your business and we do everything in our power to secure that elmah.io is running smoothly. In fact we have an average of <a href="http://status.elmah.io/1105484">99.99 % uptime</a> on our API.</p>
-<p>But how do you handle that remaining 0.01 % of the time where you need to log a message in elmah.io and the service is down? You have a few options actually:</p>
-<ol>
-<li>You can subscribe an event handler to listen for this situation (where communicating with the elmah.io API fails). To hook up an event handler, write this piece of code in your initialization code:</li>
-</ol>
-<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
-var logger = ErrorLog.Client;
-logger.OnMessageFail += (sender, args) =&gt;
-{
-    var message = args.Message;
-    var exception = args.Error;
-    // TODO: log message and/or exception somewhere else.
-}
-</code></pre>
-
-<ol>
-<li>
-<p>We have a prerelease of the <a href="https://www.nuget.org/packages/elmah.io">elmah.io NuGet</a> package which implements a client side queue, if the API is down. It's still not very well documented and we will probably end up moving this feature to v3 of our API/client package, which is scheduled to be release late this year or beginning of next year. Here's a bit of code to look at: <a href="https://github.com/elmahio/elmah.io/blob/apiv2.1/Elmah.Io.Client/LoggerOptions.cs#L17">https://github.com/elmahio/elmah.io/blob/apiv2.1/Elmah.Io.Client/LoggerOptions.cs</a>.</p>
-</li>
-<li>
-<p>If you want to be able to rollback to another solution, in case elmah.io goes down, you can actually log to multiple error logs as described here: <a href="../logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</a>.</p>
-</li>
-</ol>
-<p>We constantly work to improve the uptime of the entire solution. The next move will be to split the API and website in two and start using GEO replicated websites in Windows Azure.</p>
+<h1 id="using-the-elmahio-extension-for-visual-studio">Using the elmah.io extension for Visual Studio</h1>
+<p>Being able to focus on .NET developers makes it possible to do all kinds of cool things. Like building an elmah.io extension for Visual Studio. That's exactly what we've done and here's how to use it.</p>
+<h2 id="installation">Installation</h2>
+<p><a href="https://visualstudiogallery.msdn.microsoft.com/369827de-80ca-4b36-9b73-88bd85fdbc81">Download the elmah.io extension</a> from the Visual Studio gallery.</p>
+<blockquote>
+<p>Don't use the Extensions and Updates feature inside Visual Studio, since Visual Studio 2015 causes a problem with installing extensions in previous versions.</p>
+</blockquote>
+<p>Double click the downloaded VSIX and enable elmah.io in the versions of Visual Studio of your choice. The extension supports Visual Studio 2012, 2013 and 2015.</p>
+<h2 id="usage">Usage</h2>
+<p>Inside Visual Studio navigate to View | Other Windows | elmah.io or simply search for elmah.io in the Quick Launcher (Ctrl+Q).</p>
+<p>You'll see the elmah.io window somewhere:</p>
+<p><img alt="elmah.io windows in Visual Studio" src="../images/elmah_io_vs1.png" /></p>
+<p>Click the sign in button in the top left corner. Log in using the same provider that you're using on the website:</p>
+<p><img alt="Sign in window" src="../images/elmah_io_vs2.png" /></p>
+<p>Once logged in, the list of logs is populated with all of your logs defined at elmah.io. Select a log and click the search icon:</p>
+<p><img alt="Browse a log inside Visual Studio" src="../images/elmah_io_vs3.png" /></p>
+<p>To inspect a single message, double click it and the message details window will open:</p>
+<p><img alt="Message details" src="../images/elmah_io_vs4.png" /></p>
+<p>The toolbar in the top provides a couple of options: View the message on elmah.io, hide the message and delete the message.</p>
 
 
 <br/><br/>
