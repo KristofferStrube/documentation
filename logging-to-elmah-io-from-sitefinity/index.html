@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from Web API - elmah.io Documentation</title>
+	<title>Logging from Sitefinity - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -119,8 +119,8 @@
 					<a href="../logging-to-elmah-io-from-elmah/">Logging from ELMAH</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from Web API</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-web-api/">Logging from Web API</a>
 				</li>
 			
 				<li >
@@ -159,8 +159,8 @@
 					<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-sitefinity/">Logging from Sitefinity</a>
+				<li class="active">
+					<a href="./">Logging from Sitefinity</a>
 				</li>
 			
 				<li >
@@ -236,36 +236,22 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="logging-from-web-api">Logging from Web API</h1>
-<p>Web API provides its own mechanism for handling errors, why ELMAH’s modules and handlers doesn’t work there. Luckily Richard Dingwall created the <a href="https://www.nuget.org/packages/Elmah.Contrib.WebApi/">Elmah.Contrib.WebApi</a> NuGet package to fix this.</p>
-<p>To start logging exceptions from Web API, install the NuGet packages:</p>
+<h1 id="logging-from-sitefinity">Logging from Sitefinity</h1>
+<p>Sitefinity is a CMS from Telerik, implemented on top of ASP.NET. Like other content management systems build on top of ASP.NET, ELMAH is supported out of the box.</p>
+<p>To install elmah.io in a Sitefinity website, start by opening the website in Visual Studio by selecting <em>File | Open Web Site...</em> and navigate to the Sitefinity projects folder (something similar to this: <code>C:\Program Files (x86)\Telerik\Sitefinity\Projects\Default</code>).</p>
+<p>Right click the web site and install the elmah.io NuGet package or install it through Package Manager Console:</p>
 <pre><code class="powershell">Install-Package elmah.io
-Install-Package Elmah.Contrib.WebApi
 </code></pre>
 
-<p>Add the following code to your <code>WebApiConfig.cs</code> file:</p>
-<pre><code class="csharp">public static class WebApiConfig
+<p>During installation you will be prompted for your log id, available from the settings page of your log on elmah.io.</p>
+<p>That's it! Uncaught errors in Sitefinity are logged to your elmah.io log. To test that the integration works, right click the web site and add a new Web Form named ELMAH.aspx. In the code behind file add the following code:</p>
+<pre><code class="chsarp">protected void Page_Load(object sender, EventArgs e)
 {
-    public static void Register(HttpConfiguration config)
-    {
-        ...
-        config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
-        ...
-    }
+    throw new ApplicationException();
 }
 </code></pre>
 
-<p><code>IExceptionLogger</code> is a new concept in Web API 2. It intercepts all thrown exceptions, even errors in controller contructors and routing errors.</p>
-<p>If you are using Web API 1, there’s another way to add exception logging:</p>
-<pre><code class="csharp">protected void Application_Start()
-{
-    ...
-    GlobalConfiguration.Configuration.Filters.Add(new ElmahHandleErrorApiAttribute());
-    ...
-}
-</code></pre>
-
-<p>In this case you register a new global filter with Web API. The downside of this approach is, that only errors thrown in controller actions are logged.</p>
+<p>Start the website and navigate to the ELMAH.aspx page. If everything works as intended, you will see the yellow screen of death and a new error will pop up on elmah.io.</p>
 
 
 <br/><br/>
