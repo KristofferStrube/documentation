@@ -255,7 +255,9 @@ catch (Exception e)
 <p>In the example I add a custom variable named <code>InputValueWas</code> with the value of the <code>inputValue</code> variable. This way I will be able to see which input value caused the exception.</p>
 <h3 id="use-the-onmessage-hook-in-the-elmahio-client">Use the <code>OnMessage</code> hook in the elmah.io client</h3>
 <p>You may not use ELMAH’s ErrorSignal feature, but rely on ELMAH to log uncaught exceptions only. In this scenario you probably don’t have access to the thrown exception. The elmah.io client offers a hook for you to be able to execute code every time something is logged:</p>
-<pre><code class="csharp">Logger.OnMessage += (sender, args) =&gt;
+<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
+var logger = ErrorLog.Client;
+logger.OnMessage += (sender, args) =&gt;
 {
     if (args.Message.Data == null) args.Message.Data = new List&lt;Item&gt;();
     args.Message.Data.Add(new Item { Key = &quot;SomeOtherVariable&quot;, Value = someVariable });
