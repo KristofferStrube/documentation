@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Remove sensitive form data - elmah.io Documentation</title>
+	<title>Adding version information - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -211,8 +211,8 @@
 					<a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Remove sensitive form data</a>
+				<li >
+					<a href="../remove-sensitive-form-data/">Remove sensitive form data</a>
 				</li>
 			
 				<li >
@@ -231,8 +231,8 @@
 					<a href="../handle-elmah-io-downtime/">Handle elmah.io downtime</a>
 				</li>
 			
-				<li >
-					<a href="../adding-version-information/">Adding version information</a>
+				<li class="active">
+					<a href="./">Adding version information</a>
 				</li>
 			
 			</ul>
@@ -240,23 +240,60 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="remove-sensitive-form-data">Remove sensitive form data</h1>
-<p>You may have something like usernames and passwords in form posts on your website. Since ELMAH automatically logs the content of a failing form POST, sensitive data potentially ends up in your log. No one else but you and your company should really get to look inside your log, but remember that everyone connected to the internet, is a potential hacking victim.</p>
-<p>There’s no build-in feature to remove data from the error data, before logging it to ELMAH. Luckily <a href="https://code.google.com/p/elmah/wiki/ErrorFiltering">ELMAH’s Error Filtering</a> feature lets you accomplish that anyway by writing a bit of additional code in your <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">void ErrorLog_Filtering(object sender, ExceptionFilterEventArgs args)
+<h1 id="adding-version-information">Adding Version Information</h1>
+<p>Almost every piece of software have some sort of version. Whether it's a nice looking <a href="http://semver.org/">SemVer</a> string or a simple timestamp, being able to distinguish one version from the other is important. elmah.io supports sending version information from your application in every message logged.</p>
+<h2 id="version-numbers-on-the-ui">Version Numbers on the UI</h2>
+<p>Let's start by looking at how version numbers are represented in the elmah.io UI. Every message contains a version property as illustrated below:</p>
+<p><img alt="Error Details with Version Number" src="../images/versiondetails.png" /></p>
+<p>The error is logged by an application with version number 1.0.0. Looking at another error, the version number may look different:</p>
+<p><img alt="Error Details with Other Version Number" src="../images/versiondetails2.png" /></p>
+<p>This way, you will be able to see which version of your software that logged each message.</p>
+<p>Having the version number on the message, opens up some interesting search possibilities. Imagine that you want to search for every message logged by 1.0.* versions of your software, including release candidates etc. Simply do a search in the search box like this:</p>
+<p><img alt="Search for Versions" src="../images/versionsearch.png" /></p>
+<p>The example above finds every message logged from 1.0.0, 1.0.0-rc1, 1.0.1, etc.</p>
+<h2 id="adding-version-numbers">Adding Version Numbers</h2>
+<p>How you choose to represent version numbers in your system is really up to you. elmah.io doesn't require SemVer, even though we strongly recommend you to use it. Version is a simple string in our <a href="../elmah.io/api">API</a>, which means that you can send anything from SemVer to a stringified timestamp.</p>
+<p>Adding a version number to every message logged in elmah.io, is easy as 1-2-3. If you're using our API, there's a property named <code>version</code> where you can put the version of your application. Chances are that you are using one of the integrations like ELMAH, log4net or Serilog. In fact there's multiple ways to send a version number to elmah.io.</p>
+<h3 id="globally-using-elmah">Globally using ELMAH</h3>
+<p>You probably want to attach the same version number on every message logged in elmah.io. The easiest way to achieve that, is to create a global event handler for the OnMessage event, which is triggered every time the elmah.io client logs a message to elmah.io:</p>
+<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
+var logger = ErrorLog.Client;
+logger.OnMessage += (sender, args) =&gt;
 {
-    var httpContext = args.Context as HttpContext;
-    if (httpContext != null &amp;&amp; httpContext.Request.Form.AllKeys.Any(k =&gt; k == &quot;SomeSecretFormField&quot;))
-    {
-        var error = new Error(args.Exception, httpContext);
-        error.Form.Set(&quot;SomeSecretFormField&quot;, &quot;***hidden***&quot;);
-        ErrorLog.GetDefault(httpContext).Log(error);
-        args.Dismiss();
-    }
+    args.Message.Version = &quot;1.2.3&quot;; // Requires elmah.io.core version &gt;= 2.0.26
 }
 </code></pre>
 
-<p>The <code>ErrorLog_Filtering</code> method is called by ELMAH, every time a new exception is about to get logged. The purpose of the method is to be able to tell ELMAH not to log certain kinds of exceptions, but in this case we use the method as a hook to modify the logged error. Since you cannot modify the Form property of the HTTP request, we create a new Error object and update the value of the “SomeSecretFormField” key. The new Error object is then manually logged to the default ELMAH error logger and we dismiss the original error. It’s essential to remember to call <code>Dismiss()</code>, because if you don’t, the original error containing the sensitive form field is logged as well.</p>
+<p>In the example, the message send of to elmah.io is decorated with the version numer <code>1.2.3</code> You will need to replace this with the value of an app setting, the assembly info or whatever strategy you've used to make the version number available to your code.</p>
+<h3 id="trycatch-using-elmah">Try/catch using ELMAH</h3>
+<p>If you're logging errors to elmah.io in catch blocks, logging the version number can be done using a similar approach to the above:</p>
+<pre><code class="csharp">try
+{
+    CallSomeBusinessLogic(inputValue);
+}
+catch (Exception e)
+{
+    e.Data.Add(&quot;X-ELMAHIO-VERSION&quot;, &quot;1.2.3&quot;);
+    ErrorSignal.FromCurrentContext().Raise(e);
+}
+</code></pre>
+
+<p>In this case, the code at this point doesn't know anything about elmah.io. Luckily, there's an alternative to the Version property, by putting a custom element in the Data dictionary on Exception. The exact name of the key must be <code>X-ELMAHIO-VERSION</code> for elmah.io to interpret this as the version number.</p>
+<h3 id="using-log4net">Using log4net</h3>
+<p>log4net supports the concept of customer properties in various ways. Since log4net properties are converted to custom properties in elmah.io, the easiest way to add a version number of every message logged through log4net, is by configuring a global property somewhere in your initialization code:</p>
+<pre><code class="csharp">log4net.GlobalContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
+</code></pre>
+
+<p>The property name is equal to the custom element we used in the last section.</p>
+<p>log4net supports custom properties in the context of a log call as well. To do that, put the <code>X-ELMAHIO-VERSION</code> property in the <code>ThreadContext</code> before logging to log4net:</p>
+<pre><code class="csharp">log4net.ThreadContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
+log4net.Error(&quot;This is an error message&quot;);
+</code></pre>
+
+<h3 id="using-nlog">Using NLog</h3>
+<p>In progress.</p>
+<h3 id="using-serilog">Using Serilog</h3>
+<p>In progress.</p>
 
 
 <br/><br/>
