@@ -241,7 +241,7 @@
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
 <h1 id="logging-from-log4net">Logging from Log4net</h1>
-<p>log4net is probably the oldest .NET logging frameworks on the block. Maintained by Apache and developed for more than a decade, makes log4net a good and well supported choice for some types of applications. log4net is based on the concept of appenders, which works pretty much like ELMAH’s error logs. Unlike ELMAH, log4net can have multiple appenders, which makes it possible to log errors to multiple sources. In addition log4net supports different log levels like Info and Warning. While ELMAH doesn’t have the concept of log levels, elmah.io supports all of the levels in log4net.</p>
+<p>log4net is probably the oldest .NET logging frameworks on the block. Maintained by Apache and developed for more than a decade, makes log4net a good and well supported choice for some types of applications. log4net is based on the concept of appenders, which works pretty much like ELMAH’s error loggers. Unlike ELMAH, log4net can have multiple appenders, which makes it possible to log errors to multiple destinations. In addition log4net supports different log levels like Info and Warning. While ELMAH doesn’t have the concept of log levels, elmah.io supports all of the levels in log4net.</p>
 <p>In this tutorial we’ll add log4net to an ASP.NET MVC project, but the process is almost identical with other project types. Create a new MVC project and install the elmah.io appender:</p>
 <pre><code class="powershell">Install-Package elmah.io.log4net
 </code></pre>
@@ -278,6 +278,20 @@ catch (ApplicationException ex)
     log.Error(&quot;Error happening&quot;, ex);
 }
 </code></pre>
+
+<h2 id="context-properties">Context Properties</h2>
+<p>log4net offers a feature called context properties. With context properties, you can log additional key/value pairs with every log message. The elmah.io appender for log4net, supports context properties as well. Context properties are handled like <a href="http://docs.elmah.io/logging-custom-data/">custom properties</a> in the elmah.io UI.</p>
+<p>Let's utilize two different hooks in log4net, to add context properties to elmah.io:</p>
+<pre><code class="csharp">log4net.GlobalContext.Properties[&quot;ApplicationIdentifier&quot;] = &quot;MyCoolApp&quot;;
+log4net.ThreadContext.Properties[&quot;ThreadId&quot;] = Thread.CurrentThread.ManagedThreadId;
+
+log.Info(&quot;This is a message with custom properties&quot;);
+</code></pre>
+
+<p>Basically, we set two custom properties on contextual classes provided by log4net. To read more about the choices in log4net, check out the <a href="https://logging.apache.org/log4net/release/manual/contexts.html">log4net manual</a>.</p>
+<p>When looking up the log message in elmah.io, we see the context properties in the Data tab:</p>
+<p><img alt="Context properties from log4net" src="../images/context_properties_from_log4net.png" /></p>
+<p>Besides the two custom variables that we set through <code>GlobalContext</code> and <code>ThreadContext</code>, we see a couple of build-in properties in log4net, both prefixed with <code>log4net:</code>.</p>
 
 
 <br/><br/>
