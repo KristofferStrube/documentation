@@ -166,9 +166,79 @@
             "title": "Configure elmah.io from code"
         }, 
         {
+            "location": "/elmah-io-apps-slack/", 
+            "text": "Install Slack App for elmah.io\n\n\nGenerate OAuth 2 Token\n\n\nIn order to allow elmah.io to log messages to Slack, you will need to generate an OAuth 2 token. To do so, log into slack and go to the \nOAuth Tokens\n page.\n\n\n\n\nClick the \nCreate token\n button and copy the generated token (colored in red and prefixed with \nxoxp-\n).\n\n\nInstall the Slack App on elmah.io\n\n\nLog into elmah.io and go to the log settings. Click the Apps tab. Locate the Slack app and click the \nInstall\n button:\n\n\n\n\nPaste the token copied in the previous step into the Token textbox. In the Channel, input the name of the Slack channel you want messages from elmah.io to show up. Remember to leave out the hash (#) sign (example use general and not #general).\n\n\nClick \nSave\n and the app is added to your log. When new errors are logged, messages start appearing in the channel that you configured.\n\n\nFinally, if you need more control on what to log and/or your want to customize the messages, you should read our guide on \nIntegrating elmah.io with Slack manually\n.", 
+            "title": "Slack"
+        }, 
+        {
+            "location": "/elmah-io-apps-slack/#install-slack-app-for-elmahio", 
+            "text": "", 
+            "title": "Install Slack App for elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-slack/#generate-oauth-2-token", 
+            "text": "In order to allow elmah.io to log messages to Slack, you will need to generate an OAuth 2 token. To do so, log into slack and go to the  OAuth Tokens  page.   Click the  Create token  button and copy the generated token (colored in red and prefixed with  xoxp- ).", 
+            "title": "Generate OAuth 2 Token"
+        }, 
+        {
+            "location": "/elmah-io-apps-slack/#install-the-slack-app-on-elmahio", 
+            "text": "Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Slack app and click the  Install  button:   Paste the token copied in the previous step into the Token textbox. In the Channel, input the name of the Slack channel you want messages from elmah.io to show up. Remember to leave out the hash (#) sign (example use general and not #general).  Click  Save  and the app is added to your log. When new errors are logged, messages start appearing in the channel that you configured.  Finally, if you need more control on what to log and/or your want to customize the messages, you should read our guide on  Integrating elmah.io with Slack manually .", 
+            "title": "Install the Slack App on elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-hipchat/", 
+            "text": "Install HipChat App for elmah.io\n\n\nGenerate OAuth 2 Token\n\n\nIn order to allow elmah.io to log messages to HipChat, you will need to generate an OAuth 2 token. To do so, log into HipChat and go to the \nAPI Access\n page (replace \nelmahio\n with your subdomain).\n\n\n\n\nInput a label , click the \nCreate\n button and copy the generated token.\n\n\nInstall the HipChat App on elmah.io\n\n\nLog into elmah.io and go to the log settings. Click the Apps tab. Locate the HipChat app and click the \nInstall\n button:\n\n\n\n\nPaste the token copied in the previous step into the Token textbox. In the Room textbox, input the name of the HipChat chat room you want messages from elmah.io to show up.\n\n\nClick \nSave\n and the app is added to your log. When new errors are logged, messages start appearing in the chat room that you configured.\n\n\nFinally, if you need more control on what to log, you should read our guide on \nIntegrating elmah.io with HipChat manually\n.", 
+            "title": "HipChat"
+        }, 
+        {
+            "location": "/elmah-io-apps-hipchat/#install-hipchat-app-for-elmahio", 
+            "text": "", 
+            "title": "Install HipChat App for elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-hipchat/#generate-oauth-2-token", 
+            "text": "In order to allow elmah.io to log messages to HipChat, you will need to generate an OAuth 2 token. To do so, log into HipChat and go to the  API Access  page (replace  elmahio  with your subdomain).   Input a label , click the  Create  button and copy the generated token.", 
+            "title": "Generate OAuth 2 Token"
+        }, 
+        {
+            "location": "/elmah-io-apps-hipchat/#install-the-hipchat-app-on-elmahio", 
+            "text": "Log into elmah.io and go to the log settings. Click the Apps tab. Locate the HipChat app and click the  Install  button:   Paste the token copied in the previous step into the Token textbox. In the Room textbox, input the name of the HipChat chat room you want messages from elmah.io to show up.  Click  Save  and the app is added to your log. When new errors are logged, messages start appearing in the chat room that you configured.  Finally, if you need more control on what to log, you should read our guide on  Integrating elmah.io with HipChat manually .", 
+            "title": "Install the HipChat App on elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-github/", 
+            "text": "Install GitHub App for elmah.io\n\n\nGenerate Personal Access Token\n\n\nIn order to allow elmah.io to create issues on GitHub, you will need to generate Personal Access Token. To do so, log into GitHub and go to the \nNew personal access token\n page.\n\n\n\n\nInput a token description, click the \nGenerate token\n button and copy the generated token (colored with a green background).\n\n\nInstall the GitHub App on elmah.io\n\n\nLog into elmah.io and go to the log settings. Click the Apps tab. Locate the GitHub app and click the \nInstall\n button:\n\n\n\n\nPaste the token copied in the previous step into the \nToken\n textbox. In the \nOwner\n textbox, input the name of the user or organisation owning the repository you want to create issues in. In the \nRepository\n textbox input the name of the repository.\n\n\nClick \nSave\n and the app is added to your log. When new errors are logged, issues are automatically create in the configured GitHub repository.", 
+            "title": "GitHub"
+        }, 
+        {
+            "location": "/elmah-io-apps-github/#install-github-app-for-elmahio", 
+            "text": "", 
+            "title": "Install GitHub App for elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-github/#generate-personal-access-token", 
+            "text": "In order to allow elmah.io to create issues on GitHub, you will need to generate Personal Access Token. To do so, log into GitHub and go to the  New personal access token  page.   Input a token description, click the  Generate token  button and copy the generated token (colored with a green background).", 
+            "title": "Generate Personal Access Token"
+        }, 
+        {
+            "location": "/elmah-io-apps-github/#install-the-github-app-on-elmahio", 
+            "text": "Log into elmah.io and go to the log settings. Click the Apps tab. Locate the GitHub app and click the  Install  button:   Paste the token copied in the previous step into the  Token  textbox. In the  Owner  textbox, input the name of the user or organisation owning the repository you want to create issues in. In the  Repository  textbox input the name of the repository.  Click  Save  and the app is added to your log. When new errors are logged, issues are automatically create in the configured GitHub repository.", 
+            "title": "Install the GitHub App on elmah.io"
+        }, 
+        {
+            "location": "/elmah-io-apps-botbuster/", 
+            "text": "Install BotBuster App for elmah.io\n\n\nThe BotBuster app for elmah.io, identifies and ignores messages generated by white hat bots like spiders, search engine bots and similar. Under normal circumstances, you want to allow access for white hat bots, but you don't want to get a notification every time one of them tries to request a resource not found on the server.\n\n\nInstalling BotBuster couldn't be simpler. Log into elmah.io and go to the log settings. Click the Apps tab. Locate the BotBuster app and click the \nInstall\n button.", 
+            "title": "BotBuster"
+        }, 
+        {
+            "location": "/elmah-io-apps-botbuster/#install-botbuster-app-for-elmahio", 
+            "text": "The BotBuster app for elmah.io, identifies and ignores messages generated by white hat bots like spiders, search engine bots and similar. Under normal circumstances, you want to allow access for white hat bots, but you don't want to get a notification every time one of them tries to request a resource not found on the server.  Installing BotBuster couldn't be simpler. Log into elmah.io and go to the log settings. Click the Apps tab. Locate the BotBuster app and click the  Install  button.", 
+            "title": "Install BotBuster App for elmah.io"
+        }, 
+        {
             "location": "/integrate-elmah-io-with-slack/", 
             "text": "Integrate with Slack\n\n\nStart by copying your Slack-token from the \nAPI page\n. We will need this when setting up the integration.\n\n\n\n\nOn elmah.io, go to the Rules tab beneath your log settings. In this example we want a message on Slack every time a new error is logged in our elmah.io log. To do this, name your rule and input a query like illustrated on the following screenshot:\n\n\n\n\nHit the Then link and select HTTP request. Input the following values (remember to replace YOUR_TOKEN and YOUR_CHANNEL):\n\n\n\n\n\n\n\n\nField\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nMethod\n\n\nPOST\n\n\n\n\n\n\nURL\n\n\nhttps://slack.com/api/chat.postMessage?token=YOUR_TOKEN\nchannel=YOUR_CHANNEL\ntext=$message\nusername=elmah.io\n\n\n\n\n\n\n\n\nThe final result should look like this:\n\n\n\n\nDon't worry about the empty Content-Type and Body. Everything needed to post the message to Slack is embedded into the URL. To learn more about the structure of the URL, jump to \nBreaking it down\n\n\nClick the OK button and add the new rule by clicking Add. This configuration tells elmah.io, to make a HTTP request against the Slack API, every time a new error is logged. The message at elmah.io is shown as the chat message inside Slack:\n\n\n\n\nBreaking it down\n\n\nYou should have received a message on Slack already. To learn more about how to specify and extend the configuration for Slack, this is the section for you. Let's start by inspecting the simplest possible Slack URL:\n\n\nhttps://slack.com/api/chat.postMessage?token=xxxx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxxx-xxxxxxxxxx\nchannel=%23general\ntext=$message\n\n\nThe initial part (\nhttps://slack.com/api/chat.postMessage\n) points out the method to invoke on Slack. In this case we want to post a new message (\nchat.postMessage\n). The \ntoken\n query parameter contains your access token as found on the \nAPI page\n.\n\n\nThe \nchannel\n parameter contains the name or the ID of the channel you want to post the chat message to. In the example above, I specify the #general channel, but it can be any channel on your account. Observe how I've URL encoded the \n#\n character.\n\n\nNext up is the \ntext\n parameter which contains the actual message we want to post to #general. By inserting \n$message\n, I tell elmah.io to insert the title or headline of the logged message. In case of an exception, this will be the exception message generated at your website. elmah.io supports a range of variables, available on the Rules tab on the log settings.\n\n\nTo add a sender name other than \nBot\n, add a \nusername\n parameter like this: \nusername=elmah.io\n.\n\n\nIf you want a nice profile icon as well, you can append the following parameter: \nicon_url=https://elmah.io/icons/AppIcon50x50.png\n. This tells Slack to show a nice elmah.io icon next to the chat messages.", 
-            "title": "Slack"
+            "title": "Integrating with Slack manually"
         }, 
         {
             "location": "/integrate-elmah-io-with-slack/#integrate-with-slack", 
@@ -183,7 +253,7 @@
         {
             "location": "/integrate-elmah-io-with-hipchat/", 
             "text": "Integrate with HipChat\n\n\nBefore we dig into the details of elmah.io, you should sign up or log into HipChat. Create a new room for your team and go to the API page. Create a new token with the Notification type and label it something meaningful:\n\n\n\n\nWe will need the generated token in a minute, so keep that tab open.\n\n\nOn elmah.io, go to the Rules tab beneath your log settings. In this example we want a message on HipChat every time a new error is logged in our elmah.io log. To do this, name your rule and input a query like illustrated on the following screenshot:\n\n\n\n\nHit the Then link and select HTTP request. Input the following values (remember to replace YOUR_TOKEN and YOUR_ROOM):\n\n\n\n\n\n\n\n\nField\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nMethod\n\n\nPOST\n\n\n\n\n\n\nURL\n\n\nhttps://api.hipchat.com/v1/rooms/message?format=json\nauth_token=YOUR_TOKEN\n\n\n\n\n\n\nContent Type\n\n\napplication/x-www-form-urlencoded\n\n\n\n\n\n\nBody\n\n\nroom_id=YOUR_ROOM\nfrom=elmah.io\nmessage=$message\n\n\n\n\n\n\n\n\nThe final result should look like this:\n\n\n\n\nClick the OK button and add the new rule by clicking Add. This configuration tells elmah.io, to make a HTTP request against the HipChat API, every time a new error is logged. The message at elmah.io is shown as the chat message inside HipChat:", 
-            "title": "HipChat"
+            "title": "Integrating with HipChat manually"
         }, 
         {
             "location": "/integrate-elmah-io-with-hipchat/#integrate-with-hipchat", 
@@ -193,7 +263,7 @@
         {
             "location": "/integrate-elmah-io-with-zapier/", 
             "text": "Integrate with Zapier\n\n\nIn short Zapier is the place to go, if you need to integrate two or more online systems. In this article we use an integration point provided by elmah.io and Zapier called a trigger. A trigger is (as the name suggest) something that triggers an action in Zapier. In case of elmah.io, the trigger available is when new messages are logged to your log. Actions exists on the other side of the integration and tells Zapier what to do every time a trigger is fired. Hundreds of actions exists, in this example we use the GitHub action to create a new issue every time a new message is logged.\n\n\nCreate a new account on Zapier.com. Then click the Make a New Zap button. The create new Zap page is shown:\n\n\n\n\nSelect elmah.io in the \nChoose a Trigger app\u2026\n dropdown and then select \nNew Error\n in the \nChoose a Trigger\u2026\n dropdown. In the \nChoose an Action app\u2026\n select \nGitHub\n and select \nCreate Issue\n in the \nChoose an Action\u2026\n dropdown.\n\n\n\n\nThis configuration tells Zapier to create a new issue at GitHub, every time a new error is logged in elmah.io. The action could be one of the hundreds of other integrations available at Zapier. Click Continue.\n\n\nIn section 2 select the \nConnect a different elmah.io Account\n and input a name and the log id of the log you want to integrate:\n\n\n\n\nAuthorize your GitHub account (or whatever integration you\u2019ve selected in the action step) and click \nContinue\n. Step 4 isn\u2019t mandatory, but here you will be able to setup additional constraints to the Zap. If you\u2019re using elmah.io for other than errors, you can tell Zapier only to create a new GitHub issue when the message is an actual error:\n\n\n\n\nIn step 5 you specify how the new issue should create created. In this example I\u2019ve chosen the GitHub project for our open source client. For the title, I use two of the variables available from the elmah.io action. For a complete list of variables, click the Insert button next to each textbox. The variable will look something like this \u201cMyApp: An error occurred\u201d. The issue body contains the detail of the error (typically a stacktrace). Finally I\u2019ve selected \nbug\n as a label.\n\n\n\n\nTest the Zap an hit \nContinue\n:\n\n\n\n\nFinally, name your Zap and click the \nTurn Zap on\n button:\n\n\n\n\nWhen future errors are logged in your elmah.io log, a GitHub issue is automatically created. How awesome is that!", 
-            "title": "Zapier"
+            "title": "Integrating with Zapier"
         }, 
         {
             "location": "/integrate-elmah-io-with-zapier/#integrate-with-zapier", 

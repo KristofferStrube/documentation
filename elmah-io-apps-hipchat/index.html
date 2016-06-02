@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Use Extended User Details without Email as Id - elmah.io Documentation</title>
+	<title>HipChat - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -185,8 +185,8 @@
 					<a href="../elmah-io-apps-slack/">Slack</a>
 				</li>
 			
-				<li >
-					<a href="../elmah-io-apps-hipchat/">HipChat</a>
+				<li class="active">
+					<a href="./">HipChat</a>
 				</li>
 			
 				<li >
@@ -235,8 +235,8 @@
 					<a href="../remove-sensitive-form-data/">Remove sensitive form data</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Use Extended User Details without Email as Id</a>
+				<li >
+					<a href="../use-extended-user-details-without-email-as-id/">Use Extended User Details without Email as Id</a>
 				</li>
 			
 				<li >
@@ -264,26 +264,17 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="use-extended-user-details">Use Extended User Details</h1>
-<h2 id="without-email-as-id">without Email as Id</h2>
-<p>As you may know, ELMAH automatically logs the user identity as part of the error. To make that happen, ELMAH uses the identity object on the current thread, which gets set by most authentication frameworks for .NET (like ASP.NET Membership Provider and ASP.NET Identity). Some of you may use the users email as key while others use something like a database identifier. If you are using an email, you are already covered and able to see Extended User Details. If not, you need to provide elmah.io with a little help.</p>
-<p>In order to tell elmah.io about the users email and still keeping the identifier in the user field, you can enrich the message with a piece of custom data, before sending it off to elmah.io. In order to fully understand the code below, you need to know a bit about <code>ILogger</code>. <code>ILogger</code> is part of the raw <a href="http://www.nuget.org/packages/elmah.io.client">elmah.io client</a>, able to communicate with the <a href="https://elmah.io/api">elmah.io API</a>. <code>ILogger</code> isn’t dependent of ELMAH and it pretty much corresponds to other logging clients known from log4net, nlog etc.</p>
-<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
-var logger = ErrorLog.Client;
-logger.OnMessage += (sender, args) =&gt;
-{
-    if (string.IsNullOrWhiteSpace(args.Message.User)) return;
-    var db = ...;
-    var user = db.GetById&lt;User&gt;(args.Message.User);
-    args.Message.Data.Add(new Item {Key = &quot;X-ELMAHIO-USEREMAIL&quot;, Value = user.Email});
-}
-</code></pre>
-
-<p>The first line forces creation of the client. The elmah.io <code>ErrorLog</code> implementation uses a singleton <code>ILogger</code> to communicate with elmah.io.</p>
-<p>We then register a new event handler on the <code>OnMessage</code> event. <code>OnMessage</code> event handlers are executed just before a message is send to elmah.io. In the body of the event handler, the users email is fetched from the database by calling the <code>GetById</code> method. How you will be able to convert the user ID to an email depends on your tech stack, but you get the picture.</p>
-<p>In the last line the data collection of the message is enriched with a new key value pair. <code>X-ELMAHIO-USEREMAIL</code> tells elmah.io, that the value of that item contains the email of the user involved in the currently logged message.</p>
-<p>That’s it! 9 lines of code and you are able to watch every little details about the users experiencing problems on your website:</p>
-<p><img alt="Extended User Details" src="../images/extended_user_details.png" /></p>
+<h1 id="install-hipchat-app-for-elmahio">Install HipChat App for elmah.io</h1>
+<h2 id="generate-oauth-2-token">Generate OAuth 2 Token</h2>
+<p>In order to allow elmah.io to log messages to HipChat, you will need to generate an OAuth 2 token. To do so, log into HipChat and go to the <a href="https://elmahio.hipchat.com/account/api">API Access</a> page (replace <em>elmahio</em> with your subdomain).</p>
+<p><img alt="OAuth Tokens Page" src="../images/apps/hipchat/generate_token.png" /></p>
+<p>Input a label , click the <em>Create</em> button and copy the generated token.</p>
+<h2 id="install-the-hipchat-app-on-elmahio">Install the HipChat App on elmah.io</h2>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the HipChat app and click the <em>Install</em> button:</p>
+<p><img alt="Install HipChat App" src="../images/apps/hipchat/install_hipchat.png" /></p>
+<p>Paste the token copied in the previous step into the Token textbox. In the Room textbox, input the name of the HipChat chat room you want messages from elmah.io to show up.</p>
+<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, messages start appearing in the chat room that you configured.</p>
+<p>Finally, if you need more control on what to log, you should read our guide on <a href="http://docs.elmah.io/integrate-elmah-io-with-hipchat/">Integrating elmah.io with HipChat manually</a>.</p>
 
 
 <br/><br/>

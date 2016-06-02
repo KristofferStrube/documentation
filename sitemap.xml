@@ -108,6 +108,34 @@
     
         
     <url>
+     <loc>None/elmah-io-apps-slack/</loc>
+     <lastmod>2016-06-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/elmah-io-apps-hipchat/</loc>
+     <lastmod>2016-06-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/elmah-io-apps-github/</loc>
+     <lastmod>2016-06-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/elmah-io-apps-botbuster/</loc>
+     <lastmod>2016-06-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
      <loc>None/integrate-elmah-io-with-slack/</loc>
      <lastmod>2016-06-02</lastmod>
      <changefreq>daily</changefreq>
@@ -124,10 +152,6 @@
      <lastmod>2016-06-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
         
     <url>
      <loc>None/logging-custom-data/</loc>
