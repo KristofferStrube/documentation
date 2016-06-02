@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>ELMAH and custom errors - elmah.io Documentation</title>
+	<title>Creating apps for elmah.io - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -197,8 +197,8 @@
 					<a href="../elmah-io-apps-botbuster/">BotBuster</a>
 				</li>
 			
-				<li >
-					<a href="../creating-apps-for-elmah-io/">Creating apps for elmah.io</a>
+				<li class="active">
+					<a href="./">Creating apps for elmah.io</a>
 				</li>
 			
 			</ul>
@@ -259,8 +259,8 @@
 					<a href="../adding-version-information/">Adding version information</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">ELMAH and custom errors</a>
+				<li >
+					<a href="../elmah-and-custom-errors/">ELMAH and custom errors</a>
 				</li>
 			
 			</ul>
@@ -268,30 +268,96 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="elmah-and-custom-errors">ELMAH and custom errors</h1>
-<p>ELMAH and ASP.NET (MVC) custom errors isn't exactly known to be best friends. Question after questions have been posted on forums like Stack Overflow, from people having problems with ELMAH, when custom errors are configured. In fact these problems make perfect sense, since both ELMAH and custom errors are designed to catch errors and do something about them.</p>
-<p>Before looking at some code, we really recommend you to read Duston Moris Gorskis blog post <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>. It provides a great introduction to different ways of implementing custom error pages in ASP.NET MVC.</p>
-<p>Back to ELMAH. In most implementations of custom error pages, ASP.NET actually swallows any uncaught exceptions, putting ELMAH out of play. To overcome this issue, you can utilize MVC's <code>IExceptionFilter</code> to log all exceptions, whether or not it is handled by a custom error page:</p>
-<pre><code class="csharp">public class ElmahExceptionLogger : IExceptionFilter
-{
-    public void OnException (ExceptionContext context)
-    {
-        if (context.ExceptionHandled)
-        {
-            ErrorSignal.FromCurrentContext().Raise(context.Exception);
+<h1 id="creating-apps-for-elmahio">Creating Apps for elmah.io</h1>
+<p>Developing custom apps for elmah.io is possible through a bit of JSON and NuGet magic. This document show you how.</p>
+<p>Apps on elmah.io are basically a nice wrapper around the Business Rule Engine on elmah.io. Using business rules, users can execute various actions based on Lucene queries against logged messages. Ignore messages based on a specific user agent, call the Slack API when fatal messages are logged are just a few examples on the possibilities using rules.</p>
+<p>For this example we'll create a small app posting requests to RequestBin on every error. Probably not the most usable app, but serves the example well. RequestBin works by creating a bin, which you can then create HTTP requests against. Each bin contains a unique ID, which we will use in a second.</p>
+<h2 id="creating-manifestjson">Creating manifest.json</h2>
+<p>To start creating the app, create a new file named <code>manifest.json</code>:</p>
+<pre><code class="js">{
+    &quot;variables&quot;: [{
+        &quot;key&quot;: &quot;bin&quot;,
+        &quot;name&quot;: &quot;Bin&quot;,
+        &quot;description&quot;: &quot;The Id of the bin to post to&quot;,
+        &quot;example&quot;: &quot;1k5c4qb2&quot;,
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;required&quot;: true
+    }],
+    &quot;rule&quot;: {
+        &quot;title&quot;: &quot;Post a message to RequestBin on all messages&quot;,
+        &quot;query&quot;: &quot;severity: Error&quot;,
+        &quot;then&quot;: {
+            &quot;type&quot;: &quot;http&quot;,
+            &quot;url&quot;: &quot;http://requestb.in/$bin&quot;,
+            &quot;method&quot;: &quot;post&quot;,
+            &quot;contentType&quot;: &quot;application/json&quot;,
+            &quot;body&quot;: &quot;{\&quot;timestamp\&quot;: \&quot;$time\&quot;, \&quot;message\&quot;: \&quot;$message\&quot;, \&quot;severity\&quot;: \&quot;$severity\&quot;}&quot;
         }
     }
- }
-</code></pre>
-
-<p>The <code>OnException</code> method on <code>ElmahExceptionLogger</code> is executed every time an error is happening, by registering it in <code>Application_Start</code>:</p>
-<pre><code class="csharp">protected void Application_Start()
-{
-    ...
-    GlobalConfiguration.Configuration.Filters.Add(new ElmahExceptionLogger());
-    ...
 }
 </code></pre>
+
+<p>The manifest consists of two blocks: <code>variables</code> and <code>rule</code>. Variables serves as input for generating the UI when users add the app to their log on elmah.io. In variables you can ask the user for information needed in order to execute the rule like username and password, access tokens or as in this example, an id of a bin on RequestBin.</p>
+<p>For now, only <code>text</code> variables are available, but we may extend this with other types like <code>bool</code>, <code>number</code> etc.</p>
+<p>The <code>rule</code> section tell elmah.io what this app should do. The two important fields to notice here is <code>query</code> and <code>then</code>. These terms match 1:1 to the same terms in the business rules. <code>query</code> should contain either a full-text query string or a Lucene query. Every message logged, matching this query, triggers the <code>then</code> part of this app. For the simple app, we query messages based on <code>severity</code> and <code>userAgent</code>. For a complete list of search fields, visit the Rules tab on your log settings.</p>
+<p>In the <code>then</code> section we tell elmah.io what to do with messages matching the <code>query</code>. In this case, we want it to create a new HTTP request on http://requestb.in. Notice how the <code>$bin</code> variables from before is used as part of the URL. <code>body</code> contains examples on built-in variables like <code>$message</code> and <code>$time</code>. Built-in variables are documented on the Rules tab of the log settings as well.</p>
+<p>A final note about <code>then</code>. In this example we use the <code>"type": "http"</code> to allow elmah.io to make HTTP requests. Types corresponding to other actions available in the rule engine are available as well. These are <code>ignore</code>, <code>hide</code> and <code>email</code>.</p>
+<h2 id="creating-a-nuspec">Creating a NuSpec</h2>
+<p>Apps for elmah.io are distributed as NuGet packages. There's a few requirements you will need to satisfy in order for your app to show up in the elmah.io UI.</p>
+<p>Let's write a NuSpec for our app named <code>elmah.io.apps.requestbin.nuspec</code>:</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;package xmlns=&quot;http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd&quot;&gt;
+  &lt;metadata&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;authors&gt;elmah.io&lt;/authors&gt;
+    &lt;owners&gt;elmah.io&lt;/owners&gt;
+    &lt;id&gt;elmah.io.apps.requestbin&lt;/id&gt;
+    &lt;title&gt;RequestBin Integration&lt;/title&gt;
+    &lt;requireLicenseAcceptance&gt;false&lt;/requireLicenseAcceptance&gt;
+    &lt;description&gt;Post a new HTTP request to RequestBin when messages are logged in elmah.io.&lt;/description&gt;
+    &lt;projectUrl&gt;https://github.com/elmahio/elmah.io.apps.requestbin&lt;/projectUrl&gt;
+    &lt;iconUrl&gt;https://secure.gravatar.com/avatar/5c4cb3646528821117abde6d2d5ee22d?s=32&lt;/iconUrl&gt;
+    &lt;tags&gt;Error Exception Reporing Management Logging ELMAH Diagnostics Tracing RequestBin&lt;/tags&gt;
+  &lt;/metadata&gt;
+  &lt;files&gt;
+    &lt;file src=&quot;manifest.json&quot; target=&quot;manifest.json&quot; /&gt;
+  &lt;/files&gt;
+&lt;/package&gt;
+</code></pre>
+
+<p>The configuration is pretty simple. We include a single file (<code>manifest.json</code>) in the root of the package and name the package with <code>elmah.io.apps.</code> prefix. In fact this is a requirement for the package to work.</p>
+<h2 id="building-and-publishing-the-app">Building and Publishing the App</h2>
+<p>To build the app, we use <code>nuget.exe</code>:</p>
+<pre><code class="powershell">c:\projects\elmah.io.apps.requestbin&gt;nuget pack
+Attempting to build package from 'elmah.io.apps.requestbin.nuspec'.
+Successfully created package 'c:\projects\elmah.io.apps.requestbin\elmah.io.apps.requestbin.1.0.0.nupkg'.
+</code></pre>
+
+<p>To upload the package to NuGet, use <code>nuget push</code>:</p>
+<pre><code class="powershell">c:\projects\elmah.io.apps.requestbin&gt;nuget push elmah.io.apps.requestbin.1.0.0.nupkg MyApiKey
+Pushing elmah.io.apps.requestbin 1.0.0 to the NuGet gallery (https://www.nuget.org)...
+Your package was pushed.
+</code></pre>
+
+<p>(replace <code>MyApiKey</code> with your API Key located on nuget.org)</p>
+<p>That's it folks. The app is now public and available in elmah.io.</p>
+<h2 id="testing-the-package">Testing the Package</h2>
+<p>To test that everything is working, we'll start by creating a new bin on RequestBin. Go to <a href="http://requestb.in/">http://requestb.in/</a> and click the <em>Create a RequestBin</em> button:</p>
+<p><img alt="Bin Created" src="../images/create_requestbin.png" /></p>
+<p>In this case, the bin ID is <code>1chhlvo1</code>.</p>
+<p>Log into elmah.io and go to the Apps tab on the log settings. The RequestBin app is available from the list of apps in the bottom. Click the <em>Install</em> button:</p>
+<p><img alt="RequestBin Settings" src="../images/requestbin_settings.png" /></p>
+<p>Observe how the <code>bin</code> variable from <code>manifest.json</code> shows up in the log settings with the <code>description</code> and <code>example</code> as we specified.</p>
+<p>Input the bin ID and click the <em>Save</em> button.</p>
+<p>To test that everything is working, you can use elmah.io's API to publish a new message to your log, which should match the query specified in <code>manifest.json</code>:</p>
+<pre><code class="powershell">curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;: &quot;Manual error&quot;, &quot;severity&quot;: &quot;Error&quot;}' https://elmah.io/api/v2/messages?logId=MyLogId
+</code></pre>
+
+<p>(replace <code>MyLogId</code> with your log ID)</p>
+<p>Refresh the bin at RequestBin and observe the HTTP request performed by the app:</p>
+<p><img alt="HTTP request in RequestBin" src="../images/requestbin_message.png" /></p>
+<p>Isn't that just the most awesome thing you have seen all day? The JSON format specified in <code>manifest.json</code> now ends up on RequestBin using a homebrewed elmah.io app.</p>
+<p>To see more examples of elmah.io apps, check out <a href="https://github.com/elmahio/elmah.io.apps.slack">elmah.io.apps.slack</a>, <a href="https://github.com/elmahio/elmah.io.apps.hipchat">elmah.io.apps.hipchat</a> and <a href="https://github.com/elmahio/elmah.io.apps.github">elmah.io.apps.github</a> all available on GitHub. For even more information, get in contact. We are always happy to help, even if you're just playing around with app development for the fun of it.</p>
 
 
 <br/><br/>
