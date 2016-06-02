@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from ServiceStack - elmah.io Documentation</title>
+	<title>Logging from ASP.NET MVC - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -119,8 +119,8 @@
 					<a href="../logging-to-elmah-io-from-elmah/">Logging from ELMAH</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-aspnet-mvc/">Logging from ASP.NET MVC</a>
+				<li class="active">
+					<a href="./">Logging from ASP.NET MVC</a>
 				</li>
 			
 				<li >
@@ -143,8 +143,8 @@
 					<a href="../logging-to-elmah-io-from-nancy/">Logging from Nancy</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from ServiceStack</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-servicestack/">Logging from ServiceStack</a>
 				</li>
 			
 				<li >
@@ -248,18 +248,16 @@
 </div></div>
             <div class="col-md-9" role="main" style="border-left: 1px solid #eee;">
 
-<h1 id="logging-from-servicestack">Logging from ServiceStack</h1>
-<p>Logging errors to elmah.io from ServiceStack is almost as easy as installing in MVC and Web API. The folks over at ServiceStack provide you with a NuGet package named ServiceStack.Logging.Elmah. Like Web API you need to tell ServiceStack to use ELMAH as logging framework for errors, besides adding the standard ELMAH configuration in web.config. Start by installing both ServiceStack.Logging.Elmah and elmah.io into your ServiceStack web project:</p>
-<pre><code class="powershell">Install-Package ServiceStack.Logging.Elmah
+<h1 id="logging-from-aspnet-mvc">Logging from ASP.NET MVC</h1>
+<p>Even though ELMAH works out of the box with ASP.NET MVC, ELMAH and MVC provides some features with interfere with one another. As usual, the great community around ELMAH have done something to fix this, using the [Elmah.Mvc][https://www.nuget.org/packages/Elmah.MVC/] NuGet package.</p>
+<p>To start logging exceptions from ASP.NET MVC, install the NuGet packages:</p>
+<pre><code class="powershell">Install-Package Elmah.MVC
 Install-Package elmah.io
 </code></pre>
 
-<p>Once installed, add the following line to your AppHost:</p>
-<pre><code class="csharp">LogManager.LogFactory = new ElmahLogFactory(new NLogFactory());
-</code></pre>
-
-<p>The above example assumes that you are already using NLog as the existing framework for logging. Wrapping different logger factories in each other actually makes it possible to log errors through ELMAH and other types of messages like warnings and info messages through another logging framework. If you don’t need anything other than ELMAH logging, use the NullLogFactory instead of NLogFactory.</p>
-<p>That’s it! By installing both the ServiceStack.Logging.Elmah and elmah.io packages, you should have sufficient configuration in your web.config to start logging like a pro.</p>
+<p>That's basically it. Every unhandled exception in ASP.NET MVC, is logged to elmah.io.</p>
+<p>So why install <code>Elmah.MVC</code> at all, when the <code>elmah.io</code> package works out of the box? For starters, <code>Elmah.MVC</code> adds some interesting logic around routing and authentication, which matches how things are handled in MVC. Take a look in the <code>web.config</code> for application settings with the <code>elmah.mvc.</code> prefix. For documentation about these settings, check out the <a href="https://github.com/alexbeletsky/elmah-mvc">Elmah.MVC project</a> on GitHub.</p>
+<p>Since <code>Elmah.MVC</code> configures its own URL for accessing the ELMAH UI (just <code>/elmah</code> and not <code>/elmah.axd</code>), you can remove the <code>location</code> element in <code>web.config</code>, added by the <code>elmah.io</code> NuGet package installer.</p>
 
 
 <br/><br/>
