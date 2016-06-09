@@ -92,6 +92,12 @@
     </url>
         
     <url>
+     <loc>None/logging-to-elmah-io-from-express/</loc>
+     <lastmod>2016-06-09</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>None/configure-elmah-io-manually/</loc>
      <lastmod>2016-06-09</lastmod>
      <changefreq>daily</changefreq>
