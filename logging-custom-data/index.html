@@ -301,10 +301,28 @@ logger.OnMessage += (sender, args) =&gt;
 
 <p>You may not have seen the Logger type of elmah.io before, but what’s important to know right now is, that Logger is responsible for logging messages to the elmah.io API. Another new term here is Message. A message is the type encapsulating all of the information about the thrown exception.</p>
 <p>In the code example I subscribe a new event handler to the <code>OnMessage</code> event. This tells the elmah.io client to execute your event handler, before actually logging an exception to elmah.io. I use the event to add a custom variable to the <code>Data</code> dictionary of the message logged to elmah.io.</p>
-<h3 id="looking-at-your-custom-variables">Looking at your custom variables</h3>
+<h3 id="looking-at-your-custom-data">Looking at your custom data</h3>
 <p>Logging custom data doesn’t really make anything easier, unless you have a place to show them. Luckily for you, we have thought about that and now offers a new tab on the error details:</p>
 <p><img alt="Custom Variables" src="../images/looking_at_custom_variables.gif" /></p>
 <p>Like the content in the other tabs of the error details, you will be able to filter results by the variable key.</p>
+<h3 id="searching-custom-data">Searching custom data</h3>
+<p>Custom data is not searchable by default. Some times it makes sense, that errors can be searched from values logged as part of custom data. For now, this feature is supported through the use of variable naming, but we may extend this to a configuration option through the UI as well.</p>
+<p>To make a custom variable and its value searchable through the UI (as well as through the API), name the variable with the prefix <code>X-ELMAHIO-SEARCH-</code>. The variable will become searchable through the name added after the prefix.</p>
+<p>Example:</p>
+<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null);
+var logger = ErrorLog.Client;
+logger.OnMessage += (sender, args) =&gt;{
+    if (args.Message.Data == null) args.Message.Data = new List&lt;Item&gt;();
+    args.Message.Data.Add(new Item { Key = &quot;X-ELMAHIO-SEARCH-myVariable&quot;, Value = &quot;Some funky value&quot; });
+};
+</code></pre>
+
+<p>would make <code>myVariable</code> searchable using this query:</p>
+<pre><code>data.myVariable:funky
+</code></pre>
+
+<p>Observe how the <code>X-ELMAHIO-SEARCH-</code> prefix is replaced with the <code>data.</code> prefix when indexed in elmah.io.</p>
+<p>To avoid someone filling up our cluster with custom data, only the first three variables prefixed with <code>X-ELMAHIO-SEARCH-</code> are made searchable. Also, variables with a value containing more than 256 characters are not indexed.</p>
 
 
 <br/><br/>
