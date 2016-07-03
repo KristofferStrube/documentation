@@ -148,6 +148,12 @@
     
         
     <url>
+     <loc>None/using-the-rest-api/</loc>
+     <lastmod>2016-07-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>None/integrate-elmah-io-with-slack/</loc>
      <lastmod>2016-07-03</lastmod>
      <changefreq>daily</changefreq>
