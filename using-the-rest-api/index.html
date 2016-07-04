@@ -337,9 +337,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>Now only <code>81C7C282C9FDAEA3</code> shows up, since that message contains the text <code>another</code> in the <code>title</code> field. Like specifying the <code>query</code> parameter, you can limit the number of messages using the <code>from</code>, <code>to</code> and <code>pagesize</code> parameters.</p>
 <h3 id="deleting-a-message">Deleting a message</h3>
-<p>TODO</p>
+<p>When fixing the bug causing an error logged at elmah.io, you may want to delete the error. Deleting a single error is as easy as fetching it. Create a DELETE request to the errors unique URL: <code>https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID</code>.</p>
+<p>When successfully deleted, the delete endpoint returns at HTTP status code of <code>200</code>.</p>
 <h3 id="deleting-messages">Deleting messages</h3>
-<p>TODO</p>
+<p>Deleting messages one by one can be tedious work. To delete multiple errors, you can utilize the Delete Messages endpoint by creating a DELETE request to: <code>https://elmah.io/api/v2/messages?logid=LOG_ID</code>. The request <strong>must</strong> contain a body with at least a query:</p>
+<pre><code class="json">{
+    &quot;query&quot;: &quot;test&quot;
+}
+</code></pre>
+
+<p>An option for deleting messages by date range is available as well. Check out the API documentation for details.</p>
 <h3 id="hiding-a-message">Hiding a message</h3>
 <p>Depending on your use case, you may want to hide a message, rather than deleting it. Hidden messages are not shown as default through neither the UI, nor the REST API. But you will be able to search for them by enabling the <code>Hidden</code> checkbox on the UI.</p>
 <p>To hide a message, use the <code>_hide</code> endpoints like this: <code>https://elmah.io/api/v2/messages/_hide?id=99CDEA3D6A631F09&amp;logid=LOG_ID</code>.</p>
