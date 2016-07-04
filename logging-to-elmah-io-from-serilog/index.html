@@ -300,6 +300,23 @@ catch (Exception e) {
 </code></pre>
 
 <p>The Error method tells Serilog to log the error in the configured sinks, which in our case logs to elmah.io. Simple and beautiful.</p>
+<h2 id="logging-custom-properties">Logging custom properties</h2>
+<p>Serilog support logging custom properties in three ways: As part of the log message, through enrichers and using <code>LogContext</code>. All three types of properties are implemented in the elmah.io sink as part of the Data dictionary to elmah.io.</p>
+<p>The following example shows how to log all three types of properties:</p>
+<pre><code class="csharp">var logger =
+    new LoggerConfiguration()
+        .Enrich.WithProperty(&quot;ApplicationIdentifier&quot;, &quot;MyCoolApp&quot;)
+        .Enrich.FromLogContext()
+        .WriteTo.ElmahIO(new Guid(&quot;a6ac10b1-98b3-495f-960e-424fb18e3caf&quot;))
+        .CreateLogger();
+
+using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.ManagedThreadId))
+{
+    logger.Error(&quot;This is a message with {Type} properties&quot;, &quot;custom&quot;);
+}
+</code></pre>
+
+<p>Beneath the Data tab on the logged message details, the <code>ApplicationIdentifier</code>, <code>ThreadId</code> and <code>Type</code> properties can be found.</p>
 
 
 <br/><br/>
