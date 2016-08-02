@@ -298,21 +298,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <blockquote>
 <p>The elmah.io provider for ASP.NET logging is currently in beta. We would really appreciate some feedback from you guys.</p>
 </blockquote>
-<p>To log all warnings and errors from ASP.NET, install the following NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Extensions.Logging -Pre
+<p>To log all warnings and errors from ASP.NET (Core), install the following NuGet package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.AspNetCore -Pre
 </code></pre>
 
 <p>Configure the elmah.io logger in <code>Startup.cs</code> or whatever file you are using to initialize your web app:</p>
 <pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory fac)
 {
-    loggerFactory.AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
+    app.UseElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
 }
 </code></pre>
 
 <p>(replace <code>API_KEY</code> with your API key found on your profile on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
+<p>To decorate errors with information about the failing request, you will need to install the <a href="https://www.nuget.org/packages/Microsoft.AspNetCore.Http/">Microsoft.AspNetCore.Http</a>  NuGet package and register <code>IHttpContextAccessor</code> in <code>Startup.cs</code>:</p>
+<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
+    ...
+}
+</code></pre>
+
 <p>That's it. Every warning and error will be logged to elmah.io. Logging manuel errors are as easy as 1-2-3:</p>
 <pre><code class="csharp">logger.LogError(1, new Exception(), &quot;Unexpected error&quot;);
 </code></pre>
+
+<p>where <code>logger</code> is an instance of <code>Microsoft.Extensions.Logging.ILogger</code>.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
