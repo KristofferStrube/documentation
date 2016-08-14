@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from JSNLog - elmah.io Documentation</title>
+	<title>Logging from Logary - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -171,8 +171,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-umbraco/">Logging from Umbraco</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from JSNLog</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-jsnlog/">Logging from JSNLog</a>
 				</li>
 			
 				<li >
@@ -187,8 +187,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-express/">Logging from Express</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-logary/">Logging from Logary</a>
+				<li class="active">
+					<a href="./">Logging from Logary</a>
 				</li>
 			
 				<li >
@@ -297,40 +297,46 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<p>﻿# Logging from JSNLog</p>
-<p>Using JSNLog you will be able to log JavaScript errors to elmah.io. In this sample, we will focus about logging JavaScript errors from a ASP.NET MVC web application, but you can use JSNLog to log anything to elmah.io, so please check out their documentation.</p>
-<p>Start by installing the JSNLog.Elmah package:</p>
-<pre><code class="powershell">Install-Package JSNLog.Elmah
+<h1 id="logging-from-logary">Logging from Logary</h1>
+<p>Logary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are at perfect fit, since elmah.io has been designed with semantics from the ground up.</p>
+<p>In this tutorial we’ll add Logary to an Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:</p>
+<pre><code class="powershell">Install-Package Logary.Targets.Elmah.Io
 </code></pre>
 
-<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then install elmah.io:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<h2 id="configuration-in-f">Configuration in F&#35;</h2>
+<p>Configure elmah.io just like you would any normal target:</p>
+<pre><code class="fsharp">withTargets [
+  // ...
+  ElmahIO.create { ElmahIO with logId = &quot;LOG_ID&quot; } &quot;elmah.io&quot;
+] &gt;&gt;
+withRules [
+ // ...
+ Rule.createForTarget &quot;elmah.io&quot;
+]
 </code></pre>
 
-<p>Remember to input a valid log id during the installation. Add the JSNLog code before any script imports in your _Layout.cshtml file:</p>
-<pre><code class="csharp">@Html.Raw(JSNLog.JavascriptLogging.Configure())
+<p>where <code>LOG_ID</code> is the id of your log.</p>
+<h2 id="configuration-in-c">Configuration in C&#35;</h2>
+<p>Configuration in C# is just as easy:</p>
+<pre><code class="csharp">.Target&lt;ElmahIO.Builder&gt;(
+  &quot;elmah.io&quot;,
+  conf =&gt; conf.Target.SendTo(apiKey: &quot;LOG_ID&quot;))
 </code></pre>
 
-<p>You are ready to log errors from JavaScript til elmah.io. To test that everything is installed correctly, launch your web application and execute the following JavaScript using Chrome Developer Tools or similar:</p>
-<pre><code class="javascript">JL().fatal(&quot;log message&quot;);
+<p>where <code>LOG_ID</code> is the id of your log.</p>
+<h2 id="logging">Logging</h2>
+<p>To start logging messages to elmah.io, you can use the following F# code:</p>
+<pre><code class="fsharp">let logger = logary.getLogger (PointName [| &quot;Logary&quot;; &quot;Samples&quot;; &quot;main&quot; |])
+
+Message.event Info &quot;User logged in&quot;
+  |&gt; Message.setField &quot;userName&quot; &quot;haf&quot;
+  |&gt; Logger.logSimple logger
+
 </code></pre>
 
-<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be build into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
-<pre><code class="javascript">&lt;script&gt;
-window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-
-    // Send object with all data to server side log, using severity fatal,
-    // from logger &quot;onerrorLogger&quot;
-    JL(&quot;onerrorLogger&quot;).fatalException({
-        &quot;msg&quot;: &quot;Exception!&quot;,
-        &quot;errorMsg&quot;: errorMsg, &quot;url&quot;: url,
-        &quot;line number&quot;: lineNumber, &quot;column&quot;: column
-    }, errorObj);
-
-    // Tell browser to run its own error handler as well  
-    return false;
-}
-&lt;/script&gt;
+<p>or in C#:</p>
+<pre><code class="csharp">var logger = logary.GetLogger(&quot;Logary.CSharpExample&quot;);
+logger.LogEventFormat(LogLevel.Fatal, &quot;Unhandled {exception}!&quot;, e);
 </code></pre>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
