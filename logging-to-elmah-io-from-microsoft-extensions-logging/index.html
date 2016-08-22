@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from ASP.NET Core - elmah.io Documentation</title>
+	<title>Logging from Microsoft.Extensions.Logging - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -139,8 +139,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-web-api/">Logging from Web API</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from ASP.NET Core</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-aspnet-core/">Logging from ASP.NET Core</a>
 				</li>
 			
 				<li >
@@ -155,8 +155,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-nlog/">Logging from NLog</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-microsoft-extensions-logging/">Logging from Microsoft.Extensions.Logging</a>
+				<li class="active">
+					<a href="./">Logging from Microsoft.Extensions.Logging</a>
 				</li>
 			
 				<li >
@@ -297,37 +297,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-from-aspnet-core">Logging from ASP.NET Core</h1>
-<p>Since ELMAH hasn't been ported to ASP.NET Core yet, we've built a provider for the new logging abstraction bundled with ASP.NET Core: <a href="https://github.com/aspnet/Logging">Microsoft.Extensions.Logging</a>.</p>
-<blockquote>
-<p>The elmah.io provider for ASP.NET logging is currently in beta. We would really appreciate some feedback from you guys.</p>
-</blockquote>
-<p>To log all warnings and errors from ASP.NET (Core), install the following NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.AspNetCore -Pre
+<h1 id="logging-from-microsoftextensionslogging">Logging from Microsoft.Extensions.Logging</h1>
+<p><a href="https://github.com/aspnet/Logging">Microsoft.Extensions.Logging</a> is a common logging abstraction from Microsoft, much like log4net and Serilog. Microsoft.Extensions.Logging started as a new logging mechanism for ASP.NET Core, but now acts as a logging framework for all sorts of project types.</p>
+<p>Start by installing the <a href="https://www.nuget.org/packages/Elmah.Io.Extensions.Logging/">Elmah.Io.Extensions.Logging</a> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Extensions.Logging -Pre
 </code></pre>
 
-<p>Configure the elmah.io logger in <code>Startup.cs</code> or whatever file you are using to initialize your web app:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory fac)
-{
-    app.UseElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
-}
+<p>Then create a new <code>LoggerFactory</code>:</p>
+<pre><code class="csharp">var factory = new LoggerFactory();
 </code></pre>
 
-<p>(replace <code>API_KEY</code> with your API key found on your profile on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
-<p>To decorate errors with information about the failing request, you will need to install the <a href="https://www.nuget.org/packages/Microsoft.AspNetCore.Http/">Microsoft.AspNetCore.Http</a>  NuGet package and register <code>IHttpContextAccessor</code> in <code>Startup.cs</code>:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    ...
-    services.AddSingleton&lt;IHttpContextAccessor, HttpContextAccessor&gt;();
-    ...
-}
+<p>A dependency injection based application like ASP.NET Core would get <code>ILoggerFactory</code> injected instead.</p>
+<p>Configure Microsoft.Extensions.Logging to use elmah.io:</p>
+<pre><code class="csharp">factory.AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
 </code></pre>
 
-<p>That's it. Every warning and error will be logged to elmah.io. Logging manuel errors are as easy as 1-2-3:</p>
-<pre><code class="csharp">logger.LogError(1, new Exception(), &quot;Unexpected error&quot;);
+<p>Replace <code>API_KEY</code> with your API key found on the profile page and <code>LOG_ID</code> with the id of the log you wish to log to.</p>
+<p>Finally create a new logger and start logging exceptions:</p>
+<pre><code class="csharp">var logger = factory.CreateLogger(&quot;MyLog&quot;);
+logger.LogError(1, ex, &quot;Unexpected error&quot;);
 </code></pre>
-
-<p>where <code>logger</code> is an instance of <code>Microsoft.Extensions.Logging.ILogger</code>.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
