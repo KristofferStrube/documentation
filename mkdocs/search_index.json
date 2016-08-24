@@ -106,6 +106,31 @@
             "title": "Logging from Microsoft.Extensions.Logging"
         }, 
         {
+            "location": "/logging-to-elmah-io-from-logary/", 
+            "text": "Logging from Logary\n\n\nLogary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are at perfect fit, since elmah.io has been designed with semantics from the ground up.\n\n\nIn this tutorial we\u2019ll add Logary to an Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:\n\n\nInstall-Package Logary.Targets.Elmah.Io\n\n\n\n\nConfiguration in F\n\n\nConfigure elmah.io just like you would any normal target:\n\n\nwithTargets [\n  // ...\n  ElmahIO.create { ElmahIO with logId = \nLOG_ID\n } \nelmah.io\n\n] \n\nwithRules [\n // ...\n Rule.createForTarget \nelmah.io\n\n]\n\n\n\n\nwhere \nLOG_ID\n is the id of your log.\n\n\nConfiguration in C\n\n\nConfiguration in C# is just as easy:\n\n\n.Target\nElmahIO.Builder\n(\n  \nelmah.io\n,\n  conf =\n conf.Target.SendTo(apiKey: \nLOG_ID\n))\n\n\n\n\nwhere \nLOG_ID\n is the id of your log.\n\n\nLogging\n\n\nTo start logging messages to elmah.io, you can use the following F# code:\n\n\nlet logger = logary.getLogger (PointName [| \nLogary\n; \nSamples\n; \nmain\n |])\n\nMessage.event Info \nUser logged in\n\n  |\n Message.setField \nuserName\n \nhaf\n\n  |\n Logger.logSimple logger\n\n\n\n\n\nor in C#:\n\n\nvar logger = logary.GetLogger(\nLogary.CSharpExample\n);\nlogger.LogEventFormat(LogLevel.Fatal, \nUnhandled {exception}!\n, e);", 
+            "title": "Logging from Logary"
+        }, 
+        {
+            "location": "/logging-to-elmah-io-from-logary/#logging-from-logary", 
+            "text": "Logary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are at perfect fit, since elmah.io has been designed with semantics from the ground up.  In this tutorial we\u2019ll add Logary to an Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:  Install-Package Logary.Targets.Elmah.Io", 
+            "title": "Logging from Logary"
+        }, 
+        {
+            "location": "/logging-to-elmah-io-from-logary/#configuration-in-f", 
+            "text": "Configure elmah.io just like you would any normal target:  withTargets [\n  // ...\n  ElmahIO.create { ElmahIO with logId =  LOG_ID  }  elmah.io \n]  \nwithRules [\n // ...\n Rule.createForTarget  elmah.io \n]  where  LOG_ID  is the id of your log.", 
+            "title": "Configuration in F&#35;"
+        }, 
+        {
+            "location": "/logging-to-elmah-io-from-logary/#configuration-in-c", 
+            "text": "Configuration in C# is just as easy:  .Target ElmahIO.Builder (\n   elmah.io ,\n  conf =  conf.Target.SendTo(apiKey:  LOG_ID ))  where  LOG_ID  is the id of your log.", 
+            "title": "Configuration in C&#35;"
+        }, 
+        {
+            "location": "/logging-to-elmah-io-from-logary/#logging", 
+            "text": "To start logging messages to elmah.io, you can use the following F# code:  let logger = logary.getLogger (PointName [|  Logary ;  Samples ;  main  |])\n\nMessage.event Info  User logged in \n  |  Message.setField  userName   haf \n  |  Logger.logSimple logger  or in C#:  var logger = logary.GetLogger( Logary.CSharpExample );\nlogger.LogEventFormat(LogLevel.Fatal,  Unhandled {exception}! , e);", 
+            "title": "Logging"
+        }, 
+        {
             "location": "/logging-to-elmah-io-from-nancy/", 
             "text": "Logging from Nancy\n\n\nAs with MVC and WebAPI, Nancy already provides ELMAH support out of the box. Start by installing the elmah.io NuGet package:\n\n\nInstall-Package elmah.io\n\n\n\n\nTo integrate Nancy and ELMAH, Christian Westman already did a great job with his Nancy.Elmah project. Install it using NuGet:\n\n\nInstall-Package Nancy.Elmah\n\n\n\n\nIt\u2019s important that you install the elmah.io package before Nancy.Elmah, because both packages likes to add the ELMAH configuration to the web.config file. If you install it the other way around, you will need to add the elmah.io ErrorLog element manually.\n\n\nIn order for Nancy to know how to log errors to Elmah, you need to add an override of the DefaultNancyBootstrapper. Create a new class in the root named Bootstrapper:\n\n\nusing Nancy;\nusing Nancy.Bootstrapper;\nusing Nancy.Elmah;\nusing Nancy.TinyIoc;\n\nnamespace Elmah.Io.NancyExample\n{\n    public class Bootstrapper : DefaultNancyBootstrapper\n    {\n        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)\n        {\n            base.ApplicationStartup(container, pipelines);\n            Elmahlogging.Enable(pipelines, \nelmah\n);\n        }\n    }\n}\n\n\n\n\nThe important thing in the code sample is line 13, where we tell Nancy.Elmah to hook into the pipeline of Nancy in order for it to catch and log HTTP errors. The second parameter for the Enable-method, lets us define a URL for the ELMAH error page, which can be used as an alternative to elmah.io for quick viewing of errors.", 
             "title": "Logging from Nancy"
