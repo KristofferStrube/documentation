@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from Logary - elmah.io Documentation</title>
+	<title>Creating Rules to Perfor Actions on Messages - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -159,8 +159,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-microsoft-extensions-logging/">Logging from Microsoft.Extensions.Logging</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from Logary</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-logary/">Logging from Logary</a>
 				</li>
 			
 				<li >
@@ -291,8 +291,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../using-the-rest-api/">Using the REST API</a>
 				</li>
 			
-				<li >
-					<a href="../creating-rules-to-perform-actions-on-messages/">Creating Rules to Perfor Actions on Messages</a>
+				<li class="active">
+					<a href="./">Creating Rules to Perfor Actions on Messages</a>
 				</li>
 			
 				<li >
@@ -313,47 +313,93 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-from-logary">Logging from Logary</h1>
-<p>Logary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are at perfect fit, since elmah.io has been designed with semantics from the ground up.</p>
-<p>In this tutorial we’ll add Logary to an Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:</p>
-<pre><code class="powershell">Install-Package Logary.Targets.Elmah.Io
-</code></pre>
-
-<h2 id="configuration-in-f">Configuration in F&#35;</h2>
-<p>Configure elmah.io just like you would any normal target:</p>
-<pre><code class="fsharp">withTargets [
-  // ...
-  ElmahIO.create { ElmahIO with logId = &quot;LOG_ID&quot; } &quot;elmah.io&quot;
-] &gt;&gt;
-withRules [
- // ...
- Rule.createForTarget &quot;elmah.io&quot;
-]
-</code></pre>
-
-<p>where <code>LOG_ID</code> is the id of your log.</p>
-<h2 id="configuration-in-c">Configuration in C&#35;</h2>
-<p>Configuration in C# is just as easy:</p>
-<pre><code class="csharp">.Target&lt;ElmahIO.Builder&gt;(
-  &quot;elmah.io&quot;,
-  conf =&gt; conf.Target.SendTo(apiKey: &quot;LOG_ID&quot;))
-</code></pre>
-
-<p>where <code>LOG_ID</code> is the id of your log.</p>
-<h2 id="logging">Logging</h2>
-<p>To start logging messages to elmah.io, you can use the following F# code:</p>
-<pre><code class="fsharp">let logger = logary.getLogger (PointName [| &quot;Logary&quot;; &quot;Samples&quot;; &quot;main&quot; |])
-
-Message.event Info &quot;User logged in&quot;
-  |&gt; Message.setField &quot;userName&quot; &quot;haf&quot;
-  |&gt; Logger.logSimple logger
-
-</code></pre>
-
-<p>or in C#:</p>
-<pre><code class="csharp">var logger = logary.GetLogger(&quot;Logary.CSharpExample&quot;);
-logger.LogEventFormat(LogLevel.Fatal, &quot;Unhandled {exception}!&quot;, e);
-</code></pre>
+<h1 id="creating-rules-to-perform-actions-on-messages">Creating Rules to Perform Actions on Messages</h1>
+<p>elmah.io comes with a great rule engine for performing various actions when messages are logged in your log. The rule engine is located beneath each log on the log settings page:</p>
+<p><img alt="Rules Tab" src="../images/rulestab.png" /></p>
+<p>A rule consists of three parts: a title, a query and an action.</p>
+<p>The title should be a short text explaining what this rule does. We don't use the title for anything, so please write something that helps you identify rules and to keep them apart.</p>
+<p>The query should contain either a full-text search string or a Lucene query. When new messages are logged, the message is matched up against all queries registered on that log. If and only if a message matches a query, the action registered on the rule is performed.</p>
+<p>As mentioned above, the action part of a rule is executed when a message matches the query specified in the same rule. An action can be one of four types: Ignore, Hide, Mail and HTTP Request. In order to illustrate how to use each action type, here are four examples on useful rules.</p>
+<h2 id="ignore-errors-with-a-http-status-code-of-400">Ignore errors with a HTTP status code of 400</h2>
+<p>To ignore all messages with a HTTP status code of 400, you would need to set up the following:</p>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Query</th>
+<th>Then</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ignore 400s</td>
+<td><code>statusCode:400</code></td>
+<td>Ignore</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Then</em> part would look like this:</p>
+<p><img alt="Then Ignore" src="../images/thenignore.png" /></p>
+<h2 id="hide-warnings">Hide warnings</h2>
+<p>To hide all messages with a severity of <code>Warning</code>, you would need to set up the following:</p>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Query</th>
+<th>Then</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hide Warnings</td>
+<td><code>severity:Warning</code></td>
+<td>Hide</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Then</em> part would look like this:</p>
+<p><img alt="Then Ignore" src="../images/thenhide.png" /></p>
+<h2 id="send-an-email-on-all-messages-containing-a-word">Send an email on all messages containing a word</h2>
+<p>To send an email on all messages containing the word <em>billing</em> somewhere, you would need to set up the following:</p>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Query</th>
+<th>Then</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mail on billing</td>
+<td><code>billing</code></td>
+<td>Email</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Then</em> part would look like this:</p>
+<p><img alt="Then Email" src="../images/thenemail.png" /></p>
+<h2 id="make-a-http-request-on-all-new-and-fatal-messages">Make a HTTP request on all new and fatal messages</h2>
+<p>To make a HTTP request on every new message with a severity of <code>Fatal</code>, you would need to set up the following:</p>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Query</th>
+<th>Then</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request on new fatal</td>
+<td><code>isNew:true AND severity:Fatal</code></td>
+<td>HTTP</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Then</em> part would look like this:</p>
+<p><img alt="Then HTTP" src="../images/thenhttp.png" /></p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
