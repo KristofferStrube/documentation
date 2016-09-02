@@ -315,7 +315,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <h1 id="creating-apps-for-elmahio">Creating Apps for elmah.io</h1>
 <p>Developing custom apps for elmah.io is possible through a bit of JSON and NuGet magic. This document show you how.</p>
-<p>Apps on elmah.io are basically a nice wrapper around the Business Rule Engine on elmah.io. Using business rules, users can execute various actions based on Lucene queries against logged messages. Ignore messages based on a specific user agent, call the Slack API when fatal messages are logged are just a few examples on the possibilities using rules.</p>
+<p>Apps on elmah.io are basically a nice wrapper around the Business Rule Engine on elmah.io. Using business rules, users can execute various actions based on full-text and Lucene queries against logged messages. Ignore messages based on a specific user agent or call the Slack API when fatal messages are logged are just a few examples on the possibilities using rules.</p>
 <p>For this example we'll create a small app posting requests to RequestBin on every error. Probably not the most usable app, but serves the example well. RequestBin works by creating a bin, which you can then create HTTP requests against. Each bin contains a unique ID, which we will use in a second.</p>
 <h2 id="creating-manifestjson">Creating manifest.json</h2>
 <p>To start creating the app, create a new file named <code>manifest.json</code>:</p>
@@ -343,8 +343,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>The manifest consists of two blocks: <code>variables</code> and <code>rule</code>. Variables serves as input for generating the UI when users add the app to their log on elmah.io. In variables you can ask the user for information needed in order to execute the rule like username and password, access tokens or as in this example, an id of a bin on RequestBin.</p>
-<p>For now, only <code>text</code> variables are available, but we may extend this with other types like <code>bool</code>, <code>number</code> etc.</p>
-<p>The <code>rule</code> section tell elmah.io what this app should do. The two important fields to notice here is <code>query</code> and <code>then</code>. These terms match 1:1 to the same terms in the business rules. <code>query</code> should contain either a full-text query string or a Lucene query. Every message logged, matching this query, triggers the <code>then</code> part of this app. For the simple app, we query messages based on <code>severity</code> and <code>userAgent</code>. For a complete list of search fields, visit the Rules tab on your log settings.</p>
+<p>For now, only <code>text</code>, <code>select</code> and <code>number</code> variables are available, but we may extend this with other types like <code>checkbox</code>, <code>ipaddress</code> etc.</p>
+<p>The <code>rule</code> section tell elmah.io what this app should do. Specifying a rule is optional and makes sense when creating apps that listen for messages matching a query. The two important fields to notice here is <code>query</code> and <code>then</code>. These terms match 1:1 to the same terms in the business rules. <code>query</code> should contain either a full-text query string or a Lucene query. Every message logged, matching this query, triggers the <code>then</code> part of this app. For the simple app, we query messages based on <code>severity</code>. For a complete list of search fields, visit the Rules tab on your log settings.</p>
 <p>In the <code>then</code> section we tell elmah.io what to do with messages matching the <code>query</code>. In this case, we want it to create a new HTTP request on http://requestb.in. Notice how the <code>$bin</code> variables from before is used as part of the URL. <code>body</code> contains examples on built-in variables like <code>$message</code> and <code>$time</code>. Built-in variables are documented on the Rules tab of the log settings as well.</p>
 <p>A final note about <code>then</code>. In this example we use the <code>"type": "http"</code> to allow elmah.io to make HTTP requests. Types corresponding to other actions available in the rule engine are available as well. These are <code>ignore</code>, <code>hide</code> and <code>email</code>.</p>
 <h2 id="creating-a-nuspec">Creating a NuSpec</h2>
@@ -362,7 +362,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     &lt;description&gt;Post a new HTTP request to RequestBin when messages are logged in elmah.io.&lt;/description&gt;
     &lt;projectUrl&gt;https://github.com/elmahio/elmah.io.apps.requestbin&lt;/projectUrl&gt;
     &lt;iconUrl&gt;https://secure.gravatar.com/avatar/5c4cb3646528821117abde6d2d5ee22d?s=32&lt;/iconUrl&gt;
-    &lt;tags&gt;Error Exception Reporing Management Logging ELMAH Diagnostics Tracing RequestBin&lt;/tags&gt;
   &lt;/metadata&gt;
   &lt;files&gt;
     &lt;file src=&quot;manifest.json&quot; target=&quot;manifest.json&quot; /&gt;
@@ -370,7 +369,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 &lt;/package&gt;
 </code></pre>
 
-<p>The configuration is pretty simple. We include a single file (<code>manifest.json</code>) in the root of the package and name the package with <code>elmah.io.apps.</code> prefix. In fact this is a requirement for the package to work.</p>
+<p>The configuration is pretty simple. We include a single file (<code>manifest.json</code>) in the root of the package and name the package. The name needs to be all-lowercase and prefixed with <code>elmah.io.apps.</code> in order to show up on elmah.io.</p>
 <h2 id="building-and-publishing-the-app">Building and Publishing the App</h2>
 <p>To build the app, we use <code>nuget.exe</code>:</p>
 <pre><code class="powershell">c:\projects\elmah.io.apps.requestbin&gt;nuget pack
@@ -385,7 +384,7 @@ Your package was pushed.
 </code></pre>
 
 <p>(replace <code>MyApiKey</code> with your API Key located on nuget.org)</p>
-<p>That's it folks. The app is now public and available in elmah.io.</p>
+<p>That's it folks. The app is now public and available on elmah.io.</p>
 <h2 id="testing-the-package">Testing the Package</h2>
 <p>To test that everything is working, we'll start by creating a new bin on RequestBin. Go to <a href="http://requestb.in/">http://requestb.in/</a> and click the <em>Create a RequestBin</em> button:</p>
 <p><img alt="Bin Created" src="../images/create_requestbin.png" /></p>
@@ -402,7 +401,7 @@ Your package was pushed.
 <p>Refresh the bin at RequestBin and observe the HTTP request performed by the app:</p>
 <p><img alt="HTTP request in RequestBin" src="../images/requestbin_message.png" /></p>
 <p>Isn't that just the most awesome thing you have seen all day? The JSON format specified in <code>manifest.json</code> now ends up on RequestBin using a homebrewed elmah.io app.</p>
-<p>To see more examples of elmah.io apps, check out <a href="https://github.com/elmahio/elmah.io.apps.slack">elmah.io.apps.slack</a>, <a href="https://github.com/elmahio/elmah.io.apps.hipchat">elmah.io.apps.hipchat</a> and <a href="https://github.com/elmahio/elmah.io.apps.github">elmah.io.apps.github</a> all available on GitHub. For even more information, get in contact. We are always happy to help, even if you're just playing around with app development for the fun of it.</p>
+<p>To see more examples of elmah.io apps, check out <a href="https://github.com/elmahio/elmah.io.apps.slack">elmah.io.apps.slack</a>, <a href="https://github.com/elmahio/elmah.io.apps.hipchat">elmah.io.apps.hipchat</a> and <a href="https://github.com/elmahio/elmah.io.apps.github">elmah.io.apps.github</a> all available on GitHub. We also provide a <a href="https://github.com/elmahio/elmah.io.apps.playground">Playground app</a> to showcase the different types of variables. For even more information, get in contact. We are always happy to help, even if you're just playing around with app development for the fun of it.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
