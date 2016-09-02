@@ -323,6 +323,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p><img alt="Install HipChat App" src="../images/apps/hipchat/install_hipchat.png" /></p>
 <p>Paste the token copied in the previous step into the Token textbox. In the Room textbox, input the name of the HipChat chat room you want messages from elmah.io to show up.</p>
 <p>Click <em>Save</em> and the app is added to your log. When new errors are logged, messages start appearing in the chat room that you configured.</p>
+<blockquote>
+<p>HipChat doesn't allow more than 500 requests per 5 minutes. If you generate more messages to elmah.io, not all of them will show up in HipChat because of this.</p>
+</blockquote>
 <p>Finally, if you need more control on what to log, you should read our guide on <a href="http://docs.elmah.io/integrate-elmah-io-with-hipchat/">Integrating elmah.io with HipChat manually</a>.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>

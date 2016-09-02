@@ -350,6 +350,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p><img alt="HTTP Request Dialog" src="../images/send_http_request_to_hipchat.png" /></p>
 <p>Click the OK button and add the new rule by clicking Add. This configuration tells elmah.io, to make a HTTP request against the HipChat API, every time a new error is logged. The message at elmah.io is shown as the chat message inside HipChat:</p>
 <p><img alt="Errors on HipChat" src="../images/elmah_io_error_on_hipchat.png" /></p>
+<blockquote>
+<p>HipChat doesn't allow more than 500 requests per 5 minutes. If you generate more messages to elmah.io, not all of them will show up in HipChat because of this.</p>
+</blockquote>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 

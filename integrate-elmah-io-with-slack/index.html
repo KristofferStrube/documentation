@@ -342,6 +342,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>Don't worry about the empty Content-Type and Body. Everything needed to post the message to Slack is embedded into the URL. To learn more about the structure of the URL, jump to <a href="#breaking-it-down">Breaking it down</a></p>
 <p>Click the OK button and add the new rule by clicking Add. This configuration tells elmah.io, to make a HTTP request against the Slack API, every time a new error is logged. The message at elmah.io is shown as the chat message inside Slack:</p>
 <p><img alt="Error on Slack" src="../images/elmah_io_error_on_slack.png" /></p>
+<blockquote>
+<p>Slack doesn't allow more than a single request per second. If you generate more than one message to elmah.io per second, not all of them will show up in Slack because of this.</p>
+</blockquote>
 <h2 id="breaking-it-down">Breaking it down</h2>
 <p>You should have received a message on Slack already. To learn more about how to specify and extend the configuration for Slack, this is the section for you. Let's start by inspecting the simplest possible Slack URL:</p>
 <p><code>https://slack.com/api/chat.postMessage?token=xxxx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxxx-xxxxxxxxxx&amp;channel=%23general&amp;text=$message</code></p>
