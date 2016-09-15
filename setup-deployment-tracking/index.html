@@ -353,6 +353,39 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 
 <p>(replace <code>API_KEY</code> with your API key found on your profile)</p>
 <p>In the example, a simple version string is sent to the API and elmah.io will automatically put a timestamp on that. Overriding user information and description, makes the experience withing the elmah.io UI better. Pulling release notes and the name and email of the deployer, is usually available through environment variables or similar, depending on the technology used for creating the deployment.</p>
+<h3 id="using-kudu">Using Kudu</h3>
+<p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script as shown in <a href="http://blog.elmah.io/decorating-errors-with-version-number-using-azure-websites/">Decorating errors with version number using Azure websites</a>.</p>
+<p>With a post deployment script running inside Kudu, we have the possibility to extract some more information about the current deployment. A full deployment PowerShell script for Kudu, would look like this:</p>
+<pre><code class="powershell">$version = Get-Date -format u
+
+(Get-Content ..\wwwroot\web.config).replace('$version', $version) | Set-Content ..\wwwroot\web.config
+
+$ProgressPreference = &quot;SilentlyContinue&quot;
+
+$commit = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_MESSAGE&quot;);
+$commitId = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_ID&quot;);
+$httpHost = [System.Environment]::GetEnvironmentVariable(&quot;HTTP_HOST&quot;);
+$deployUrl = &quot;https://$httpHost/api/deployments/$commitId&quot;
+
+$username = &quot;MY_USERNAME&quot;
+$password = &quot;MY_PASSWORD&quot;
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f $username,$password)))
+
+$deployInfo = Invoke-RestMethod -Method Get -Uri $deployUrl -Headers @{Authorization=(&quot;Basic {0}&quot; -f $base64AuthInfo)}
+
+$url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
+$body = @{
+  version = $version
+  description = $commit
+  userName = $deployInfo.author
+  userEmail = $deployInfo.author_email
+}
+
+Invoke-RestMethod -Method Post -Uri $url -Body $body
+</code></pre>
+
+<p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your profile)</p>
+<p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional informations about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
 <h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
 <p>In progress.</p>
 <h3 id="using-visual-studio-team-services">Using Visual Studio Team Services</h3>
