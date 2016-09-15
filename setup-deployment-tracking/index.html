@@ -318,6 +318,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="set-up-deployment-tracking">Set Up Deployment Tracking</h1>
+<ul>
+<li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
+<li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a><ul>
+<li><a href="#manually-using-swagger-ui">Manually using Swagger UI</a></li>
+<li><a href="#using-powershell">Using PowerShell</a></li>
+<li><a href="#using-kudu">Using Kudu</a></li>
+<li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
+<li><a href="#using-visual-studio-team-services">Using Visual Studio Team Services</a></li>
+</ul>
+</li>
+</ul>
 <p>Deployment tracking creates an overview of the different versions of your software and show you how well each version performed. With this integration in place, you will be able to see when you released and if some of your releases caused more errors than others. While most pages on elmah.io supports everything from verbose to fatal messages, the context on deployment tracking is around warnings and errors.</p>
 <p>To set up deployment tracking, you will need two things:</p>
 <ol>
