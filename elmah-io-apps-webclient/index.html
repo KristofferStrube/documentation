@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from JSNLog - elmah.io Documentation</title>
+	<title>WebClient - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -179,8 +179,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-umbraco/">Logging from Umbraco</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from JSNLog</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-jsnlog/">Logging from JSNLog</a>
 				</li>
 			
 				<li >
@@ -241,8 +241,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../elmah-io-apps-mailman/">Mailman</a>
 				</li>
 			
-				<li >
-					<a href="../elmah-io-apps-webclient/">WebClient</a>
+				<li class="active">
+					<a href="./">WebClient</a>
 				</li>
 			
 				<li >
@@ -325,41 +325,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<p>﻿# Logging from JSNLog</p>
-<p>Using JSNLog you will be able to log JavaScript errors to elmah.io. In this sample, we will focus about logging JavaScript errors from a ASP.NET MVC web application, but you can use JSNLog to log anything to elmah.io, so please check out their documentation.</p>
-<p>Start by installing the JSNLog.Elmah package:</p>
-<pre><code class="powershell">Install-Package JSNLog.Elmah
-</code></pre>
-
-<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then install elmah.io:</p>
-<pre><code class="powershell">Install-Package elmah.io
-</code></pre>
-
-<p>Remember to input a valid log id during the installation. Add the JSNLog code before any script imports in your _Layout.cshtml file:</p>
-<pre><code class="csharp">@Html.Raw(JSNLog.JavascriptLogging.Configure())
-</code></pre>
-
-<p>You are ready to log errors from JavaScript til elmah.io. To test that everything is installed correctly, launch your web application and execute the following JavaScript using Chrome Developer Tools or similar:</p>
-<pre><code class="javascript">JL().fatal(&quot;log message&quot;);
-</code></pre>
-
-<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be build into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
-<pre><code class="javascript">&lt;script&gt;
-window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-
-    // Send object with all data to server side log, using severity fatal,
-    // from logger &quot;onerrorLogger&quot;
-    JL(&quot;onerrorLogger&quot;).fatalException({
-        &quot;msg&quot;: &quot;Exception!&quot;,
-        &quot;errorMsg&quot;: errorMsg, &quot;url&quot;: url,
-        &quot;line number&quot;: lineNumber, &quot;column&quot;: column
-    }, errorObj);
-
-    // Tell browser to run its own error handler as well  
-    return false;
-}
-&lt;/script&gt;
-</code></pre>
+<h1 id="install-webclient-app-for-elmahio">Install WebClient App for elmah.io</h1>
+<p>The WebClient app integrates elmah.io with every system providing a HTTP based API.</p>
+<p>To install WebClient, click the Install button on the Apps tab. This will show the WebClient settings page:</p>
+<p><img alt="Mailman Settings" src="../images/apps/webclient/install.png" /></p>
+<p>Input a valid URL plus body and content type (if required). Finally hit <em>Save</em>.</p>
+<p>The WebClient will make a HTTP request on the inputted URL every time a new message is logged. Be aware that this can potentially be <strong>a lot</strong> of requests, since everything from verbose to fatal message will trigger the HTTP request. Most services (like Slack and HipChat) only allow for a maximum number of requests per minute.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
