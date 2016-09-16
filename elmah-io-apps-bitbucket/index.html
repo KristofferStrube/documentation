@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Remove sensitive form data - elmah.io Documentation</title>
+	<title>Bitbucket - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -225,8 +225,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../elmah-io-apps-github/">GitHub</a>
 				</li>
 			
-				<li >
-					<a href="../elmah-io-apps-bitbucket/">Bitbucket</a>
+				<li class="active">
+					<a href="./">Bitbucket</a>
 				</li>
 			
 				<li >
@@ -263,8 +263,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Remove sensitive form data</a>
+				<li >
+					<a href="../remove-sensitive-form-data/">Remove sensitive form data</a>
 				</li>
 			
 				<li >
@@ -321,23 +321,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="remove-sensitive-form-data">Remove sensitive form data</h1>
-<p>You may have something like usernames and passwords in form posts on your website. Since ELMAH automatically logs the content of a failing form POST, sensitive data potentially ends up in your log. No one else but you and your company should really get to look inside your log, but remember that everyone connected to the internet, is a potential hacking victim.</p>
-<p>There’s no build-in feature to remove data from the error data, before logging it to ELMAH. Luckily <a href="https://code.google.com/p/elmah/wiki/ErrorFiltering">ELMAH’s Error Filtering</a> feature lets you accomplish that anyway by writing a bit of additional code in your <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">void ErrorLog_Filtering(object sender, ExceptionFilterEventArgs args)
-{
-    var httpContext = args.Context as HttpContext;
-    if (httpContext != null &amp;&amp; httpContext.Request.Form.AllKeys.Any(k =&gt; k == &quot;SomeSecretFormField&quot;))
-    {
-        var error = new Error(args.Exception, httpContext);
-        error.Form.Set(&quot;SomeSecretFormField&quot;, &quot;***hidden***&quot;);
-        ErrorLog.GetDefault(httpContext).Log(error);
-        args.Dismiss();
-    }
-}
-</code></pre>
-
-<p>The <code>ErrorLog_Filtering</code> method is called by ELMAH, every time a new exception is about to get logged. The purpose of the method is to be able to tell ELMAH not to log certain kinds of exceptions, but in this case we use the method as a hook to modify the logged error. Since you cannot modify the Form property of the HTTP request, we create a new Error object and update the value of the “SomeSecretFormField” key. The new Error object is then manually logged to the default ELMAH error logger and we dismiss the original error. It’s essential to remember to call <code>Dismiss()</code>, because if you don’t, the original error containing the sensitive form field is logged as well.</p>
+<h1 id="install-bitbucket-app-for-elmahio">Install Bitbucket App for elmah.io</h1>
+<h2 id="get-your-api-key">Get your API key</h2>
+<p>In order to allow elmah.io to create issues on Bitbucket, you will need your teams API key. API keys on Bitbucket are only supported om team accounts. Go to your teams settings page (like https://bitbucket.org/account/user/elmahio/groups/) and click <em>API key</em> in the menu::</p>
+<p><img alt="API Key Page" src="../images/apps/bitbucket/apikey.png" /></p>
+<p>Copy the generated API key.</p>
+<h2 id="install-the-bitbucket-app-on-elmahio">Install the Bitbucket App on elmah.io</h2>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Bitbucket app and click the <em>Install</em> button:</p>
+<p><img alt="Install Slack App" src="../images/apps/bitbucket/install_Settings.png" /></p>
+<p>Paste the API key copied in the previous step into the <em>API Key</em> textbox. In the <em>Team</em> textbox, input the name of the team owning the repository you want to create issues in. In the <em>Repository</em> textbox input the name of the repository.</p>
+<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, issues are automatically create in the configured Bitbucket repository.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
