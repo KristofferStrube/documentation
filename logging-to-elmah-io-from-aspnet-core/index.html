@@ -343,23 +343,39 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>(replace <code>API_KEY</code> with your API key found on your profile on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
 <p>That's it. Every uncaught exception will be logged to elmah.io. To log exceptions manually (or even log verbose and information messages), check out <a href="../logging-to-elmah-io-from-microsoft-extensions-logging">Logging from Microsoft.Extensions.Logging</a>.</p>
-<h2 id="events">Events</h2>
+<h2 id="settings">Settings</h2>
+<h3 id="events">Events</h3>
 <p>elmah.io for ASP.NET Core supports a range of events for hooking into the process of logging messages. Events are registered as actions when installing the elmah.io middleware:</p>
 <pre><code class="csharp">app.UseElmahIo(
     &quot;API_KEY&quot;, 
     new Guid(&quot;LOG_ID&quot;), 
-    message =&gt; {
-        message.Version = &quot;42&quot;;
-    },
-    (message, exception) =&gt; {
-        logger.LogError(1, exception, &quot;Error during log to elmah.io&quot;);
+    new ElmahIoSettings
+    {
+        OnMessage = message =&gt; {
+            message.Version = &quot;42&quot;;
+        },
+        OnError = (message, exception) =&gt; {
+            logger.LogError(1, exception, &quot;Error during log to elmah.io&quot;);
+        }
     });
 </code></pre>
 
-<p>Two additional parameters are sent to the <code>UseElmahIo</code> method. The first parameter is an action (<code>Action&lt;CreateMessage&gt;</code>) with a single parameter named <code>message</code>. This action is called by elmah.io just before logging a new message to the API. Use this method to decorate/enrich your log messages with additional data like a version number. The second parameter is also an action (<code>Action&lt;CreateMessage, Exception&gt;</code>), but with two parameters (<code>message</code> and <code>exception</code>). This action is called if communication with the elmah.io API failed. If this happens, you should log the message to a local log (through Microsoft.Extensions.Logging, Serilog or similar).</p>
+<p>An <code>ElmahIoSettings</code> object is sent to the <code>UseElmahIo</code> method. The settings class contains properties for hooking into the log process. The action registered in the <code>OnMessage</code> property is called by elmah.io just before logging a new message to the API. Use this action to decorate/enrich your log messages with additional data like a version number. The <code>OnError</code> action is called if communication with the elmah.io API failed. If this happens, you should log the message to a local log (through Microsoft.Extensions.Logging, Serilog or similar).</p>
 <blockquote>
-<p>Do not log to elmah.io in your <code>onError</code> event handler, since that could cause an infinite loop in your code.</p>
+<p>Do not log to elmah.io in your <code>OnError</code> action, since that could cause an infinite loop in your code.</p>
 </blockquote>
+<h3 id="formatting-events">Formatting events</h3>
+<p>A default exception formatter is used to format any exceptions, before sending them off to the elmah.io API. To override the format of the details field in elmah.io, set a new <code>IExceptionFormatter</code> in the <code>ExceptionFormatter</code> property on the <code>ElmahIoSettings</code> object:</p>
+<pre><code class="csharp">app.UseElmahIo(
+    &quot;API_KEY&quot;, 
+    new Guid(&quot;LOG_ID&quot;), 
+    new ElmahIoSettings
+    {
+        ExceptionFormatter = new DefaultExceptionFormatter()
+    });
+</code></pre>
+
+<p>Besides the default exception formatted (<code>DefaultExceptionFormatter</code>), Elmah.Io.AspNetCore comes with a formatter called <code>YellowScreenOfDeathExceptionFormatter</code>. This formatter, outputs an exception and its inner exceptions as a list of exceptions, much like on the ASP.NET yellow screen of death. If you want, implementing your own exception formatter, requires you to implement a single method.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
