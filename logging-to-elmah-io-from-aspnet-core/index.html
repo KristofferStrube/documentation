@@ -364,7 +364,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <blockquote>
 <p>Do not log to elmah.io in your <code>OnError</code> action, since that could cause an infinite loop in your code.</p>
 </blockquote>
-<h3 id="formatting-events">Formatting events</h3>
+<h3 id="formatting-exceptions">Formatting exceptions</h3>
 <p>A default exception formatter is used to format any exceptions, before sending them off to the elmah.io API. To override the format of the details field in elmah.io, set a new <code>IExceptionFormatter</code> in the <code>ExceptionFormatter</code> property on the <code>ElmahIoSettings</code> object:</p>
 <pre><code class="csharp">app.UseElmahIo(
     &quot;API_KEY&quot;, 
