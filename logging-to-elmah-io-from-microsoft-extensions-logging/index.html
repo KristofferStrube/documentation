@@ -350,6 +350,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 logger.LogError(1, ex, &quot;Unexpected error&quot;);
 </code></pre>
 
+<h2 id="filtering-log-messages">Filtering log messages</h2>
+<p>As default, the elmah.io logger for Microsoft.Extensions.Logging only logs warnings, errors and fatals. The rationale behind this is that we build an error management system and really doesn't do much to support millions of debug messages from your code. Sometimes you may want to log non-exception messages, though. To do so, use filters in Microsoft.Extensions.Logging.</p>
+<p>To log everything from log level <code>Information</code> and up, use the <code>AddElmahIo</code> overload which accepts a filter:</p>
+<pre><code class="csharp">factory.AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), new FilterLoggerSettings
+{
+    {&quot;elmah.io&quot;, LogLevel.Information}
+});
+</code></pre>
+
+<p>In the code sample, every log message with the category <code>elmah.io</code> and a log level of <code>Information</code> and up, will be logged to elmah.io. To log a new information message, create a logger with the <code>elmah.io</code> category and call the <code>LogInformation</code> method:</p>
+<pre><code class="csharp">var logger = factory.CreateLogger(&quot;elmah.io&quot;);
+logger.LogInformation(&quot;This is an information message&quot;);
+</code></pre>
+
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
 <div class="modal fade modal-signin" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
