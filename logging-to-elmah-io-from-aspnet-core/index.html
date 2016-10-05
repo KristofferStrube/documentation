@@ -188,6 +188,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 				</li>
 			
 				<li >
+					<a href="../logging-to-elmah-io-from-powershell/">Logging from PowerShell</a>
+				</li>
+			
+				<li >
 					<a href="../logging-to-elmah-io-from-sitefinity/">Logging from Sitefinity</a>
 				</li>
 			
@@ -347,6 +351,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>(replace <code>API_KEY</code> with your API key found on your profile on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
 <p>That's it. Every uncaught exception will be logged to elmah.io. To log exceptions manually (or even log verbose and information messages), check out <a href="../logging-to-elmah-io-from-microsoft-extensions-logging">Logging from Microsoft.Extensions.Logging</a>.</p>
+<h2 id="logging-exceptions-manually">Logging exceptions manually</h2>
+<p>While automatically logging all uncaught exceptions is definitely a nice feature, sometimes you may want to catch exceptions and log them manually. If you just want to log the exception details, without all of the contextual information about the HTTP context (cookies, server variables etc.), we recommend you to look at our integration for <a href="../logging-to-elmah-io-from-microsoft-extensions-logging">Microsoft.Extensions.Logging</a>. If the context is important for the error, you can utilize the <code>Ship</code>-methods available in <code>Elmah.Io.AspNetCore</code>:</p>
+<pre><code class="csharp">try
+{
+    var i = 0;
+    var result = 42/i;
+}
+catch (DivideByZeroException e)
+{
+    e.Ship(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), HttpContext);
+}
+</code></pre>
+
+<p>When catching an exception, you simply call the <code>Ship</code> extension method with your API key, log id and the current HTTP context as parameters. We are looking into removing <code>API_KEY</code> and <code>LOG_ID</code> from these methods, since they are already specified in <code>Startup.cs</code>. For now, use app settings, dependency injection or similar to only specify these variables in one place.</p>
 <h2 id="settings">Settings</h2>
 <h3 id="events">Events</h3>
 <p>elmah.io for ASP.NET Core supports a range of events for hooking into the process of logging messages. Events are registered as actions when installing the elmah.io middleware:</p>

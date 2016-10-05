@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from Logary - elmah.io Documentation</title>
+	<title>Logging from PowerShell - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -159,8 +159,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-microsoft-extensions-logging/">Logging from Microsoft.Extensions.Logging</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from Logary</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-logary/">Logging from Logary</a>
 				</li>
 			
 				<li >
@@ -187,8 +187,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-powershell/">Logging from PowerShell</a>
+				<li class="active">
+					<a href="./">Logging from PowerShell</a>
 				</li>
 			
 				<li >
@@ -333,47 +333,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-from-logary">Logging from Logary</h1>
-<p>Logary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are at perfect fit, since elmah.io has been designed with semantics from the ground up.</p>
-<p>In this tutorial we’ll add Logary to an Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:</p>
-<pre><code class="powershell">Install-Package Logary.Targets.Elmah.Io
+<h1 id="logging-from-powershell">Logging from PowerShell</h1>
+<p>In order for you to be able to log to elmah.io from PowerShell, you will need the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package. This package contains the raw client libraries for communicating with the <a href="https://elmah.io/api/v2">elmah.io API</a>.</p>
+<p>First of all, you will need to include <code>elmah.io.client.dll</code> in your PowerShell script. How you do this is entirely up to you of course. You can place this assembly with your script or you can download it through NuGet on every execution. To download the elmah.io.client package through NuGet, you will need <code>nuget.exe</code>:</p>
+<pre><code class="powershell">$source = &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot;
+$target = &quot;.\nuget.exe&quot;
+Invoke-WebRequest $source -OutFile $target
+Set-Alias nuget $target -Scope Global
 </code></pre>
 
-<h2 id="configuration-in-f">Configuration in F&#35;</h2>
-<p>Configure elmah.io just like you would any normal target:</p>
-<pre><code class="fsharp">withTargets [
-  // ...
-  ElmahIO.create { ElmahIO with logId = &quot;LOG_ID&quot; } &quot;elmah.io&quot;
-] &gt;&gt;
-withRules [
- // ...
- Rule.createForTarget &quot;elmah.io&quot;
-]
+<p>This script will download the latest version of the NuGet command line tool and make it available through the command <code>nuget</code>.</p>
+<p>To install elmah.io.client, run <code>nuget.exe</code>:</p>
+<pre><code class="powershell">nuget install elmah.io.client
 </code></pre>
 
-<p>where <code>LOG_ID</code> is the id of your log.</p>
-<h2 id="configuration-in-c">Configuration in C&#35;</h2>
-<p>Configuration in C# is just as easy:</p>
-<pre><code class="csharp">.Target&lt;ElmahIO.Builder&gt;(
-  &quot;elmah.io&quot;,
-  conf =&gt; conf.Target.SendTo(apiKey: &quot;LOG_ID&quot;))
+<p>This will create a <code>packages</code> folder containing the latest stable version of the elmah.io.client package. Since you probably don't want to hardcode the path to the current version number, get a reference to <code>elmah.io.client.dll</code> and load it:</p>
+<pre><code class="powershell">$elmahIoClientPath = Get-ChildItem -Path . -Filter elmah.io.client.dll -Recurse
+[Reflection.Assembly]::LoadFile($elmahIoClientPath.FullName)
 </code></pre>
 
-<p>where <code>LOG_ID</code> is the id of your log.</p>
-<h2 id="logging">Logging</h2>
-<p>To start logging messages to elmah.io, you can use the following F# code:</p>
-<pre><code class="fsharp">let logger = logary.getLogger (PointName [| &quot;Logary&quot;; &quot;Samples&quot;; &quot;main&quot; |])
-
-Message.event Info &quot;User logged in&quot;
-  |&gt; Message.setField &quot;userName&quot; &quot;haf&quot;
-  |&gt; Logger.logSimple logger
-
+<p>You now have <code>elmah.io.client.dll</code> loaded into your shell and everything is set up in order to log to elmah.io. To do so, add try-catch around critical code:</p>
+<pre><code class="powershell">$logger = New-Object Elmah.Io.Client.Logger([guid]::new(&quot;LOG_ID&quot;))
+Try {
+    # some code that may throw exceptions
+}
+Catch {
+    $logger.Error($_.Exception, &quot;Oh no, something bad happened&quot;);
+}
 </code></pre>
 
-<p>or in C#:</p>
-<pre><code class="csharp">var logger = logary.GetLogger(&quot;Logary.CSharpExample&quot;);
-logger.LogEventFormat(LogLevel.Fatal, &quot;Unhandled {exception}!&quot;, e);
-</code></pre>
+<p>In the first line, we create a new logger object with the <code>LOG_ID</code> of the log we want to write to. Then, in the <code>Catch</code> block, the catched exception is shipped of to elmah.io including a custom message.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
