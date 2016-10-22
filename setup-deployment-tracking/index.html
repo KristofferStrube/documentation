@@ -416,7 +416,30 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
 <p>In progress.</p>
 <h3 id="using-visual-studio-team-services">Using Visual Studio Team Services</h3>
-<p>In progress.</p>
+<p>If you are using Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
+<ol>
+<li>
+<p>Go to the <a href="https://marketplace.visualstudio.com/items?itemName=elmahio.deploy-tasks">elmah.io Deployment Tasks extension</a> on the Visual Studio Marketplace and click <em>Install</em> (log in if not already).
+<img alt="elmah.io VSTS extension" src="../images/vsts_extension.png" /></p>
+</li>
+<li>
+<p>Select the account to install the extension into and click <em>Confirm</em>:
+<img alt="elmah.io VSTS account" src="../images/vsts_select_account.png" /></p>
+</li>
+<li>
+<p>Go to your Visual Studio Team Services project and edit your Release definition.
+<img alt="VSTS release definition" src="../images/vsts_release_definition.png" /></p>
+</li>
+<li>
+<p>Click <em>Add tasks</em> and locate the elmah.io Deployment Notification task. Click <em>Add</em>.
+<img alt="Add VSTS task" src="../images/vsts_add_task.png" /></p>
+</li>
+<li>
+<p>Copy your API key from your <a href="https://elmah.io/profile">profile</a> and paste it into the <em>API Key</em> field. Click <em>Save</em>.
+<img alt="VSTS task added" src="../images/vsts_task_added.png" /></p>
+</li>
+</ol>
+<p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to <a href="#decorate-your-messages-with-a-version-number">decorate all messages sent to elmah.io with the same version number</a>.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
