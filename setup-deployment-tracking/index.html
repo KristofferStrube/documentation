@@ -344,6 +344,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><a href="#using-visual-studio-team-services">Using Visual Studio Team Services</a></li>
 </ul>
 </li>
+<li><a href="#versioning-different-services">Versioning different services</a></li>
 </ul>
 <p>Deployment tracking creates an overview of the different versions of your software and show you how well each version performed. With this integration in place, you will be able to see when you released and if some of your releases caused more errors than others. While most pages on elmah.io supports everything from verbose to fatal messages, the context on deployment tracking is around warnings and errors.</p>
 <p>To set up deployment tracking, you will need two things:</p>
@@ -414,7 +415,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your profile)</p>
 <p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional informations about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
 <h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
-<p>In progress.</p>
+<p>We are looking into the possibilities of creating an integration for Octopus Deploy, but for now just <a href="#using-powershell">use PowerShell</a>.</p>
 <h3 id="using-visual-studio-team-services">Using Visual Studio Team Services</h3>
 <p>If you are using Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
 <ol>
@@ -440,6 +441,15 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to <a href="#decorate-your-messages-with-a-version-number">decorate all messages sent to elmah.io with the same version number</a>.</p>
+<h2 id="versioning-different-services">Versioning Different Services</h2>
+<p>Chances are that your software consist of multiple services released independently and with different version numbers. This is a common pattern when splitting up a software system in microservices. How you choose to split your elmah.io logs is entirely up to you, but we almost always recommend having a separate log for each service. When doing so, you only want deployment tracking to show the releases from the service you are currently looking at. The problem here is that deployments on elmah.io are not related to a log in any way. We could have implemented it this way, but that would limit the ways to split up logs.</p>
+<p>To make sure that only deployments related to the service you are looking at are shown, you need unique deployment names. A simple approach is to name your releases with a service name prefix like this:</p>
+<ul>
+<li>service1-1.0.0</li>
+<li>service1-1.1.0</li>
+<li>service2-1.0.0</li>
+</ul>
+<p>In the examples we have two services: service1 and service2. By prefixing deployments with the servicename, we make sure that not both service1-1.0.0 and service2-1.0.0 are shown when looking at one of the services.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
