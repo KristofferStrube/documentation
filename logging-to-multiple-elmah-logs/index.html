@@ -333,7 +333,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-to-multiple-logs">Logging to multiple logs</h1>
+<h1 id="logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</h1>
 <p>Unfortunately, ELMAH doesn’t support multiple log targets like other logging frameworks like Serilog. This makes logging to multiple logs a bit tricky, but no way impossible. Let’s say that you’re using ELMAH in your web application and configured it to log everything in SQL Server. If you look through your <code>web.config</code> file, you will have code looking like this somewhere:</p>
 <pre><code class="xml">&lt;elmah&gt;
     &lt;errorLog type=&quot;Elmah.SqlErrorLog, Elmah&quot; connectionStringName=&quot;elmah&quot;/&gt;
