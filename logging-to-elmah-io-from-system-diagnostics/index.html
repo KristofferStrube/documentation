@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging through a HTTP proxy - elmah.io Documentation</title>
+	<title>Logging from System.Diagnostics - elmah.io Documentation</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -187,8 +187,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-system-diagnostics/">Logging from System.Diagnostics</a>
+				<li class="active">
+					<a href="./">Logging from System.Diagnostics</a>
 				</li>
 			
 				<li >
@@ -211,8 +211,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../configure-elmah-io-from-code/">Configure elmah.io from code</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging through a HTTP proxy</a>
+				<li >
+					<a href="../logging-through-a-http-proxy/">Logging through a HTTP proxy</a>
 				</li>
 			
 			</ul>
@@ -337,33 +337,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-through-a-http-proxy">Logging through a HTTP proxy</h1>
-<p>You may find yourself in a situation, where your production web servers isn’t allowed HTTP requests towards the public internet. This also impacts the elmah.io client, which requires access to the URL https://elmah.io/api. A popular choice of implementing this kind of restriction nowadays, seem to be through a HTTP proxy like squid.</p>
-<p>Luckily the elmah.io client supports proxy configuration out of the box. Let’s look at how to configure a HTTP proxy through <code>web.config</code>:</p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;configuration&gt;
-  &lt;configSections&gt;
-    &lt;sectionGroup name=&quot;elmah&quot;&gt;
-      &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorMail&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorMailSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorFilter&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorFilterSectionHandler, Elmah&quot; /&gt;
-    &lt;/sectionGroup&gt;
-  &lt;/configSections&gt;
-  &lt;elmah&gt;
-    &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;59AA232A-F80A-4414-801D-F305D8AE55D7&quot; /&gt;
-  &lt;/elmah&gt;
-  &lt;system.net&gt;
-    &lt;defaultProxy&gt;
-      &lt;proxy usesystemdefault=&quot;True&quot; proxyaddress=&quot;http://192.168.0.1:3128&quot; bypassonlocal=&quot;False&quot;/&gt;
-    &lt;/defaultProxy&gt;
-  &lt;/system.net&gt;
-&lt;/configuration&gt;
+<h1 id="logging-from-systemdiagnostics">Logging from System.Diagnostics</h1>
+<p>.NET comes with its own tracing/logging feature located in the <a href="https://msdn.microsoft.com/en-us/library/gg145030(v=vs.110).aspx">System.Diagnostics namespaces</a>. A core part of <code>System.Diagnostics</code> is the <code>Trace</code> class, but that namespace contains utilities for performance counters, working with the event log and a lot of other features. In this article, we will focus on logging to elmah.io from <code>System.Diagnostics.Trace</code>.</p>
+<p>To start logging, install the <a href="https://www.nuget.org/packages/Elmah.Io.Trace/">Elmah.Io.Trace</a> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Trace
 </code></pre>
 
-<p>The above example is of course greatly simplified.</p>
-<p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port your are using).</p>
+<p>As default, <code>Trace</code> logs to the Win32 OutputDebugString function, but it is possible to log to multiple targets (like appenders in log4net). To do so, tell <code>Trace</code> about elmah.io:</p>
+<pre><code class="csharp">System.Diagnostics.Trace.Listeners.Add(new ElmahIoTraceListener(new Guid(&quot;LOG_ID&quot;)));
+</code></pre>
+
+<p>(replace <code>LOG_ID</code> with your log id)</p>
+<p>To start logging, call the <code>Trace</code> API:</p>
+<pre><code class="csharp">try
+{
+    System.DIagnostics.Trace.Write(&quot;Starting something dangerous&quot;);
+    ...
+}
+catch (Exception e)
+{
+    System.Diagnostics.Trace.Fail(e.Message, e.ToString());
+}
+</code></pre>
+
+<p>In the example, we write an information message with the message <code>Starting something dangerous</code> and logs any thrown exception to elmah.io.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
