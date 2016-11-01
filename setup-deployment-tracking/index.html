@@ -419,7 +419,32 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your profile)</p>
 <p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional informations about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
 <h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
-<p>We are looking into the possibilities of creating an integration for Octopus Deploy, but for now just <a href="#using-powershell">use PowerShell</a>.</p>
+<p>Notifying elmah.io of a new deployment from Octopus Deploy, is supported through a custom step template. To install and configure the template, follow the steps below:</p>
+<ol>
+<li>
+<p>Go to the  <a href="https://library.octopusdeploy.com/step-template/actiontemplate-elmah.io-register-deployment">elmah.io - Register Deployment</a> step template on the Octopus Deploy Library.
+<img alt="Octopus Deploy Library" src="../images/octopus_deploy_library.png" /></p>
+</li>
+<li>
+<p>Click the <em>Copy to clipboard</em> button.</p>
+</li>
+<li>
+<p>Click <em>Library</em> in the header on your Octopus Deploy instance and go to the <em>Step templates</em> tab.</p>
+</li>
+<li>
+<p>Click the <em>Import</em> link and paste the step template copied from the Library. Then click <em>Import</em>.
+<img alt="Add step template to Octopus" src="../images/add_step_template_to_octopus.png" /></p>
+</li>
+<li>
+<p>Go to the Process tab of your project on Octopus Deploy and click the <em>Add step</em> button. The elmah.io step template is available in the bottom of the list.
+<img alt="Add step template to process" src="../images/add_elmah_io_deployment_step.png" /></p>
+</li>
+<li>
+<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your <a href="https://elmah.io/profile">profile</a>. Optionally input a version number prefix, to <a href="#using-visual-studio-team-services">support multiple services</a>.
+<img alt="Save notification step" src="../images/save_notification_step.png" /></p>
+</li>
+</ol>
+<p>And we're done. On every new deployment, Octopus Deploy will notify elmah.io</p>
 <h3 id="using-visual-studio-team-services">Using Visual Studio Team Services</h3>
 <p>If you are using Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
 <ol>
