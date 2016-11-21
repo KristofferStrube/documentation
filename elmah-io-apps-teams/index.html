@@ -342,7 +342,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="install-microsoft-teams-app-for-elmahio">Install Microsoft Teams App for elmah.io</h1>
-<p>Coming soon!</p>
+<h2 id="install-webhook-connector-on-microsoft-teams">Install webhook connector on Microsoft Teams</h2>
+<p>In order to send messages to Microsoft Teams, you will need to install the Webhook connector on teams by clicking ... next to the channel you want for the elmah.io messages and click <em>Connectors</em>. Locate the <em>Incoming Webhook</em> and click <em>Add</em>. Input 'elmah.io' in the name text box and upload another image if you'd like. After clicking the <em>Create</em> button, you will see a webhook URL to use for the integration:</p>
+<p><img alt="Webhook URL" src="../images/teams_webhook.png" /></p>
+<p>Copy the URL.</p>
+<h2 id="install-the-microsoft-teams-app-on-elmahio">Install the Microsoft Teams App on elmah.io</h2>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Microsoft Teams app and click the <em>Install</em> button. In the overlay, paste the URL from the previous step:</p>
+<p><img alt="Install Microsoft Teams app" src="../images/teams_installapp.png" /></p>
+<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, messages start appearing in the channel that you configured.</p>
+<blockquote>
+<p>The Office 365 API used behind the scenes for this app uses throttling rather than a maximum allowed requests. This means that you may start experiencing messages not being sent, if you start logging a large amount of messages. We have experienced a lot of weird error codes when communicating with the API. An example of this is an exception while posting data to the API, but the data is successfully shown on Teams. The result of this error is, that elmah.io retries the failing request multiple times, which causes the same message to be shown multiple times on Teams.</p>
+</blockquote>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
