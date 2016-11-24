@@ -347,9 +347,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(EvernoteMvcExample.ElmahConfig), &quot;Start&quot;)]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ElmahFromCodeExample.ElmahConfig), &quot;Start&quot;)]
 
-namespace EvernoteMvcExample
+namespace ElmahFromCodeExample
 {
     public static class ElmahConfig
     {
@@ -377,7 +377,15 @@ namespace EvernoteMvcExample
 </code></pre>
 
 <p>Let’s look at the code. In line 5, the <code>ElmahConfig</code> class is configured as a <code>PreApplicationStartMethod</code> which means, that ASP.NET (MVC) will execute the Start method when the web application starts up. In line 13 the <code>ServiceCenter.Current</code> property is set to the return type of the <code>CreateServiceProviderQueryHandler</code> method. This method is where the magic happens. Besides creating the new <code>ServiceContainer</code>, we actually created the <code>Elmah.Io.ErrorLog</code> class normally configured through XML. The Dictionary should contain the LogId found on the dashboard of the elmah.io website.</p>
-<p>That’s it! You no longer need the <code>&lt;elmah&gt;</code> element in your <code>web.config</code> file.</p>
+<p>Since <code>ServiceContainer</code> and friends are bundled with ELMAH, you still need to configure ELMAH as part of the pipeline. Add the <code>ErrorLogModule</code> to your <code>web.config</code> like this:</p>
+<pre><code class="xml">&lt;system.webserver&gt;
+&lt;modules&gt;
+&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; precondition=&quot;managedHandler&quot;/&gt;
+&lt;/modules&gt;
+&lt;/system.webserver&gt;
+</code></pre>
+
+<p>That’s it! You no longer need the <code>&lt;elmah&gt;</code> element, config sections or anything else than the module in your <code>web.config</code> file.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
