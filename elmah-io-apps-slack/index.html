@@ -342,19 +342,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="install-slack-app-for-elmahio">Install Slack App for elmah.io</h1>
-<h2 id="generate-oauth-2-token">Generate OAuth 2 Token</h2>
-<p>In order to allow elmah.io to log messages to Slack, you will need to generate an OAuth 2 token. To do so, log into slack and go to the <a href="https://api.slack.com/docs/oauth-test-tokens">OAuth Tokens</a> page.</p>
-<p><img alt="OAuth Tokens Page" src="../images/apps/slack/generate_token.png" /></p>
-<p>Click the <em>Create token</em> button and copy the generated token (colored in red and prefixed with <code>xoxp-</code>).</p>
-<h2 id="install-the-slack-app-on-elmahio">Install the Slack App on elmah.io</h2>
-<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Slack app and click the <em>Install</em> button:</p>
-<p><img alt="Install Slack App" src="../images/apps/slack/install_slack.png" /></p>
-<p>Paste the token copied in the previous step into the Token textbox. In the Channel, input the name of the Slack channel you want messages from elmah.io to show up. Remember to leave out the hash (#) sign (example use general and not #general).</p>
-<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, messages start appearing in the channel that you configured.</p>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Slack app and click the <em>Install</em> button. You will be asked to allow access from elmah.io:</p>
+<p><img alt="Allow Slack access" src="../images/slack_allow_access.png" /></p>
+<p>Select your team and in the following screen, select the channel you want to show errors on Slack:</p>
+<p><img alt="Select channel" src="../images/slack_select_channel.png" /></p>
+<p>Click the <em>Authorize</em> button and you will be redirected to elmah.io. The integration to Slack is now installed.</p>
 <blockquote>
 <p>Slack doesn't allow more than a single request per second. If you generate more than one message to elmah.io per second, not all of them will show up in Slack because of this.</p>
 </blockquote>
-<p>Finally, if you need more control on what to log and/or your want to customize the messages, you should read our guide on <a href="http://docs.elmah.io/integrate-elmah-io-with-slack/">Integrating elmah.io with Slack manually</a>.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 
