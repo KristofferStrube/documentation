@@ -343,7 +343,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <h1 id="integrate-with-slack">Integrate with Slack</h1>
 <blockquote>
-<p>This document is obsolete. You should integrate with Slack using our <a href="../elmah-io-apps-slack/">Slack App</a>. In fact, Slack recommend not sharing test tokens outside your company, why this guide probably will be deleted in the near future.</p>
+<p>This document is obsolete. You should integrate with Slack using our <a href="../elmah-io-apps-slack/">Slack App</a>. In fact, Slack recommend not sharing test tokens outside your company, which is why this guide probably will be deleted in the near future.</p>
 </blockquote>
 <p>Start by copying your Slack-token from the <a href="https://api.slack.com/web">API page</a>. We will need this when setting up the integration.</p>
 <p><img alt="Slack Authentication Page" src="../images/slack_authentication_page.png" /></p>
@@ -379,7 +379,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h2 id="breaking-it-down">Breaking it down</h2>
 <p>You should have received a message on Slack already. To learn more about how to specify and extend the configuration for Slack, this is the section for you. Let's start by inspecting the simplest possible Slack URL:</p>
 <p><code>https://slack.com/api/chat.postMessage?token=xxxx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxxx-xxxxxxxxxx&amp;channel=%23general&amp;text=$message</code></p>
-<p>The initial part (<code>https://slack.com/api/chat.postMessage</code>) points out the method to invoke on Slack. In this case we want to post a new message (<code>chat.postMessage</code>). The <code>token</code> query parameter contains your access token as found on the <a href="https://api.slack.com/web">API page</a>.</p>
+<p>The initial part (<code>https://slack.com/api/chat.postMessage</code>) points out the method to invoke on Slack. In this case, we want to post a new message (<code>chat.postMessage</code>). The <code>token</code> query parameter contains your access token as found on the <a href="https://api.slack.com/web">API page</a>.</p>
 <p>The <code>channel</code> parameter contains the name or the ID of the channel you want to post the chat message to. In the example above, I specify the #general channel, but it can be any channel on your account. Observe how I've URL encoded the <code>#</code> character.</p>
 <p>Next up is the <code>text</code> parameter which contains the actual message we want to post to #general. By inserting <code>$message</code>, I tell elmah.io to insert the title or headline of the logged message. In case of an exception, this will be the exception message generated at your website. elmah.io supports a range of variables, available on the Rules tab on the log settings.</p>
 <p>To add a sender name other than <code>Bot</code>, add a <code>username</code> parameter like this: <code>&amp;username=elmah.io</code>.</p>

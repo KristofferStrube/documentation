@@ -341,13 +341,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<p>﻿# Logging from JSNLog</p>
+<h1 id="logging-from-jsnlog">Logging from JSNLog</h1>
 <p>Using JSNLog you will be able to log JavaScript errors to elmah.io. In this sample, we will focus about logging JavaScript errors from a ASP.NET MVC web application, but you can use JSNLog to log anything to elmah.io, so please check out their documentation.</p>
 <p>Start by installing the JSNLog.Elmah package:</p>
 <pre><code class="powershell">Install-Package JSNLog.Elmah
 </code></pre>
 
-<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then install elmah.io:</p>
+<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then, install elmah.io:</p>
 <pre><code class="powershell">Install-Package elmah.io
 </code></pre>
 
@@ -359,7 +359,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <pre><code class="javascript">JL().fatal(&quot;log message&quot;);
 </code></pre>
 
-<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be build into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
+<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be built into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
 <pre><code class="javascript">&lt;script&gt;
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
 

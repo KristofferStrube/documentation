@@ -356,7 +356,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </code></pre>
 
-<p>In the above code, we listen for the Logged event by simply declaring a method named <code>ErrorLog_Logged</code>. When called we create a new (Elmah.Io.)ErrorLog instance with the GUID of your log at elmah.io. Next we simply call the Log method with a new Error object. Bam! The error is logged both in SQL Server and in elmah.io.</p>
+<p>In the above code, we listen for the Logged event by simply declaring a method named <code>ErrorLog_Logged</code>. When called, we create a new (Elmah.Io.)ErrorLog instance with the GUID of your log at elmah.io. Next, we simply call the Log method with a new Error object. Bam! The error is logged both in SQL Server and in elmah.io.</p>
 <p>If you only want to log certain types of errors in elmah.io, but everything to your normal log, you can extend your code like this:</p>
 <pre><code class="csharp">void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
 {

@@ -342,14 +342,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-from-aspnet-mvc">Logging from ASP.NET MVC</h1>
-<p>Even though ELMAH works out of the box with ASP.NET MVC, ELMAH and MVC provides some features with interfere with one another. As usual, the great community around ELMAH have done something to fix this, using the <a href="https://www.nuget.org/packages/Elmah.MVC/">Elmah.Mvc</a> NuGet package.</p>
+<p>Even though ELMAH works out of the box with ASP.NET MVC, ELMAH and MVC provides some features which interfere with one another. As usual, the great community around ELMAH have done something to fix this, by using the <a href="https://www.nuget.org/packages/Elmah.MVC/">Elmah.Mvc</a> NuGet package.</p>
 <p>To start logging exceptions from ASP.NET MVC, install the NuGet packages:</p>
 <pre><code class="powershell">Install-Package Elmah.MVC
 Install-Package elmah.io
 </code></pre>
 
 <p>That's basically it. Every unhandled exception in ASP.NET MVC, is logged to elmah.io.</p>
-<p>So why install <code>Elmah.MVC</code> at all, when the <code>elmah.io</code> package works out of the box? For starters, <code>Elmah.MVC</code> adds some interesting logic around routing and authentication, which matches how things are handled in MVC. Take a look in the <code>web.config</code> for application settings with the <code>elmah.mvc.</code> prefix. For documentation about these settings, check out the <a href="https://github.com/alexbeletsky/elmah-mvc">Elmah.MVC project</a> on GitHub.</p>
+<p>So, why install <code>Elmah.MVC</code> at all, when the <code>elmah.io</code> package works out of the box? For starters, <code>Elmah.MVC</code> adds some interesting logic around routing and authentication, which matches how things are handled in MVC. Take a look in the <code>web.config</code> for application settings with the <code>elmah.mvc.</code> prefix. For documentation about these settings, check out the <a href="https://github.com/alexbeletsky/elmah-mvc">Elmah.MVC project</a> on GitHub.</p>
 <p>Since <code>Elmah.MVC</code> configures its own URL for accessing the ELMAH UI (just <code>/elmah</code> and not <code>/elmah.axd</code>), you can remove the <code>location</code> element in <code>web.config</code>, added by the <code>elmah.io</code> NuGet package installer.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>

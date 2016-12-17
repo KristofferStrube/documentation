@@ -342,7 +342,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-through-a-http-proxy">Logging through a HTTP proxy</h1>
-<p>You may find yourself in a situation, where your production web servers isn’t allowed HTTP requests towards the public internet. This also impacts the elmah.io client, which requires access to the URL https://elmah.io/api. A popular choice of implementing this kind of restriction nowadays, seem to be through a HTTP proxy like squid.</p>
+<p>You may find yourself in a situation, where your production web servers aren't allowing HTTP requests towards the public Internet. This also impacts the elmah.io client, which requires access to the URL https://elmah.io/api. A popular choice of implementing this kind of restriction nowadays, seem to be through a HTTP proxy like squid.</p>
 <p>Luckily the elmah.io client supports proxy configuration out of the box. Let’s look at how to configure a HTTP proxy through <code>web.config</code>:</p>
 <pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;configuration&gt;
@@ -367,7 +367,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>The above example is of course greatly simplified.</p>
-<p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port your are using).</p>
+<p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port you are using).</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 

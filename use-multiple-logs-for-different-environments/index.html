@@ -342,17 +342,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="use-multiple-logs-for-different-environments">Use multiple logs for different environments</h1>
-<p>We bet that you use at least two environments for hosting you website: localhost and a production environment. You probably need to log website errors on all your environments, but you don’t want to mix errors from different environments in the same error log. Lucky for you, Microsoft provides a great way of differentiating configuration for different environments called <a href="https://msdn.microsoft.com/en-us/library/dd465326(v=vs.110).aspx">Web Config transformation</a>.</p>
+<p>We bet that you use at least two environments for hosting your website: localhost and a production environment. You probably need to log website errors on all your environments, but you don’t want to mix errors from different environments in the same error log. Lucky for you, Microsoft provides a great way of differentiating configuration for different environments called <a href="https://msdn.microsoft.com/en-us/library/dd465326(v=vs.110).aspx">Web Config transformation</a>.</p>
 <blockquote>
-<p>To avoid spending numerous hours of debugging, remember that Web Config transformations are only run on deploy and not on build. In other words deploy your website using Visual Studio, MSBuild or third for the transformations to replace the right ELMAH config.</p>
+<p>To avoid spending numerous hours of debugging, remember that Web Config transformations are only run on deploy and not on build. In other words, deploy your website using Visual Studio, MSBuild or third for the transformations to replace the right ELMAH config.</p>
 </blockquote>
-<p>Weather or not you want errors from localhost logged on elmah.io, start by installing the elmah.io NuGet package:</p>
+<p>Whether or not you want errors from localhost logged on elmah.io, start by installing the elmah.io NuGet package:</p>
 <pre><code class="powershell">Install-Package elmah.io
 </code></pre>
 
 <p>Then choose one of the two paths below.</p>
 <h2 id="logging-to-elmahio-from-both-localhost-and-production">Logging to elmah.io from both localhost and production</h2>
-<p>Create two new logs at the elmah.io website called something like “My website” and “My website development”. The naming isn’t really important, so pick something saying.</p>
+<p>Create two new logs at the elmah.io website called something like “My website” and “My website development”. The naming isn’t really important, so pick something telling.</p>
 <p>During installation of the elmah.io package, NuGet will ask you for your elmah.io log id. In this dialog input the log id from the log named “My website development”. The default configuration is used when running your website locally. When installed open the <code>web.release.config</code> file and add the following code:</p>
 <pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
   &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;INSERT_HERE&quot; /&gt;
@@ -362,7 +362,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>Replace the <code>INSERT_HERE</code> value with the log id named “My website”. That’s it! You can now build and deploy your website using different configurations. When nothing is changed, Visual Studio will build your website using the Debug configuration. This configuration looks for the ELMAH code in the <code>web.debug.config</code> file. We didn’t add any ELMAH configuration to this file, why the default values from <code>web.config</code> are used. When selecting the Release configuration, Web. Config transformations will replace the default values in <code>web.config</code> with the new ELMAH configuration from <code>web.release.config</code>.</p>
 <h2 id="logging-to-elmahio-from-production-only">Logging to elmah.io from production only</h2>
-<p>During the installation, NuGet will ask you for your elmah.io log id. You don't need to write anything in this dialog, since we will remove the default elmah.io config in a moments. When installed open the <code>web.config</code> file and locate the <code>&lt;elmah&gt;</code> element. Remove the <code>&lt;errorLog&gt;</code> element and set the <code>allowRemoveAccess</code> attribute to <code>true</code>. Your configuration should look like this now:</p>
+<p>During the installation, NuGet will ask you for your elmah.io log id. You don't need to write anything in this dialog, since we will remove the default elmah.io config in a moment. When installed open the <code>web.config</code> file and locate the <code>&lt;elmah&gt;</code> element. Remove the <code>&lt;errorLog&gt;</code> element and set the <code>allowRemoveAccess</code> attribute to <code>true</code>. Your configuration should look like this now:</p>
 <pre><code class="xml">&lt;elmah&gt;
   &lt;security allowRemoteAccess=&quot;true&quot; /&gt;
 &lt;/elmah&gt;

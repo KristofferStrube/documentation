@@ -342,7 +342,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-from-blogenginenet">Logging from BlogEngine.NET</h1>
-<p>Because BlogEngine.NET is written in ASP.NET, it doesn’t really need any custom code to use ELMAH and elmah.io. In fact ELMAH works out of the box for most web frameworks by Microsoft. If you are building and deploying the code yourself, installing elmah.io is achieved using our NuGet package:</p>
+<p>Because BlogEngine.NET is written in ASP.NET, it doesn’t really need any custom code to use ELMAH and elmah.io. In fact, ELMAH works out of the box for most web frameworks by Microsoft. If you are building and deploying the code yourself, installing elmah.io is achieved using our NuGet package:</p>
 <pre><code class="powershell">Install-Package elmah.io
 </code></pre>
 
@@ -352,7 +352,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>Where LOG_ID is your log id, located on the settings page.</p>
-<p>To wrap this up, you may have noticed that there’s a <a href="https://www.nuget.org/packages/Elmah.BlogEngine.Net/">NuGet package</a> to bring ELMAH support into BlogEngine.NET. This package adds the ELMAH assembly and config as well as adds a nice BlogEngine.NET compliant URL for browsing errors. Feel free to use this package, but remember to add it after the elmah.io package. Also make sure to cleanup the dual error log configuration:</p>
+<p>To wrap this up, you may have noticed that there’s a <a href="https://www.nuget.org/packages/Elmah.BlogEngine.Net/">NuGet package</a> to bring ELMAH support into BlogEngine.NET. This package adds the ELMAH assembly and config as well as adds a nice BlogEngine.NET compliant URL for browsing errors. Feel free to use this package, but remember to add it after the elmah.io package. Also, make sure to clean up the dual error log configuration:</p>
 <pre><code class="xml">&lt;elmah&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
   &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;LOGID&quot; /&gt;

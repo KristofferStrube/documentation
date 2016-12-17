@@ -342,19 +342,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="adding-version-information">Adding Version Information</h1>
-<p>Almost every piece of software have some sort of version. Whether it's a nice looking <a href="http://semver.org/">SemVer</a> string or a simple timestamp, being able to distinguish one version from the other is important. elmah.io supports sending version information from your application in every message logged.</p>
+<p>Almost every piece of software has some sort of version. Whether it's a nice looking <a href="http://semver.org/">SemVer</a> string or a simple timestamp, being able to distinguish one version from the other is important. elmah.io supports sending version information from your application in every message logged.</p>
 <h2 id="version-numbers-on-the-ui">Version Numbers on the UI</h2>
 <p>Let's start by looking at how version numbers are represented in the elmah.io UI. Every message contains a version property as illustrated below:</p>
 <p><img alt="Error Details with Version Number" src="../images/versiondetails.png" /></p>
 <p>The error is logged by an application with version number 1.0.0. Looking at another error, the version number may look different:</p>
 <p><img alt="Error Details with Other Version Number" src="../images/versiondetails2.png" /></p>
 <p>This way, you will be able to see which version of your software that logged each message.</p>
-<p>Having the version number on the message, opens up some interesting search possibilities. Imagine that you want to search for every message logged by 1.0.* versions of your software, including release candidates etc. Simply do a search in the search box like this:</p>
+<p>Having the version number on the message, opens up some interesting search possibilities. Imagine that you want to search for every message logged by 1.0.* versions of your software, including release candidates, etc. Simply do a search in the search box like this:</p>
 <p><img alt="Search for Versions" src="../images/versionsearch.png" /></p>
 <p>The example above finds every message logged from 1.0.0, 1.0.0-rc1, 1.0.1, etc.</p>
 <h2 id="adding-version-numbers">Adding Version Numbers</h2>
 <p>How you choose to represent version numbers in your system is really up to you. elmah.io doesn't require SemVer, even though we strongly recommend you to use it. Version is a simple string in our <a href="../elmah.io/api">API</a>, which means that you can send anything from SemVer to a stringified timestamp.</p>
-<p>Adding a version number to every message logged in elmah.io, is easy as 1-2-3. If you're using our API, there's a property named <code>version</code> where you can put the version of your application. Chances are that you are using one of the integrations like ELMAH, log4net or Serilog. In fact there's multiple ways to send a version number to elmah.io.</p>
+<p>Adding a version number to every message logged in elmah.io, is easy as 1-2-3. If you're using our API, there's a property named <code>version</code> where you can put the version of your application. Chances are that you are using one of the integrations like ELMAH, log4net or Serilog. In fact, there's multiple ways to send a version number to elmah.io.</p>
 <h3 id="globally-using-elmah">Globally using ELMAH</h3>
 <p>You probably want to attach the same version number on every message logged in elmah.io. The easiest way to achieve that, is to create a global event handler for the OnMessage event, which is triggered every time the elmah.io client logs a message to elmah.io:</p>
 <pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
@@ -365,7 +365,7 @@ logger.OnMessage += (sender, args) =&gt;
 }
 </code></pre>
 
-<p>In the example, the message send of to elmah.io is decorated with the version numer <code>1.2.3</code> You will need to replace this with the value of an app setting, the assembly info or whatever strategy you've used to make the version number available to your code.</p>
+<p>In the example, the message send off to elmah.io is decorated with the version number <code>1.2.3</code> You will need to replace this with the value of an app setting, the assembly info or whatever strategy you've used to make the version number available to your code.</p>
 <h3 id="trycatch-using-elmah">Try/catch using ELMAH</h3>
 <p>If you're logging errors to elmah.io in catch blocks, logging the version number can be done using a similar approach to the above:</p>
 <pre><code class="csharp">try
