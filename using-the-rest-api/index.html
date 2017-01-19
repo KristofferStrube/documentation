@@ -352,7 +352,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>The <code>title</code> field is the only required field on a message, but fields for specifying severity, timestamp etc. are there. For more information, check out the documentation.</p>
-<p>If everything where successful, the API returns a HTTP status code of <code>201</code> and a location to where to fetch the new message.</p>
+<p>If everything where successful, the API returns a HTTP status code of <code>201</code> and a location to where to fetch the new message. If the endpoint fails, the response will contain a description of what went wrong. Forgetting to set <code>Content-Length</code>, <code>Content-Type</code> and similar, will result in an invalid request.</p>
 <h3 id="getting-a-message">Getting a message</h3>
 <p>In the example above, the API returned the URL for getting the newly created message: <code>https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID</code>. By making a GET request to this URL, we get back the message details:</p>
 <pre><code class="json">{
