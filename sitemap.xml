@@ -128,6 +128,12 @@
     </url>
         
     <url>
+     <loc>None/logging-to-elmah-io-from-wcf/</loc>
+     <lastmod>2017-01-20</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>None/configure-elmah-io-manually/</loc>
      <lastmod>2017-01-20</lastmod>
      <changefreq>daily</changefreq>
