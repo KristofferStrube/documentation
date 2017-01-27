@@ -361,7 +361,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </code></pre>
 
-<p>(replace <code>API_KEY</code> with your API key found on your profile on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
+<p>(replace <code>API_KEY</code> with your API key found on your organization settings page on elmah.io and <code>LOG_ID</code> with the log Id of the log you want to log to).</p>
 <p>That's it. Every uncaught exception will be logged to elmah.io. To log exceptions manually (or even log verbose and information messages), check out <a href="../logging-to-elmah-io-from-microsoft-extensions-logging">Logging from Microsoft.Extensions.Logging</a>.</p>
 <h2 id="logging-exceptions-manually">Logging exceptions manually</h2>
 <p>While automatically logging all uncaught exceptions is definitely a nice feature, sometimes you may want to catch exceptions and log them manually. If you just want to log the exception details, without all of the contextual information about the HTTP context (cookies, server variables, etc.), we recommend you to look at our integration for <a href="../logging-to-elmah-io-from-microsoft-extensions-logging">Microsoft.Extensions.Logging</a>. If the context is important for the error, you can utilize the <code>Ship</code>-methods available in <code>Elmah.Io.AspNetCore</code>:</p>

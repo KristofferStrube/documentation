@@ -360,7 +360,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <pre><code class="csharp">factory.AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
 </code></pre>
 
-<p>Replace <code>API_KEY</code> with your API key found on the profile page and <code>LOG_ID</code> with the id of the log you wish to log to.</p>
+<p>Replace <code>API_KEY</code> with your API key found on the organization settings page and <code>LOG_ID</code> with the id of the log you wish to log to.</p>
 <p>Finally, create a new logger and start logging exceptions:</p>
 <pre><code class="csharp">var logger = factory.CreateLogger(&quot;MyLog&quot;);
 logger.LogError(1, ex, &quot;Unexpected error&quot;);

@@ -372,7 +372,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h3 id="manually-using-swagger-ui">Manually using Swagger UI</h3>
 <p>If you release your software manually, creating the new release manually is easy using Swagger UI. Swagger UI is a graphical client for calling a Swagger enabled endpoint (much like Postman). Navigate to <a href="https://api.elmah.io/swagger/ui/index">https://api.elmah.io/swagger/ui/index</a>, expand the <em>Deployments</em> node and click the POST request:</p>
 <p><img alt="Deployments POST" src="../images/deployments_post.png" /></p>
-<p>To create the release, input your API key (found on your profile) in the top right corner and click the JSON beneath <em>Model Schema</em>. This copies the example JSON to the deployment parameter. A minimal deployment would look like the following, but adding more information makes the experience within elmah.io even better:</p>
+<p>To create the release, input your API key (found on your organization settings page) in the top right corner and click the JSON beneath <em>Model Schema</em>. This copies the example JSON to the deployment parameter. A minimal deployment would look like the following, but adding more information makes the experience within elmah.io even better:</p>
 <pre><code class="json">{
   &quot;version&quot;: &quot;1.42.7&quot;
 }
@@ -391,7 +391,7 @@ $body = @{
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
-<p>(replace <code>API_KEY</code> with your API key found on your profile)</p>
+<p>(replace <code>API_KEY</code> with your API key found on your organization settings page)</p>
 <p>In the example, a simple version string is sent to the API and elmah.io will automatically put a timestamp on that. Overriding user information and description, makes the experience within the elmah.io UI better. Pulling release notes and the name and email of the deployer, is usually available through environment variables or similar, depending on the technology used for creating the deployment.</p>
 <h3 id="using-kudu">Using Kudu</h3>
 <p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script as shown in <a href="http://blog.elmah.io/decorating-errors-with-version-number-using-azure-websites/">Decorating errors with version number using Azure websites</a>.</p>
@@ -424,7 +424,7 @@ $body = @{
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
-<p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your profile)</p>
+<p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your organization settings page)</p>
 <p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional information about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
 <h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
 <p>Notifying elmah.io of a new deployment from Octopus Deploy, is supported through a custom step template. To install and configure the template, follow the steps below:</p>
@@ -448,7 +448,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <img alt="Add step template to process" src="../images/add_elmah_io_deployment_step.png" /></p>
 </li>
 <li>
-<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your <a href="https://elmah.io/profile">profile</a>. Optionally input a version number prefix, to <a href="#versioning-different-services">support multiple services</a>.
+<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your organization settings page. Optionally input a version number prefix, to <a href="#versioning-different-services">support multiple services</a>.
 <img alt="Save notification step" src="../images/save_notification_step.png" /></p>
 </li>
 </ol>
@@ -473,7 +473,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <img alt="Add VSTS task" src="../images/vsts_add_task.png" /></p>
 </li>
 <li>
-<p>Copy your API key from your <a href="https://elmah.io/profile">profile</a> and paste it into the <em>API Key</em> field. Click <em>Save</em>.
+<p>Copy your API key from your organization settings page and paste it into the <em>API Key</em> field. Click <em>Save</em>.
 <img alt="VSTS task added" src="../images/vsts_task_added.png" /></p>
 </li>
 </ol>
