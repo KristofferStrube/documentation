@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Set Up Deployment Tracking - elmah.io Documentation</title>
+	<title>Set Up Deployment Tracking | elmah.io</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -347,7 +347,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <h1 id="set-up-deployment-tracking">Set Up Deployment Tracking</h1>
 <ul>
-<li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
 <li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a><ul>
 <li><a href="#manually-using-swagger-ui">Manually using Swagger UI</a></li>
 <li><a href="#using-powershell">Using PowerShell</a></li>
@@ -356,19 +355,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><a href="#using-visual-studio-team-services">Using Visual Studio Team Services</a></li>
 </ul>
 </li>
+<li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
 <li><a href="#versioning-different-services">Versioning different services</a></li>
 </ul>
 <p>Deployment tracking creates an overview of the different versions of your software and show you how well each version performed. With this integration in place, you will be able to see when you released and if some of your releases caused more errors than others. While most pages on elmah.io supports everything from verbose to fatal messages, the context on deployment tracking is around warnings and errors.</p>
-<p>To set up deployment tracking, you will need two things:</p>
-<ol>
-<li>Decorate all of your messages with a version number.</li>
-<li>Tell elmah.io when you release using our REST API or one of the integrations.</li>
-</ol>
-<p>When set up, deployment tracking is available on each of your logs.</p>
-<h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
-<p>Check out <a href="http://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
+<p>To set up deployment tracking, you will need to tell elmah.io when you release, using our REST API or one of the integrations. Deployments are as default created on all of your logs, but this can be tweaked. More about this later.</p>
 <h2 id="tell-elmahio-when-you-release">Tell elmah.io when you release</h2>
-<p>When you create a release of your software either manually or with the help from a tool like Octopus, you need to tell elmah.io about it. The <a href="https://api.elmah.io/swagger/ui/index">elmah.io REST API v3</a>, provides an endpoint named <code>deployments</code>, which you can call when creating releases.</p>
+<p>When you create a release of your software either manually or with the help from a tool like Octopus, you need to tell elmah.io about it. The <a href="https://api.elmah.io/swagger/ui/index">elmah.io REST API v3</a>, provides an endpoint named <code>deployments</code>, which you can call when creating releases. After calling the endpoint, all new messages to your logs, will automatically be decorated with the most recent version number.</p>
 <h3 id="manually-using-swagger-ui">Manually using Swagger UI</h3>
 <p>If you release your software manually, creating the new release manually is easy using Swagger UI. Swagger UI is a graphical client for calling a Swagger enabled endpoint (much like Postman). Navigate to <a href="https://api.elmah.io/swagger/ui/index">https://api.elmah.io/swagger/ui/index</a>, expand the <em>Deployments</em> node and click the POST request:</p>
 <p><img alt="Deployments POST" src="../images/deployments_post.png" /></p>
@@ -448,7 +441,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <img alt="Add step template to process" src="../images/add_elmah_io_deployment_step.png" /></p>
 </li>
 <li>
-<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your organization settings page. Optionally input a version number prefix, to <a href="#versioning-different-services">support multiple services</a>.
+<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your organization settings page. Optionally input a log ID, to <a href="#versioning-different-services">support multiple services</a>.
 <img alt="Save notification step" src="../images/save_notification_step.png" /></p>
 </li>
 </ol>
@@ -477,16 +470,12 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <img alt="VSTS task added" src="../images/vsts_task_added.png" /></p>
 </li>
 </ol>
-<p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to <a href="#decorate-your-messages-with-a-version-number">decorate all messages sent to elmah.io with the same version number</a>.</p>
+<p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
+<h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
+<p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="http://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
 <h2 id="versioning-different-services">Versioning Different Services</h2>
-<p>Chances are that your software consists of multiple services released independently and with different version numbers. This is a common pattern when splitting up a software system in microservices. How you choose to split your elmah.io logs are entirely up to you, but we almost always recommend having a separate log for each service. When doing so, you only want deployment tracking to show the releases from the service you are currently looking at. The problem here is that deployments on elmah.io are not related to a log in any way. We could have implemented it this way, but that would limit the ways to split up logs.</p>
-<p>To make sure that only deployments related to the service you are looking at are shown, you need unique deployment names. A simple approach is to name your releases with a service name prefix like this:</p>
-<ul>
-<li>service1-1.0.0</li>
-<li>service1-1.1.0</li>
-<li>service2-1.0.0</li>
-</ul>
-<p>In the examples we have two services: service1 and service2. By prefixing deployments with the service name, we make sure that not both service1-1.0.0 and service2-1.0.0 are shown when looking at one of the services.</p>
+<p>Chances are that your software consists of multiple services released independently and with different version numbers. This is a common pattern when splitting up a software system in microservices. How you choose to split your elmah.io logs are entirely up to you, but we almost always recommend having a separate log for each service. When doing so, you only want deployment tracking to show the releases from the service you are currently looking at. The problem here is that deployments on elmah.io are shown on all logs as default.</p>
+<p>To make sure that only deployments related to the service you are looking at are shown, you need to decorate each deployment with the log ID where it belong. The <code>deployments</code> API support this through an optional <code>logId</code> property. If set, the new deployment is only shown on the specified log.</p>
 
 <button type="button" class="btn btn-lg btn-primary navbar-btn" data-toggle="modal" data-target="#signinModal">Give elmah.io a try now</button>
 

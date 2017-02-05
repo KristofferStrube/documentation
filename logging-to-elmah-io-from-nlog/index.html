@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Logging from NLog - elmah.io Documentation</title>
+	<title>Logging from NLog | elmah.io</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -372,7 +372,7 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
 </code></pre>
 
 <h2 id="custom-properties">Custom Properties</h2>
-<p>NLog supports custom properties like most other logging frameworks. With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="http://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="http://localhost:8000/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
+<p>NLog supports custom properties like most other logging frameworks. With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="http://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="http://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
 <p>To log custom properties with NLog and elmah.io, you need to use an overload of each logging-method that takes a <code>LogEventInfo</code> object as parameter:</p>
 <pre><code class="csharp">var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
 infoMessage.Properties.Add(&quot;Some Property Key&quot;, &quot;Some Property Value&quot;);

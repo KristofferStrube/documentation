@@ -11,7 +11,7 @@
         <link rel="shortcut icon" href="../favicon.ico">
         
 
-	<title>Adding version information - elmah.io Documentation</title>
+	<title>Adding version information | elmah.io</title>
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -346,7 +346,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="adding-version-information">Adding Version Information</h1>
-<p>Almost every piece of software has some sort of version. Whether it's a nice looking <a href="http://semver.org/">SemVer</a> string or a simple timestamp, being able to distinguish one version from the other is important. elmah.io supports sending version information from your application in every message logged.</p>
+<p>Almost every piece of software has some sort of version. Whether it's a nice looking <a href="http://semver.org/">SemVer</a> string or a simple timestamp, being able to distinguish one version from the other is important. elmah.io supports sending version information from your application in every message logged in two ways:</p>
+<ol>
+<li>By adding the version manually (as explained in this document).</li>
+<li>By using the <a href="https://elmah.io/features/#deploymenttracking">Deployment Tracking</a> feature (as explained in <a href="../setup-deployment-tracking/">Set Up Deployment Tracking</a>).</li>
+</ol>
 <h2 id="version-numbers-on-the-ui">Version Numbers on the UI</h2>
 <p>Let's start by looking at how version numbers are represented in the elmah.io UI. Every message contains a version property as illustrated below:</p>
 <p><img alt="Error Details with Version Number" src="../images/versiondetails.png" /></p>
@@ -357,7 +361,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p><img alt="Search for Versions" src="../images/versionsearch.png" /></p>
 <p>The example above finds every message logged from 1.0.0, 1.0.0-rc1, 1.0.1, etc.</p>
 <h2 id="adding-version-numbers">Adding Version Numbers</h2>
-<p>How you choose to represent version numbers in your system is really up to you. elmah.io doesn't require SemVer, even though we strongly recommend you to use it. Version is a simple string in our <a href="../elmah.io/api">API</a>, which means that you can send anything from SemVer to a stringified timestamp.</p>
+<p>How you choose to represent version numbers in your system is really up to you. elmah.io doesn't require SemVer, even though we strongly recommend you to use it. Version is a simple string in our <a href="https://elmah.io/api">API</a>, which means that you can send anything from SemVer to a stringified timestamp.</p>
 <p>Adding a version number to every message logged in elmah.io, is easy as 1-2-3. If you're using our API, there's a property named <code>version</code> where you can put the version of your application. Chances are that you are using one of the integrations like ELMAH, log4net or Serilog. In fact, there's multiple ways to send a version number to elmah.io.</p>
 <h3 id="globally-using-elmah">Globally using ELMAH</h3>
 <p>You probably want to attach the same version number on every message logged in elmah.io. The easiest way to achieve that, is to create a global event handler for the OnMessage event, which is triggered every time the elmah.io client logs a message to elmah.io:</p>
