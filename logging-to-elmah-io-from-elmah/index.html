@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
-        
-        
-        <link rel="shortcut icon" href="../favicon.ico">
-        
+        <meta name="author" content="Thomas Ardal">
+        <link rel="canonical" href="http://docs.elmah.io/logging-to-elmah-io-from-elmah/">
+        <link rel="shortcut icon" href="http://docs.elmah.io/favicon.ico">
 
-	<title>Logging from ELMAH | elmah.io</title>
+		<title>Logging from ELMAH | elmah.io</title>
+
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -24,14 +24,27 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
         <script src="/js/search.js"></script>
-        
         <script src="/../js/jquery-1.10.2.min.js"></script>
         <script src="/../js/bootstrap-3.0.3.min.js"></script>
         <link href="https://elmah.io/content/elmah.io.front/critical.css" rel="stylesheet">
         <link href="https://elmah.io/content/elmah.io.front/elmahio.css" rel="stylesheet">
         <link href="https://elmah.io/content/elmah.io.front/docs.css" rel="stylesheet">
         <link href="/../css/base.css" rel="stylesheet">
-    </head>
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="@elmah_io">
+		<meta name="twitter:creator" content="@elmah_io">
+		<meta name="twitter:title" content="Logging from ELMAH">
+		
+		
+		<meta property="og:title" content="Logging from ELMAH">
+		
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="http://docs.elmah.io/logging-to-elmah-io-from-elmah/">
+		
+		<meta property="fb:app_id" content="218008838347208" />
+
+		</head>
 
     <body class="readable body-docs">
 <!-- Google Tag Manager -->
@@ -346,7 +359,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-from-elmah">Logging from ELMAH</h1>
-<p>This article will explain the steps necessary to log errors from your web application into elmah.io. We also offer more specific guides on <a href="../logging-to-elmah-io-from-aspnet-mvc">ASP.NET MVC</a>, <a href="../logging-to-elmah-io-from-web-api">Web API</a>, <a href="../logging-to-elmah-io-from-nancy">Nancy</a> and a lot of other web- and logging-frameworks. Read through this tutorial and head over to a tutorial specific for your choice of framework afterwards. If you don’t know ELMAH, check out our <a href="http://blog.elmah.io/elmah-tutorial/">ELMAH Tutorial</a> and visit the nice folks over at the <a href="http://elmah.github.io/">ELMAH project page</a>. Let’s get started.</p>
+<p>This article will explain the steps necessary to log errors from your web application into elmah.io. We also offer more specific guides on <a href="../logging-to-elmah-io-from-aspnet-mvc">ASP.NET MVC</a>, <a href="../logging-to-elmah-io-from-web-api">Web API</a>, <a href="../logging-to-elmah-io-from-nancy">Nancy</a> and a lot of other web- and logging-frameworks. Read through this tutorial and head over to a tutorial specific for your choice of framework afterwards. If you don’t know ELMAH, check out our <a href="http://blog.elmah.io/elmah-tutorial/">ELMAH Tutorial - what is ELMAH</a> and visit the nice folks over at the <a href="http://elmah.github.io/">ELMAH project page</a>. Let’s get started.</p>
 <p>Create a new ASP.NET MVC project in Visual Studio (you can choose another web project type if you’d like):</p>
 <p><img alt="Create ASP.NET MVC Website" src="../images/create_aspnetmvc_website.png" /></p>
 <p>Select a project template of your choice:</p>

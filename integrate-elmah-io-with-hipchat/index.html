@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
-        
-        
-        <link rel="shortcut icon" href="../favicon.ico">
-        
+        <meta name="author" content="Thomas Ardal">
+        <link rel="canonical" href="http://docs.elmah.io/integrate-elmah-io-with-hipchat/">
+        <link rel="shortcut icon" href="http://docs.elmah.io/favicon.ico">
 
-	<title>Integrating with HipChat manually | elmah.io</title>
+		<title>Integrating with HipChat manually | elmah.io</title>
+
 
         <link href="/../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="/../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -24,14 +24,27 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
         <script src="/js/search.js"></script>
-        
         <script src="/../js/jquery-1.10.2.min.js"></script>
         <script src="/../js/bootstrap-3.0.3.min.js"></script>
         <link href="https://elmah.io/content/elmah.io.front/critical.css" rel="stylesheet">
         <link href="https://elmah.io/content/elmah.io.front/elmahio.css" rel="stylesheet">
         <link href="https://elmah.io/content/elmah.io.front/docs.css" rel="stylesheet">
         <link href="/../css/base.css" rel="stylesheet">
-    </head>
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="@elmah_io">
+		<meta name="twitter:creator" content="@elmah_io">
+		<meta name="twitter:title" content="Integrating with HipChat manually">
+		
+		
+		<meta property="og:title" content="Integrating with HipChat manually">
+		
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="http://docs.elmah.io/integrate-elmah-io-with-hipchat/">
+		
+		<meta property="fb:app_id" content="218008838347208" />
+
+		</head>
 
     <body class="readable body-docs">
 <!-- Google Tag Manager -->
@@ -355,34 +368,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Value</th>
+<th align="left">Field</th>
+<th align="left">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Method</td>
-<td>POST</td>
+<td align="left">Method</td>
+<td align="left">POST</td>
 </tr>
 <tr>
-<td>URL</td>
-<td>https://api.hipchat.com/v2/room/YOUR_ROOM/notification</td>
+<td align="left">URL</td>
+<td align="left">https://api.hipchat.com/v2/room/YOUR_ROOM/notification</td>
 </tr>
 <tr>
-<td>Content Type</td>
-<td>application/json</td>
+<td align="left">Content Type</td>
+<td align="left">application/json</td>
 </tr>
 <tr>
-<td>Body</td>
-<td>{"from":"elmah.io","message":"$message"}</td>
+<td align="left">Body</td>
+<td align="left">{"from":"elmah.io","message":"$message"}</td>
 </tr>
 <tr>
-<td>Authentication</td>
-<td>Bearer Token</td>
+<td align="left">Authentication</td>
+<td align="left">Bearer Token</td>
 </tr>
 <tr>
-<td>Token</td>
-<td>YOUR_TOKEN</td>
+<td align="left">Token</td>
+<td align="left">YOUR_TOKEN</td>
 </tr>
 </tbody>
 </table>
