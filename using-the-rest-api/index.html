@@ -382,7 +382,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>As shown in the returned body, elmah.io automatically inserted some missing fields like a timestamp and a severity. If no severity is specified during creating, a message is threated as information.</p>
 <h3 id="searching-messages">Searching messages</h3>
-<p>For the demo, we have inserted a couple of additional messages, which leads us to the next endpoint: searching messages. The search endpoint share the root path with the get message endpoint, but only take a log ID. The simplest possible configuration, queries the API for a list of the 15 most recent messages by calling: <code>https://elmah.io/api/v2/messages?logid=LOG_ID</code>. The body looks like this:</p>
+<p>For the demo, we have inserted a couple of additional messages, which leads us to the next endpoint: searching messages. The search endpoint shares the root path with the get message endpoint, but only take a log ID. The simplest possible configuration, queries the API for a list of the 15 most recent messages by calling: <code>https://elmah.io/api/v2/messages?logid=LOG_ID</code>. The body looks like this:</p>
 <pre><code class="json">{
   &quot;messages&quot;: [
     {
@@ -403,7 +403,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </code></pre>
 
-<p>For simplicity, the response has been simplified by not showing all of the results. The important thing to notice here, is the list of <code>messages</code> and the <code>total</code> count. <code>messages</code> contains 15 messages, which is the default page size in the search endpoint. To increase the number of returned messages, set the <code>pagesize</code> parameter in the URL (max 100 messages per request). The <code>total</code> count tells you, if there are more messages matching your search. To select messages from the next page, use the <code>pageindex</code> parameter.</p>
+<p>For simplicity, the response has been simplified by not showing all of the results. The important thing to notice here, is the list of <code>messages</code> and the <code>total</code> count. <code>messages</code> contain 15 messages, which is the default page size in the search endpoint. To increase the number of returned messages, set the <code>pagesize</code> parameter in the URL (max 100 messages per request). The <code>total</code> count tells you, if there are more messages matching your search. To select messages from the next page, use the <code>pageindex</code> parameter.</p>
 <p>Returning all messages may be fine, but being able to search by terms is even more fun. To search, use the <code>query</code>, <code>from</code> and <code>to</code> parameters as shown here: <code>https://elmah.io/api/v2/messages?logid=LOG_ID?query=another</code>. Searching for <code>another</code> will return the following response:</p>
 <pre><code class="json">{
   &quot;messages&quot;: [
