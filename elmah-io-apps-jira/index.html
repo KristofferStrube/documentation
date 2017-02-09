@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-to-multiple-elmah-logs/">
+        <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-jira/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging to multiple logs | elmah.io</title>
+		<title>Jira | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging to multiple logs">
+		<meta name="twitter:title" content="Jira">
 		
 		
-		<meta property="og:title" content="Logging to multiple logs">
+		<meta property="og:title" content="Jira">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-to-multiple-elmah-logs/">
+		<meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-jira/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -254,8 +254,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../elmah-io-apps-bitbucket/">Bitbucket</a>
 				</li>
 			
-				<li >
-					<a href="../elmah-io-apps-jira/">Jira</a>
+				<li class="active">
+					<a href="./">Jira</a>
 				</li>
 			
 				<li >
@@ -296,8 +296,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-errors-programmatically/">Logging errors programmatically</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging to multiple logs</a>
+				<li >
+					<a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a>
 				</li>
 			
 				<li >
@@ -362,34 +362,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</h1>
-<p>Unfortunately, ELMAH doesn’t support multiple log targets like other logging frameworks like Serilog. This makes logging to multiple logs a bit tricky, but no way impossible. Let’s say that you’re using ELMAH in your web application and configured it to log everything in SQL Server. If you look through your <code>web.config</code> file, you will have code looking like this somewhere:</p>
-<pre><code class="xml">&lt;elmah&gt;
-    &lt;errorLog type=&quot;Elmah.SqlErrorLog, Elmah&quot; connectionStringName=&quot;elmah&quot;/&gt;
-&lt;/elmah&gt;
-</code></pre>
-
-<p>As you probably know, this tells ELMAH to log all uncatched errors in SQL Server with the connection string “elmah”. You cannot add more <code>&lt;errorLog&gt;</code> elements, why logging to a second log seems impossible. Meet ELMAH’s Logged event, which is a great hook to log to multiple targets. Install the <a href="http://www.nuget.org/packages/elmah.io.core/">elmah.io.core</a> NuGet package and add the following code to your <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
-{
-    var elmahIoLog = new Elmah.Io.ErrorLog(new Logger(new Guid(&quot;insert your log id&quot;)));
-    elmahIoLog.Log(args.Entry.Error);
-}
-</code></pre>
-
-<p>In the above code, we listen for the Logged event by simply declaring a method named <code>ErrorLog_Logged</code>. When called, we create a new (Elmah.Io.)ErrorLog instance with the GUID of your log at elmah.io. Next, we simply call the Log method with a new Error object. Bam! The error is logged both in SQL Server and in elmah.io.</p>
-<p>If you only want to log certain types of errors in elmah.io, but everything to your normal log, you can extend your code like this:</p>
-<pre><code class="csharp">void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
-{
-    if (args.Entry.Error.StatusCode == 500)
-    {
-        var elmahIoLog = new Elmah.Io.ErrorLog(new Logger(new Guid(&quot;insert your log id&quot;)));
-        elmahIoLog.Log(args.Entry.Error);
-    }
-}
-</code></pre>
-
-<p>This time we only begin logging to elmah.io, if the thrown exception is of type <code>HttpException</code> and contains a HTTP status code of <code>500</code>. This example only logs errors with status code 500 in elmah.io and all errors in your normal error log. If you want to create this filter on all logs, you should use the <code>ErrorLog_Filtering</code> method instead. This method is called before <code>ErrorLog_Logged</code> and before actually logging the error to your normal error log.</p>
+<h1 id="install-jira-app-for-elmahio">Install Jira App for elmah.io</h1>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Jira app and click the <em>Install</em> button:</p>
+<p><img alt="Install Jira App" src="../images/apps/jira/install_settings.png" /></p>
+<p>Input your site name which is the first part of the URL you use to log into Jira. For the URL <code>https://elmahio.atlassian.net/</code>, the <code>site</code> parameter would be <code>elmahio</code>. In the Project field, input the key of the project. Note that a project have both a display name and a key. The property we are looking for here, is the uppercase identifier of the project.</p>
+<p>To create issues on Jira, you will need to input the username and password of a user with permission to create issues in the project specified above. You can use your own user credentials, but we recommend generating a user specific to elmah.io. The username must be the one found on your Jira profile. Replace <code>YOURSITE</code> with your site name in the following URL: <code>https://YOURSITE.atlassian.net/secure/ViewProfile.jspa</code>.</p>
+<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, issues are automatically created in the configured Jira project.</p>
 
 <br/>
 <p>
