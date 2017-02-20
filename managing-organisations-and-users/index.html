@@ -364,8 +364,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <h1 id="managing-organisations-and-users">Managing Organisations and Users</h1>
 <p>Chances are that you are not the only one needing to access your logs. Luckily, elmah.io offers great features in order to manage the users in your organisation and to specify who should be allowed access to what. In order to manage access, you will need to know about the concepts of <strong>users</strong> and <strong>organisations</strong>.</p>
-<p>A <strong>user</strong> represents a person wanting to access one or more logs. Each user has its own login using a social provider of choice. A user can be added to one or more organisations. Each user has an access level within the organisation as well as an access level on each log. The access level on the organisation and the logs doesn't need to be the same.</p>
-<p>An <strong>organisation</strong> is a collection of users and their role inside the organisation. You will typically only need a single organisation, representing all of the users in your company needing to access one or more logs on elmah.io.</p>
+<p>A <strong>user</strong> represents a person wanting to access one or more logs. Each user has its own login using username/password or a social provider of choice. A user can be added to one or more organisations. Each user has an access level within the organisation as well as an access level on each log. The access level on the organisation and the logs doesn't need to be the same.</p>
+<p>An <strong>organisation</strong> is a collection of users and their role inside the organisation. You will typically only need a single organisation, representing all of the users in your company needing to access one or more logs on elmah.io. Your elmah.io subscription is attached your organization and everyone with administrator access to the organization, will be able to manage the subscription.</p>
 <h2 id="adding-users-to-an-organisation">Adding users to an organisation</h2>
 <p>To assign users to a log, you will need to add them to the organisation first. When hovering the organisation name in either the left menu or on the dashboard, you will see a small gear icon. When clicking the icon, you will be taken to the organisation settings page:</p>
 <p><img alt="Organisation Settings" src="../images/organisation_settings.png" /></p>
@@ -375,17 +375,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </blockquote>
 <p>When the new user is visible in the dropdown, click the user and select an access level. The chosen access level decides what the new user is allowed to do inside the organisation. <em>Read</em> users are only allowed to view the organisation, while <em>Administrator</em> users are allowed to add new users and delete the entire organisation and all logs beneath it. The access level set for the user in the organisation, will become the user's access level on all new logs inside that organisation as well. Let's add a new user to the organisation:</p>
 <p><img alt="Add User to Organisation" src="../images/add_user_to_org.png" /></p>
-<p>To change the access level on an already added user, click one of the grouped buttons to the right of the user's name. Changing a user's access level on the organisation won't change the users access level on each log. To delete a user from the organisation, click the dropdown to the far right and select <em>Remove from organisation</em>.</p>
-<p>When a user is added to an organisation, the user will automatically have access to all new logs created in that organisation. For security reasons, a new user added to the organisation, will not have access to existing logs in the organisation. To assign the new user to all existing logs, click the dropdown next to the user and select <em>Add to all logs</em>. This will set the access level on all existing logs to the same level as specified on the user in the organisation. If the user is already added to one or more logs, the access level won't change on these logs when clicking <em>Add to all logs</em>.</p>
-<h2 id="adding-users-to-a-log">Adding users to a log</h2>
-<p>When added to the organisation, a user can be given different levels of access to each log. As mentioned above, all users inside the organisation will automatically have the same access level on each new logs, as configured on the user in the organisation.</p>
-<p>To manage users on a log, hover the log on either the left menu or on the dashboard and click the gear icon. This will take you to the log settings page:</p>
-<p><img alt="Manage Users on Log" src="../images/admin_users_on_log.png" /></p>
-<p>Both users in the organisation are now available on the log. Since I chose an existing log, the new user added to the organisation won't have access, indicated with the pressed <em>None</em> button. To assign the new user to this log, click one of the other grouped buttons.</p>
-<p>Like in the organisation settings, different access levels are available for users on a log. It's perfectly fine to change this, since you probably want users with only <em>Read</em> access on the organisation level, but <em>Write</em> or <em>Administrator</em> access to one or more logs. Being <em>Administrator</em> on a log, means that the user is able to perform user administration and other "dangerous" functions on that log.</p>
+<p>To change the access level on an already added user, click one of the grouped buttons to the right of the user's name. Changing a user's access level on the organisation won't change the users access level on each log. To delete a user from the organisation, click the red delete button to the far right.</p>
+<p>When a user is added to an organisation, the user will automatically have access to all new logs created in that organisation. For security reasons, a new user added to the organisation, will not have access to existing logs in the organisation. To assign the new user to existing logs, assign an access level on each log shown beneath the user. The list of logs can be opened by clicking the dropdown button to the right of the user.</p>
 <blockquote>
 <p>Awarding a user <em>Administrator</em> on a log, doesn't give them <em>Administrator</em> rights on the organisation.</p>
 </blockquote>
+<p>To assign a user to all logs, click the <em>None</em>, <em>Read</em>, <em>Write</em> or <em>Administrator</em> buttons in the table header above the list of logs.</p>
 
 <br/>
 <p>
@@ -393,7 +388,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </p>
 
 <p class="text-center">
-<a href="https://elmah.io/pricing/" type="button" class="btn btn-lg btn-primary navbar-btn">See how we can help you monitor your website for crashes</a>
+<a href="https://elmah.io/pricing/" type="button" class="btn btn-lg btn-primary navbar-btn hidden-xs">See how we can help you monitor your website for crashes</a>
+<a href="https://elmah.io/pricing/" type="button" class="btn btn-lg btn-primary navbar-btn visible-xs">Monitor your website</a>
 </p>
 
 <br/><br/>
