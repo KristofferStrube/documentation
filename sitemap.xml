@@ -310,6 +310,12 @@
     </url>
         
     <url>
+     <loc>https://docs.elmah.io//query-messages-using-full-text-search/</loc>
+     <lastmod>2017-03-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>https://docs.elmah.io//integrate-elmah-io-with-slack/</loc>
      <lastmod>2017-03-07</lastmod>
      <changefreq>daily</changefreq>
