@@ -367,6 +367,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-from-aspnet-core">Logging from ASP.NET Core</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-from-aspnet-core">Logging from ASP.NET Core</a><ul>
+<li><a href="#logging-exceptions-manually">Logging exceptions manually</a></li>
+<li><a href="#settings">Settings</a><ul>
+<li><a href="#events">Events</a></li>
+<li><a href="#filtering">Filtering</a></li>
+<li><a href="#formatting-exceptions">Formatting exceptions</a></li>
+<li><a href="#logging-responses-not-throwing-an-exception">Logging responses not throwing an exception</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <p>Since ELMAH hasn't been ported to ASP.NET Core yet, we've built a provider for the new logging abstraction bundled with ASP.NET Core: <a href="https://github.com/aspnet/Logging">Microsoft.Extensions.Logging</a>.</p>
 <blockquote>
 <p>The elmah.io provider for ASP.NET logging is currently in beta. We would really appreciate some feedback from you guys.</p>
@@ -424,6 +439,20 @@ catch (DivideByZeroException e)
 <blockquote>
 <p>Do not log to elmah.io in your <code>OnError</code> action, since that could cause an infinite loop in your code.</p>
 </blockquote>
+<h3 id="filtering">Filtering</h3>
+<p>While elmah.io supports <a href="https://docs.elmah.io/creating-rules-to-perform-actions-on-messages/#ignore-errors-with-a-http-status-code-of-400">ignore rules</a> serverside, you may want to filter out errors without even hitting the elmah.io API. Using the <code>OnFilter</code> function on the settings object, filtering is easy:</p>
+<pre><code class="csharp">app.UseElmahIo(
+    &quot;API_KEY&quot;, 
+    new Guid(&quot;LOG_ID&quot;), 
+    new ElmahIoSettings
+    {
+        OnFilter = message =&gt; {
+            return message.Type == &quot;System.NullReferenceException&quot;;;
+        }
+    });
+</code></pre>
+
+<p>The example above, ignores all messages of type <code>System.NullReferenceException</code>.</p>
 <h3 id="formatting-exceptions">Formatting exceptions</h3>
 <p>A default exception formatter is used to format any exceptions, before sending them off to the elmah.io API. To override the format of the details field in elmah.io, set a new <code>IExceptionFormatter</code> in the <code>ExceptionFormatter</code> property on the <code>ElmahIoSettings</code> object:</p>
 <pre><code class="csharp">app.UseElmahIo(
