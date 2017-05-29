@@ -367,18 +367,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="set-up-deployment-tracking">Set Up Deployment Tracking</h1>
+<div class="toc">
 <ul>
+<li><a href="#set-up-deployment-tracking">Set Up Deployment Tracking</a><ul>
 <li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a><ul>
 <li><a href="#manually-using-swagger-ui">Manually using Swagger UI</a></li>
 <li><a href="#using-powershell">Using PowerShell</a></li>
 <li><a href="#using-kudu">Using Kudu</a></li>
 <li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
 <li><a href="#using-visual-studio-team-services">Using Visual Studio Team Services</a></li>
+<li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
 </ul>
 </li>
 <li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
-<li><a href="#versioning-different-services">Versioning different services</a></li>
+<li><a href="#versioning-different-services">Versioning Different Services</a></li>
 </ul>
+</li>
+</ul>
+</div>
 <p>Deployment tracking creates an overview of the different versions of your software and show you how well each version performed. With this integration in place, you will be able to see when you released and if some of your releases caused more errors than others. While most pages on elmah.io supports everything from verbose to fatal messages, the context on deployment tracking is around warnings and errors.</p>
 <p>To set up deployment tracking, you will need to tell elmah.io when you release, using our REST API or one of the integrations. Deployments are as default created on all of your logs, but this can be tweaked. More about this later.</p>
 <h2 id="tell-elmahio-when-you-release">Tell elmah.io when you release</h2>
@@ -408,7 +414,11 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 <p>(replace <code>API_KEY</code> with your API key found on your organization settings page)</p>
 <p>In the example, a simple version string is sent to the API and elmah.io will automatically put a timestamp on that. Overriding user information and description, makes the experience within the elmah.io UI better. Pulling release notes and the name and email of the deployer, is usually available through environment variables or similar, depending on the technology used for creating the deployment.</p>
 <h3 id="using-kudu">Using Kudu</h3>
-<p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script as shown in <a href="https://blog.elmah.io/decorating-errors-with-version-number-using-azure-websites/">Decorating errors with version number using Azure websites</a>.</p>
+<p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script by navigating your browser to <code>https://yoursite.scm.azurewebsites.net</code> where <code>yoursite</code> is the name of your Azure website. Click the Debug console and navigate to <code>site\deployments\tools\PostDeploymentActions</code> (create it if it doesn't exist).</p>
+<p>To create the new PowerShell file, write the following in the prompt:</p>
+<pre><code class="shell">touch CreateDeployment.ps1
+</code></pre>
+
 <p>With a post deployment script running inside Kudu, we have the possibility to extract some more information about the current deployment. A full deployment PowerShell script for Kudu, would look like this:</p>
 <pre><code class="powershell">$version = Get-Date -format u
 
@@ -492,6 +502,55 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
+<h3 id="using-umbraco-cloud">Using Umbraco Cloud</h3>
+<p>Umbraco Cloud uses Azure to host Umbraco websites, why supporting deployment tracking pretty much corresponds the steps specified in <a href="#using-kudu">Using Kudu</a>. Navigate to <code>https://your-umbraco-site.scm.s1.umbraco.io</code> where <code>your-umbraco-site</code> is the name of your Umbraco site. Click the Debug console link and navigate to <code>site\deployments\tools\PostDeploymentActions\deploymenthooks</code> (create it if it doesn't exist). Notice the folder <code>deploymenthooks</code>, which is required in order for your scripts to run on Umbraco Cloud.</p>
+<p>Unlike Kudu, Umbraco Cloud only executes <code>cmd</code> and <code>bat</code> files. Create a new <code>cmd</code> file:</p>
+<pre><code class="shell">touch create-deployment.cmd
+</code></pre>
+
+<p>with the following content:</p>
+<pre><code class="shell">echo &quot;Creating elmah.io deployment&quot;
+
+cd %POST_DEPLOYMENT_ACTIONS_DIR%
+
+cd deploymenthooks
+
+powershell -command &quot;. .\create-deployment.ps1&quot;
+</code></pre>
+
+<p>The script executes a PowerShell script, which we will create next:</p>
+<pre><code class="shell">touch create-deployment.ps1
+</code></pre>
+
+<p>The content of the PowerShell script looks a lot like in <a href="#using-kudu">Using Kudu</a>, but with some minor tweaks to support Umbraco Cloud:</p>
+<pre><code class="powershell">$version = Get-Date -format u
+
+$ProgressPreference = &quot;SilentlyContinue&quot;
+
+$commitId = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_ID&quot;);
+$deployUrl = &quot;https://your-umbraco-site.scm.s1.umbraco.io/api/deployments/$commitId&quot;
+
+$username = &quot;MY_USERNAME&quot;
+$password = &quot;MY_PASSWORD&quot;
+$logId = &quot;LOG_ID&quot;
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f $username,$password)))
+
+$deployInfo = Invoke-RestMethod -Method Get -Uri $deployUrl -Headers @{Authorization=(&quot;Basic {0}&quot; -f $base64AuthInfo)}
+
+$url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
+$body = @{
+  version = $version
+  description = $deployInfo.message
+  userName = $deployInfo.author
+  userEmail = $deployInfo.author_email
+  logId = $logId
+}
+
+Invoke-RestMethod -Method Post -Uri $url -Body $body
+</code></pre>
+
+<p>Replace <code>your-umbraco-site</code> with the name of your site, <code>MY_USERNAME</code> with your Umbraco Cloud username, <code>MY_PASSWORD</code> with your Umbraco Cloud password, <code>LOG_ID</code> with the id if the elmah.io log that should contain the deployments and finally <code>API_KEY</code> with your elmah.io API key, found and your organization settings page.</p>
+<p>There you go. When deploying changes to your Umbraco Cloud site, a new deployment is automatically created on elmah.io.</p>
 <h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
 <p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="https://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
 <h2 id="versioning-different-services">Versioning Different Services</h2>
