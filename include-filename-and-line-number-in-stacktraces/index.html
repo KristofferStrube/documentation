@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/use-extended-user-details-without-email-as-id/">
+        <link rel="canonical" href="https://docs.elmah.io/include-filename-and-line-number-in-stacktraces/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Use Extended User Details without Email as Id | elmah.io</title>
+		<title>Include filename and like number in stack traces | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Use Extended User Details without Email as Id">
+		<meta name="twitter:title" content="Include filename and like number in stack traces">
 		
 		
-		<meta property="og:title" content="Use Extended User Details without Email as Id">
+		<meta property="og:title" content="Include filename and like number in stack traces">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/use-extended-user-details-without-email-as-id/">
+		<meta property="og:url" content="https://docs.elmah.io/include-filename-and-line-number-in-stacktraces/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -316,8 +316,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../handle-elmah-io-downtime/">Handle elmah.io downtime</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Use Extended User Details without Email as Id</a>
+				<li >
+					<a href="../use-extended-user-details-without-email-as-id/">Use Extended User Details without Email as Id</a>
 				</li>
 			
 				<li >
@@ -328,8 +328,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../adding-version-information/">Adding version information</a>
 				</li>
 			
-				<li >
-					<a href="../include-filename-and-line-number-in-stacktraces/">Include filename and like number in stack traces</a>
+				<li class="active">
+					<a href="./">Include filename and like number in stack traces</a>
 				</li>
 			
 				<li >
@@ -370,25 +370,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="use-extended-user-details-without-email-as-id">Use Extended User Details without Email as Id</h1>
-<p>As you may know, ELMAH automatically logs the user identity as part of the error. To make that happen, ELMAH uses the identity object on the current thread, which gets set by most authentication frameworks for .NET (like ASP.NET Membership Provider and ASP.NET Identity). Some of you may use the user's email as key, while others use something like a database identifier. If you are using an email, you are already covered and able to see Extended User Details. If not, you need to provide elmah.io with a little help.</p>
-<p>In order to tell elmah.io about the user's email and still keeping the identifier in the user field, you can enrich the message with a piece of custom data, before sending it off to elmah.io. In order to fully understand the code below, you need to know a bit about <code>ILogger</code>. <code>ILogger</code> is part of the raw <a href="http://www.nuget.org/packages/elmah.io.client">elmah.io client</a>, able to communicate with the <a href="https://elmah.io/api">elmah.io API</a>. <code>ILogger</code> isn’t dependent of ELMAH and it pretty much corresponds to other logging clients known from log4net, NLog, etc.</p>
-<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
-var logger = ErrorLog.Client;
-logger.OnMessage += (sender, args) =&gt;
-{
-    if (string.IsNullOrWhiteSpace(args.Message.User)) return;
-    var db = ...;
-    var user = db.GetById&lt;User&gt;(args.Message.User);
-    args.Message.Data.Add(new Item {Key = &quot;X-ELMAHIO-USEREMAIL&quot;, Value = user.Email});
-}
-</code></pre>
-
-<p>The first line forces creation of the client. The elmah.io <code>ErrorLog</code> implementation uses a singleton <code>ILogger</code> to communicate with elmah.io.</p>
-<p>We then register a new event handler on the <code>OnMessage</code> event. <code>OnMessage</code> event handlers are executed just before a message is send to elmah.io. In the body of the event handler, the user's email is fetched from the database by calling the <code>GetById</code> method. How you will be able to convert the user ID to an email depends on your tech stack, but you get the picture.</p>
-<p>In the last line the data collection of the message is enriched with a new key value pair. <code>X-ELMAHIO-USEREMAIL</code> tells elmah.io, that the value of that item contains the email of the user involved in the currently logged message.</p>
-<p>That’s it! 9 lines of code and you are able to watch every little details about the users experiencing problems on your website:</p>
-<p><img alt="Extended User Details" src="../images/extended_user_details.png" /></p>
+<h1 id="include-filename-and-line-number-in-stack-traces">Include filename and line number in stack traces</h1>
+<p>When deploying your application to the test and production environment, you normally want to use the <em>Release</em> configuration. When doing so, your code is optimized, web.config transformation is running and a few additional things. But, part of running on a Release build is, that you lose the ability to see filenames and line numbers in the stack traces produced by your system.</p>
+<p>.NET offer the concept of PDB files, which is automatically generated when building your code. The PDB file contains information for the debugger to work, like which file to look up when a breakpoint is reached in your code. Unless you have changed the default settings inside Visual Studio, both the Debug and Release configuration generates a PDB file.</p>
+<p>So, if both Debug and Release produces a PDB file, why does Debug builds include file name and line number in stack traces, while the Release build doesn't? The reason is most often caused by the fact that PDB files aren't published as part of the deployment. To do so, right click your project in Visual Studio and Select <em>Properties</em>. Click the <em>Package/Publish Web</em> tab and make sure that the <em>Release</em> configuration is selected in the dropdown. Next, remove the check in <em>Exclude generated debug symbols</em>:</p>
+<p><img alt="Exclude generated debug symbols" src="../images/exclude_generated_debug_symbols.png" /></p>
+<p>Also, make sure that the PDB file is generated as part of Release builds. Select the <em>Build</em> tab and click <em>Advanced...</em>. In <em>Debug Info</em> you want to make sure that either <em>pdb-only</em> or <em>full</em> is selected (<em>pdb-only</em> being the default):</p>
+<p><img alt="Advanced build settings" src="../images/advanced_build_settings.png" /></p>
+<p>On your next deployment, PDB files are published as part of the build.</p>
+<blockquote>
+<p>Depending on who you talk to, deploying PDB files as part of your build may be considered a hack. Since PDB file can contain sensitive information about your implementation, publishing these files should only be done, if you have full control of the environment you are deploying to. When releasing software to external users/customers, you don't want to include your PDB files. In this case, you should store the PDB files internally, in a symbol server or similar.</p>
+</blockquote>
 
 <br/>
 <p>

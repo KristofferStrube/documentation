@@ -286,6 +286,12 @@
     </url>
         
     <url>
+     <loc>https://docs.elmah.io//include-filename-and-line-number-in-stacktraces/</loc>
+     <lastmod>2017-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>https://docs.elmah.io//elmah-and-custom-errors/</loc>
      <lastmod>2017-06-21</lastmod>
      <changefreq>daily</changefreq>
