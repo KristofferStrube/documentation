@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-console-application/">
+        <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-azure-webjobs/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging from Console | elmah.io</title>
+		<title>Logging from Azure WebJobs | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging from Console">
+		<meta name="twitter:title" content="Logging from Azure WebJobs">
 		
 		
-		<meta property="og:title" content="Logging from Console">
+		<meta property="og:title" content="Logging from Azure WebJobs">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-console-application/">
+		<meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-azure-webjobs/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -196,8 +196,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-jsnlog/">Logging from JSNLog</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from Console</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a>
 				</li>
 			
 				<li >
@@ -220,8 +220,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-wcf/">Logging from WCF</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-azure-webjobs/">Logging from Azure WebJobs</a>
+				<li class="active">
+					<a href="./">Logging from Azure WebJobs</a>
 				</li>
 			
 				<li >
@@ -378,25 +378,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<p>﻿# Logging from Console</p>
-<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a> and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple.</p>
-<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package:</p>
-<pre><code class="powershell">Install-Package elmah.io.client
+<h1 id="logging-from-azure-webjobs">Logging from Azure WebJobs</h1>
+<p>Logging errors from Azure WebJobs, requires only a few lines of code. To start logging exceptions from WebJobs, install the Elmah.Io.Client NuGet package into your WebJob project:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Client
 </code></pre>
 
-<p>Create a new <code>Logger</code>and assign it to a variable of type <code>ILogger</code>:</p>
-<pre><code class="csharp">Elmah.Io.Client.ILogger logger = new Elmah.Io.Client.Logger(new Guid(&quot;LOGID&quot;));
+<p>Add the following code to your <code>Program.cs</code> file:</p>
+<pre><code class="csharp">class Program
+{
+    static void Main()
+    {
+        AppDomain.CurrentDomain.UnhandledException += Log;
+        ...
+    }
+
+    private static void Log(object sender, UnhandledExceptionEventArgs e)
+    {
+        var logger = Elmah.Io.Client.Logger.Create(new Guid(&quot;LOG_ID&quot;));
+        var exception = e.ExceptionObject as Exception;
+        if (exception != null)
+        {
+            logger.Error(exception, exception.Message);
+        }
+    }
+}
 </code></pre>
 
-<p>Replace <code>LOGID</code> with your log ID from elmah.io.</p>
-<p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
-<pre><code class="csharp">logger.Verbose(&quot;Verbose message&quot;);
-logger.Debug(&quot;Debug message&quot;);
-logger.Information(&quot;Information message&quot;);
-logger.Warning(&quot;Warning message&quot;);
-logger.Error(&quot;Error message&quot;);
-logger.Fatal(&quot;Fatal message&quot;);
-</code></pre>
+<p>Azure WebJobs automatically executes the <code>Log</code>-method when an exception is thrown. In this example, we simply log the exception registered in <code>UnhandledExceptionEventArgs</code>.</p>
 
 <br/>
 <p>
