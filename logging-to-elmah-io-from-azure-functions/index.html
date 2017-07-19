@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-sitefinity/">
+        <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-azure-functions/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging from Sitefinity | elmah.io</title>
+		<title>Logging from Azure Functions | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging from Sitefinity">
+		<meta name="twitter:title" content="Logging from Azure Functions">
 		
 		
-		<meta property="og:title" content="Logging from Sitefinity">
+		<meta property="og:title" content="Logging from Azure Functions">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-sitefinity/">
+		<meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-azure-functions/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -208,8 +208,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-powershell/">Logging from PowerShell</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging from Sitefinity</a>
+				<li >
+					<a href="../logging-to-elmah-io-from-sitefinity/">Logging from Sitefinity</a>
 				</li>
 			
 				<li >
@@ -224,8 +224,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-azure-webjobs/">Logging from Azure WebJobs</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-azure-functions/">Logging from Azure Functions</a>
+				<li class="active">
+					<a href="./">Logging from Azure Functions</a>
 				</li>
 			
 				<li >
@@ -382,22 +382,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-from-sitefinity">Logging from Sitefinity</h1>
-<p>Sitefinity is a CMS from Telerik, implemented on top of ASP.NET. Like other content management systems build on top of ASP.NET, ELMAH is supported out of the box.</p>
-<p>To install elmah.io in a Sitefinity web-site, start by opening the web-site in Visual Studio by selecting <em>File | Open Web Site...</em> and navigate to the Sitefinity projects folder (something similar to this: <code>C:\Program Files (x86)\Telerik\Sitefinity\Projects\Default</code>).</p>
-<p>Right click the web site and install the elmah.io NuGet package or install it through Package Manager Console:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<h1 id="logging-from-azure-functions">Logging from Azure Functions</h1>
+<p>Logging errors from Azure Functions, requires only a few lines of code. To start logging exceptions from a Function, install the Elmah.Io.Client NuGet package into your Function project:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Client
 </code></pre>
 
-<p>During installation you will be prompted for your log id, available from the settings page of your log on elmah.io.</p>
-<p>That's it! Uncaught errors in Sitefinity are logged to your elmah.io log. To test that the integration works, right click the web site and add a new Web Form named ELMAH.aspx. In the code behind file add the following code:</p>
-<pre><code class="chsarp">protected void Page_Load(object sender, EventArgs e)
+<p>Functions don't provide any mechanism for logging all uncaught exceptions, why you will need to wrap your Function code in try-catch:</p>
+<pre><code class="csharp">public class Function
 {
-    throw new ApplicationException();
+    public static void Run(string mySbMsg)
+    {
+        try
+        {
+            // Business logic goes here
+        }
+        catch (Exception e)
+        {
+            var logger = Elmah.Io.Client.Logger.Create(new Guid(&quot;LOG_ID&quot;));
+            logger.Error(e, e.Message);
+            throw;
+        }
+    }
 }
 </code></pre>
 
-<p>Start the web-site and navigate to the ELMAH.aspx page. If everything works as intended, you will see the yellow screen of death and a new error will pop up on elmah.io.</p>
+<p>Remember to throw the catched exception, to make retry and other Azure Function features work. </p>
 
 <br/>
 <p>
