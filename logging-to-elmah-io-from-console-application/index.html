@@ -382,17 +382,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<p>﻿# Logging from Console</p>
-<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a> and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple.</p>
-<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package:</p>
+<h1 id="logging-from-console">Logging from Console</h1>
+<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a> and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple. Since we currently provide two different versions of our API, the examples are split by version.</p>
+<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package (in either version 2.x or 3.x):</p>
 <pre><code class="powershell">Install-Package elmah.io.client
 </code></pre>
 
+<h2 id="v2">V2</h2>
 <p>Create a new <code>Logger</code>and assign it to a variable of type <code>ILogger</code>:</p>
-<pre><code class="csharp">Elmah.Io.Client.ILogger logger = new Elmah.Io.Client.Logger(new Guid(&quot;LOGID&quot;));
+<pre><code class="csharp">Elmah.Io.Client.ILogger logger = new Elmah.Io.Client.Logger(new Guid(&quot;LOG_ID&quot;));
 </code></pre>
 
-<p>Replace <code>LOGID</code> with your log ID from elmah.io.</p>
+<p>Replace <code>LOG_ID</code> with your log ID from elmah.io.</p>
 <p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
 <pre><code class="csharp">logger.Verbose(&quot;Verbose message&quot;);
 logger.Debug(&quot;Debug message&quot;);
@@ -401,6 +402,24 @@ logger.Warning(&quot;Warning message&quot;);
 logger.Error(&quot;Error message&quot;);
 logger.Fatal(&quot;Fatal message&quot;);
 </code></pre>
+
+<h2 id="v3">V3</h2>
+<p>Create a new <code>ElmahioAPI</code>:</p>
+<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+</code></pre>
+
+<p>Replace <code>API_KEY</code> with your API key located on the subscription settings page.</p>
+<p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
+<pre><code class="csharp">var logId = new Guid(&quot;LOG_ID&quot;);
+logger.Messages.Fatal(logId, new ApplicationException(&quot;A fatal exception&quot;), &quot;Fatal message&quot;);
+logger.Messages.Error(logId, new ApplicationException(&quot;An exception&quot;), &quot;Error message&quot;);
+logger.Messages.Warning(logId, &quot;A warning&quot;);
+logger.Messages.Information(logId, &quot;An info message&quot;);
+logger.Messages.Debug(logId, &quot;A debug message&quot;);
+logger.Messages.Verbose(logId, &quot;A verbose message&quot;);
+</code></pre>
+
+<p>Replace <code>LOG_ID</code> with your log ID from elmah.io.</p>
 
 <br/>
 <p>

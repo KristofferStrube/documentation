@@ -396,22 +396,31 @@ Set-Alias nuget $target -Scope Global
 <pre><code class="powershell">nuget install elmah.io.client
 </code></pre>
 
-<p>This will create a <code>packages</code> folder containing the latest stable version of the elmah.io.client package. Since you probably don't want to hardcode the path to the current version number, get a reference to <code>elmah.io.client.dll</code> and load it:</p>
-<pre><code class="powershell">$elmahIoClientPath = Get-ChildItem -Path . -Filter elmah.io.client.dll -Recurse
+<p>This will create a <code>Elmah.Io.Client-version</code> folder containing the latest stable version of the elmah.io.client package. Since you probably don't want to hardcode the path to the current version number, reference <code>Elmah.Io.Client.dll</code> and its dependencies using <code>Get-ChildItem</code> and a bit of recursive magic:</p>
+<pre><code class="powershell">$elmahIoClientPath = Get-ChildItem -Path . -Filter Elmah.Io.Client.dll -Recurse `
+  | Where-Object {$_.FullName -match &quot;net45&quot;}
 [Reflection.Assembly]::LoadFile($elmahIoClientPath.FullName)
+
+$restClientPath = Get-ChildItem -Path . -Filter Microsoft.Rest.ClientRuntime.dll -Recurse `
+  | Where-Object {$_.FullName -match &quot;net45&quot;}
+[Reflection.Assembly]::LoadFile($restClientPath.FullName)
+
+$jsonNetPath = Get-ChildItem -Path . -Filter Newtonsoft.Json.dll -Recurse `
+  | Where-Object {$_.FullName -match &quot;net45&quot; -and $_.FullName -notmatch &quot;portable&quot;}
+[Reflection.Assembly]::LoadFile($jsonNetPath.FullName)
 </code></pre>
 
-<p>You now have <code>elmah.io.client.dll</code> loaded into your shell and everything is set up in order to log to elmah.io. To do so, add try-catch around critical code:</p>
-<pre><code class="powershell">$logger = New-Object Elmah.Io.Client.Logger([guid]::new(&quot;LOG_ID&quot;))
+<p>You now have <code>Elmah.Io.Client.dll</code> loaded into your shell and everything is set up in order to log to elmah.io. To do so, add try-catch around critical code:</p>
+<pre><code class="powershell">$logger = [Elmah.Io.Client.ElmahioAPI]::Create(&quot;API_KEY&quot;)
 Try {
     # some code that may throw exceptions
 }
 Catch {
-    $logger.Error($_.Exception, &quot;Oh no, something bad happened&quot;);
+    $logger.Messages.Error([guid]::new(&quot;LOG_ID&quot;), $_.Exception, &quot;Oh no&quot;)
 }
 </code></pre>
 
-<p>In the first line, we create a new logger object with the <code>LOG_ID</code> of the log we want to write to. Then, in the <code>Catch</code> block, the catched exception is shipped off to elmah.io including a custom message.</p>
+<p>In the first line, we create a new logger object with the <code>API_KEY</code> of the subscription we want to use. Then, in the <code>Catch</code> block, the catched exception is shipped off to the elmah.io log specified in <code>LOG_ID</code> together with a custom message.</p>
 
 <br/>
 <p>

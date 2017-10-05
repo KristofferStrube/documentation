@@ -398,16 +398,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     private static void Log(object sender, UnhandledExceptionEventArgs e)
     {
-        var logger = Elmah.Io.Client.Logger.Create(new Guid(&quot;LOG_ID&quot;));
         var exception = e.ExceptionObject as Exception;
         if (exception != null)
         {
-            logger.Error(exception, exception.Message);
+            var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+            client.Messages.Error(new Guid(&quot;LOG_ID&quot;), exception, &quot;An error message&quot;);
         }
     }
 }
 </code></pre>
 
+<p>Remember to replace <code>API_KEY</code> with your API key located on the organization settings page and <code>LOG_ID</code> with the ID of the log you want to log to.</p>
 <p>Azure WebJobs automatically executes the <code>Log</code>-method when an exception is thrown. In this example, we simply log the exception registered in <code>UnhandledExceptionEventArgs</code>.</p>
 
 <br/>

@@ -390,7 +390,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>Functions don't provide any mechanism for logging all uncaught exceptions, why you will need to wrap your Function code in try-catch:</p>
 <pre><code class="csharp">public class Function
 {
-    public static void Run(string mySbMsg)
+    public static void Run()
     {
         try
         {
@@ -398,15 +398,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
         catch (Exception e)
         {
-            var logger = Elmah.Io.Client.Logger.Create(new Guid(&quot;LOG_ID&quot;));
-            logger.Error(e, e.Message);
+            var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+            client.Messages.Error(new Guid(&quot;LOG_ID&quot;), e, &quot;An error message&quot;);
             throw;
         }
     }
 }
 </code></pre>
 
-<p>Remember to throw the catched exception, to make retry and other Azure Function features work. </p>
+<p>Remember to replace <code>API_KEY</code> with your API key located on the organization settings page and <code>LOG_ID</code> with the ID of the log you want to log to.</p>
+<p>By re-throwing the catched exception, Azure Function features like retry works smoothly.</p>
 
 <br/>
 <p>
