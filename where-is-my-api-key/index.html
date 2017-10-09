@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-jira/">
+        <link rel="canonical" href="https://docs.elmah.io/where-is-my-api-key/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Jira | elmah.io</title>
+		<title>Where is my API key | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Jira">
+		<meta name="twitter:title" content="Where is my API key">
 		
 		
-		<meta property="og:title" content="Jira">
+		<meta property="og:title" content="Where is my API key">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-jira/">
+		<meta property="og:url" content="https://docs.elmah.io/where-is-my-api-key/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -262,8 +262,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../elmah-io-apps-bitbucket/">Bitbucket</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Jira</a>
+				<li >
+					<a href="../elmah-io-apps-jira/">Jira</a>
 				</li>
 			
 				<li >
@@ -364,8 +364,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../query-messages-using-full-text-search/">Query messages using full-text search</a>
 				</li>
 			
-				<li >
-					<a href="../where-is-my-api-key/">Where is my API key</a>
+				<li class="active">
+					<a href="./">Where is my API key</a>
 				</li>
 			
 				<li >
@@ -386,12 +386,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="install-jira-app-for-elmahio">Install Jira App for elmah.io</h1>
-<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Jira app and click the <em>Install</em> button:</p>
-<p><img alt="Install Jira App" src="../images/apps/jira/install_settings.png" /></p>
-<p>Input your site name which is the first part of the URL you use to log into Jira. For the URL <code>https://elmahio.atlassian.net/</code>, the <code>site</code> parameter would be <code>elmahio</code>. In the Project field, input the key of the project. Note that a project have both a display name and a key. The property we are looking for here, is the uppercase identifier of the project.</p>
-<p>To create issues on Jira, you will need to input the username and password of a user with permission to create issues in the project specified above. You can use your own user credentials, but we recommend generating a user specific to elmah.io. The username must be the one found on your Jira profile. Replace <code>YOURSITE</code> with your site name in the following URL: <code>https://YOURSITE.atlassian.net/secure/ViewProfile.jspa</code>.</p>
-<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, issues are automatically created in the configured Jira project.</p>
+<h1 id="where-is-my-api-key">Where is my API key?</h1>
+<p>API keys are a new concept introduced with version 3.x of our <a href="https://elmah.io/api/">API</a>. API keys are located on the organization settings page.</p>
+<p>To open organization settings, click the gears icon next to your organization name on either the left menu or through the <a href="https://elmah.io/dashboard/">dashboard</a>:</p>
+<p><img alt="Organization settings" src="../images/organization-settings.png" /></p>
+<p>When on the organization settings page, click the <em>API Keys</em> tab and copy your API key:</p>
+<p><img alt="API keys on organization settings" src="../images/api-key-on-organization-settings.png" /></p>
+<p>This view also lets you generate new API keys and revoke an existing key, if you believe that the key is compromised.</p>
 
 <br/>
 <p>
