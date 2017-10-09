@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/include-filename-and-line-number-in-stacktraces/">
+        <link rel="canonical" href="https://docs.elmah.io/where-do-i-find-my-api-key/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Include filename and like number in stack traces | elmah.io</title>
+		<title>Where do I find my API key | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Include filename and like number in stack traces">
+		<meta name="twitter:title" content="Where do I find my API key">
 		
 		
-		<meta property="og:title" content="Include filename and like number in stack traces">
+		<meta property="og:title" content="Where do I find my API key">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/include-filename-and-line-number-in-stacktraces/">
+		<meta property="og:url" content="https://docs.elmah.io/where-do-i-find-my-api-key/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -340,8 +340,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../adding-version-information/">Adding version information</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Include filename and like number in stack traces</a>
+				<li >
+					<a href="../include-filename-and-line-number-in-stacktraces/">Include filename and like number in stack traces</a>
 				</li>
 			
 				<li >
@@ -364,8 +364,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../query-messages-using-full-text-search/">Query messages using full-text search</a>
 				</li>
 			
-				<li >
-					<a href="../where-do-i-find-my-api-key/">Where do I find my API key</a>
+				<li class="active">
+					<a href="./">Where do I find my API key</a>
 				</li>
 			
 				<li >
@@ -386,17 +386,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="include-filename-and-line-number-in-stack-traces">Include filename and line number in stack traces</h1>
-<p>When deploying your application to the test and production environment, you normally want to use the <em>Release</em> configuration. When doing so, your code is optimized, web.config transformation is running and a few additional things. But, part of running on a Release build is, that you lose the ability to see filenames and line numbers in the stack traces produced by your system.</p>
-<p>.NET offer the concept of PDB files, which is automatically generated when building your code. The PDB file contains information for the debugger to work, like which file to look up when a breakpoint is reached in your code. Unless you have changed the default settings inside Visual Studio, both the Debug and Release configuration generates a PDB file.</p>
-<p>So, if both Debug and Release produces a PDB file, why does Debug builds include file name and line number in stack traces, while the Release build doesn't? The reason is most often caused by the fact that PDB files aren't published as part of the deployment. To do so, right click your project in Visual Studio and Select <em>Properties</em>. Click the <em>Package/Publish Web</em> tab and make sure that the <em>Release</em> configuration is selected in the dropdown. Next, remove the check in <em>Exclude generated debug symbols</em>:</p>
-<p><img alt="Exclude generated debug symbols" src="../images/exclude_generated_debug_symbols.png" /></p>
-<p>Also, make sure that the PDB file is generated as part of Release builds. Select the <em>Build</em> tab and click <em>Advanced...</em>. In <em>Debug Info</em> you want to make sure that either <em>pdb-only</em> or <em>full</em> is selected (<em>pdb-only</em> being the default):</p>
-<p><img alt="Advanced build settings" src="../images/advanced_build_settings.png" /></p>
-<p>On your next deployment, PDB files are published as part of the build.</p>
-<blockquote>
-<p>Depending on who you talk to, deploying PDB files as part of your build may be considered a hack. Since PDB file can contain sensitive information about your implementation, publishing these files should only be done, if you have full control of the environment you are deploying to. When releasing software to external users/customers, you don't want to include your PDB files. In this case, you should store the PDB files internally, in a symbol server or similar.</p>
-</blockquote>
+<h1 id="where-do-i-find-my-api-key">Where do I find my API key?</h1>
+<p>API keys are a new concept introduced with version 3.x of our <a href="https://elmah.io/api/">API</a>. API keys are located on the organization settings page.</p>
+<p>To open organization settings, click the gears icon next to your organization name on either the left menu or through the <a href="https://elmah.io/dashboard/">dashboard</a>:</p>
+<p><img alt="Organization settings" src="../images/organization-settings.png" /></p>
+<p>When on the organization settings page, click the <em>API Keys</em> tab and copy your API key:</p>
+<p><img alt="API keys on organization settings" src="../images/api-key-on-organization-settings.png" /></p>
+<p>This view also lets you generate new API keys and revoke an existing key, if you believe that the key is compromised.</p>
 
 <br/>
 <p>
