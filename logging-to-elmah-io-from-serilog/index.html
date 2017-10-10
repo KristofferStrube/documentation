@@ -365,6 +365,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 				</li>
 			
 				<li >
+					<a href="../where-is-my-log-id/">Where is my log ID</a>
+				</li>
+			
+				<li >
 					<a href="../where-is-my-api-key/">Where is my API key</a>
 				</li>
 			
@@ -392,7 +396,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <pre><code class="powershell">Install-Package Serilog.Sinks.ElmahIO
 </code></pre>
 
-<p>During the installation you will be prompted to input your log id, as with any other installation of elmah.io. To configure Serilog, add the following code to the Application_Start method in global.asax.cs (where LOG_ID is your log id):</p>
+<p>During the installation you will be prompted to input your log id (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>), as with any other installation of elmah.io. To configure Serilog, add the following code to the Application_Start method in global.asax.cs (where LOG_ID is your log id):</p>
 <pre><code class="csharp">var log =
     new LoggerConfiguration()
         .WriteTo.ElmahIO(new Guid(&quot;LOG_ID&quot;))
