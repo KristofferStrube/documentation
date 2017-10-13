@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-errors-programmatically/">
+        <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-gitlab/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging errors programmatically | elmah.io</title>
+		<title>GitLab | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging errors programmatically">
+		<meta name="twitter:title" content="GitLab">
 		
 		
-		<meta property="og:title" content="Logging errors programmatically">
+		<meta property="og:title" content="GitLab">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-errors-programmatically/">
+		<meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-gitlab/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -290,8 +290,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../elmah-io-apps-youtrack/">YouTrack</a>
 				</li>
 			
-				<li >
-					<a href="../elmah-io-apps-gitlab/">GitLab</a>
+				<li class="active">
+					<a href="./">GitLab</a>
 				</li>
 			
 				<li >
@@ -308,8 +308,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-custom-data/">Logging custom data</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging errors programmatically</a>
+				<li >
+					<a href="../logging-errors-programmatically/">Logging errors programmatically</a>
 				</li>
 			
 				<li >
@@ -394,36 +394,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-errors-programmatically">Logging errors programmatically</h1>
-<p>So you’ve setup a shiny new ELMAH log and all of your un-handled errors are logged to ELMAH. Now you’re wondering: “How do I log my handled errors to ELMAH programmatically?”</p>
-<p>You are in luck! ELMAH provides a nice API to do just that through error signaling. Consider the following code:</p>
-<pre><code class="csharp">try
-{
-    int i = 0;
-    int result = 42 / i;
-}
-catch (DivideByZeroException e)
-{
-    // What to do?
-}
-</code></pre>
-
-<p>Obviously an exception is thrown when trying to divide by zero, but what if we want to catch (and log) that exception instead of throwing it back through the call stack? With ELMAH’s <code>ErrorSignal</code> class we can log the error:</p>
-<pre><code class="csharp">try
-{
-    int i = 0;
-    int result = 42 / i;
-}
-catch (DivideByZeroException e)
-{
-    ErrorSignal.FromCurrentContext().Raise(e);
-}
-</code></pre>
-
-<p>We call the static method <code>FromCurrentContext</code> on the <code>ErrorSignal</code> class, which returns a new object for doing the actual logging. Logging happens through the Raise method, which logs the exception to the configured ELMAH storage endpoint.</p>
-<p>In the example above, I use the <code>FromCurrentContext</code> helper to create a new instance of <code>ErrorSignal</code>. ELMAH also works outside the context of a webserver and in this case, you would simply use the default logger with <code>null</code> as the http context:</p>
-<pre><code class="csharp">ErrorLog.GetDefault(null).Log(new Error(e));
-</code></pre>
+<h1 id="install-gitlab-app-for-elmahio">Install GitLab App for elmah.io</h1>
+<h2 id="generate-personal-access-token">Generate Personal Access Token</h2>
+<p>In order to allow elmah.io to create issues on GitLab, you will need to generate a Personal Access Token. To do so, log into GitLab and go to the <a href="https://gitlab.com/profile/personal_access_tokens">Access Tokens</a> page.</p>
+<p><img alt="GitLab Tokens Page" src="../images/gitlab-access-token.png" /></p>
+<p>Input a token name. check the <em>api</em> checkbox, click the <em>Create personal access token</em> button and copy the generated token.</p>
+<h2 id="install-the-gitlab-app-on-elmahio">Install the GitLab App on elmah.io</h2>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the GitLab app and click the <em>Install</em> button:</p>
+<p><img alt="Install GitLab App" src="../images/gitlab-settings.png" /></p>
+<p>Paste the token copied in the previous step into the <em>Token</em> textbox. In the <em>Project</em> textbox, input the ID or name of the project you want issues created on. If you are self-hosting GitLab, input your custom URL in the <em>URL</em> textbox (example https://gitlab.hooli.com).</p>
+<p>Click the <em>Test</em> button and observe it turn green. When clicking <em>Save</em>, the app is added to your log. When new errors are logged, issues are automatically created in the configured GitLab project.</p>
 
 <br/>
 <p>
