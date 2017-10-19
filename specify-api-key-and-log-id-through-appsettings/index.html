@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-to-multiple-elmah-logs/">
+        <link rel="canonical" href="https://docs.elmah.io/specify-api-key-and-log-id-through-appsettings/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging to multiple logs | elmah.io</title>
+		<title>Specify API key and log ID through appSettings | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging to multiple logs">
+		<meta name="twitter:title" content="Specify API key and log ID through appSettings">
 		
 		
-		<meta property="og:title" content="Logging to multiple logs">
+		<meta property="og:title" content="Specify API key and log ID through appSettings">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-to-multiple-elmah-logs/">
+		<meta property="og:url" content="https://docs.elmah.io/specify-api-key-and-log-id-through-appsettings/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -312,8 +312,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-errors-programmatically/">Logging errors programmatically</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging to multiple logs</a>
+				<li >
+					<a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a>
 				</li>
 			
 				<li >
@@ -340,8 +340,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>
 				</li>
 			
-				<li >
-					<a href="../specify-api-key-and-log-id-through-appsettings/">Specify API key and log ID through appSettings</a>
+				<li class="active">
+					<a href="./">Specify API key and log ID through appSettings</a>
 				</li>
 			
 				<li >
@@ -398,34 +398,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</h1>
-<p>Unfortunately, ELMAH doesn’t support multiple log targets like other logging frameworks like Serilog. This makes logging to multiple logs a bit tricky, but no way impossible. Let’s say that you’re using ELMAH in your web application and configured it to log everything in SQL Server. If you look through your <code>web.config</code> file, you will have code looking like this somewhere:</p>
+<h1 id="specify-api-key-and-log-id-through-appsettings">Specify API key and log ID through appSettings</h1>
+<p>When integrating to elmah.io from ASP.NET, MVC, Web API and similar, we use the open source project ELMAH to log uncaught exceptions. ELMAH requires configuration in <code>web.config</code>, which in the case of elmah.io could look something like this:</p>
 <pre><code class="xml">&lt;elmah&gt;
-    &lt;errorLog type=&quot;Elmah.SqlErrorLog, Elmah&quot; connectionStringName=&quot;elmah&quot;/&gt;
+    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
 
-<p>As you probably know, this tells ELMAH to log all uncatched errors in SQL Server with the connection string “elmah”. You cannot add more <code>&lt;errorLog&gt;</code> elements, why logging to a second log seems impossible. Meet ELMAH’s Logged event, which is a great hook to log to multiple targets. Install the <a href="http://www.nuget.org/packages/elmah.io/">Elmah.Io</a> NuGet package and add the following code to your <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
-{
-    var elmahIoLog = new Elmah.Io.ErrorLog(ElmahioAPI.Create(&quot;API_KEY&quot;), new Guid(&quot;LOG_ID&quot;));
-    elmahIoLog.Log(args.Entry.Error);
-}
+<p>You'd normally use web.config Transformations to specify different API keys and log IDs for different environments (see <a href="https://docs.elmah.io/use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>). When hosting on Microsoft Azure (and other cloud-based offerings), a better approach is to specify configuration in the <code>appSettings</code> element and overwrite values through the web app settings in the Portal.</p>
+<p>The elmah.io clients built for ASP.NET based web frameworks support this scenario through additional attributes on the <code>&lt;errorLog&gt;</code> element:</p>
+<pre><code class="xml">&lt;appSettings&gt;
+    &lt;add key=&quot;apiKeyRef&quot; value=&quot;API_KEY&quot; /&gt;
+    &lt;add key=&quot;logIdRef&quot; value=&quot;LOG_ID&quot; /&gt;
+&lt;/appSettings&gt;
+...
+&lt;elmah&gt;
+    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKeyKey=&quot;apiKeyRef&quot; logIdKey=&quot;logIdRef&quot; /&gt;
+&lt;/elmah&gt;
 </code></pre>
 
-<p>In the above code, we listen for the Logged event by simply declaring a method named <code>ErrorLog_Logged</code>. When called, we create a new <code>(Elmah.Io.)ErrorLog</code> instance with an <code>IElmahioAPI</code> object and the log ID. Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). Next, we simply call the Log method with a new Error object. Bam! The error is logged both in SQL Server and in elmah.io.</p>
-<p>If you only want to log certain types of errors in elmah.io, but everything to your normal log, you can extend your code like this:</p>
-<pre><code class="csharp">void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
-{
-    if (args.Entry.Error.StatusCode == 500)
-    {
-        var elmahIoLog = new Elmah.Io.ErrorLog(...);
-        elmahIoLog.Log(args.Entry.Error);
-    }
-}
-</code></pre>
-
-<p>This time we only begin logging to elmah.io, if the thrown exception is of type <code>HttpException</code> and contains a HTTP status code of <code>500</code>. This example only logs errors with status code 500 in elmah.io and all errors in your normal error log. If you want to create this filter on all logs, you should use the <code>ErrorLog_Filtering</code> method instead. This method is called before <code>ErrorLog_Logged</code> and before actually logging the error to your normal error log.</p>
+<p>Unlike the first example, the term <em>Key</em> has been appended to both the <code>apiKey</code> and <code>logId</code> attributes. The values of those attributes needs to match a key specified in <code>appSettings</code> (in this example <em>apiKeyRef</em> and <em>logIdRef</em>). How you choose to name these keys is entirely up to you, as long as the names match.</p>
+<p>elmah.io now picks up your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) from the <code>appSettings</code> element and can be overwritten on your production site on Azure.</p>
 
 <br/>
 <p>

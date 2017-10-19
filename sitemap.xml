@@ -304,6 +304,12 @@
     </url>
         
     <url>
+     <loc>https://docs.elmah.io//specify-api-key-and-log-id-through-appsettings/</loc>
+     <lastmod>2017-10-19</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>https://docs.elmah.io//adding-version-information/</loc>
      <lastmod>2017-10-19</lastmod>
      <changefreq>daily</changefreq>
