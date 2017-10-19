@@ -397,9 +397,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h1 id="logging-from-wcf">Logging from WCF</h1>
 <p>ELMAH and WCF isn't exactly known to go hand in hand. But, with a bit of custom code, logging exceptions from WCF to elmah.io is possible.</p>
 <p>Let's get started. Install elmah.io into your WCF project using NuGet:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<pre><code class="powershell">Install-Package Elmah.Io
 </code></pre>
 
+<p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>Add a new class named <code>HttpErrorHandler</code>:</p>
 <pre><code class="csharp">public class HttpErrorHandler : IErrorHandler
 {

@@ -395,7 +395,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="logging-through-a-http-proxy">Logging through a HTTP proxy</h1>
-<p>You may find yourself in a situation, where your production web servers aren't allowing HTTP requests towards the public Internet. This also impacts the elmah.io client, which requires access to the URL https://elmah.io/api. A popular choice of implementing this kind of restriction nowadays, seem to be through a HTTP proxy like squid.</p>
+<p>You may find yourself in a situation, where your production web servers aren't allowing HTTP requests towards the public Internet. This also impacts the elmah.io client, which requires access to the URL https://api.elmah.io. A popular choice of implementing this kind of restriction nowadays, is through a HTTP proxy like squid.</p>
 <p>Luckily the elmah.io client supports proxy configuration out of the box. Let’s look at how to configure a HTTP proxy through <code>web.config</code>:</p>
 <pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;configuration&gt;
@@ -409,7 +409,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   &lt;/configSections&gt;
   &lt;elmah&gt;
     &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;59AA232A-F80A-4414-801D-F305D8AE55D7&quot; /&gt;
+    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;...&quot; LogId=&quot;...&quot; /&gt;
   &lt;/elmah&gt;
   &lt;system.net&gt;
     &lt;defaultProxy&gt;

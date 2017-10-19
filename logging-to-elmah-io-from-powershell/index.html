@@ -405,7 +405,7 @@ Set-Alias nuget $target -Scope Global
 
 <p>This script will download the latest version of the NuGet command line tool and make it available through the command <code>nuget</code>.</p>
 <p>To install elmah.io.client, run <code>nuget.exe</code>:</p>
-<pre><code class="powershell">nuget install elmah.io.client
+<pre><code class="powershell">nuget install Elmah.Io.Client
 </code></pre>
 
 <p>This will create a <code>Elmah.Io.Client-version</code> folder containing the latest stable version of the elmah.io.client package. Since you probably don't want to hardcode the path to the current version number, reference <code>Elmah.Io.Client.dll</code> and its dependencies using <code>Get-ChildItem</code> and a bit of recursive magic:</p>

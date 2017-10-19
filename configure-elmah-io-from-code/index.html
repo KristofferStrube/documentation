@@ -418,7 +418,8 @@ namespace ElmahFromCodeExample
                 var container = new ServiceContainer(sp(context));
 
                 var config = new Dictionary&lt;string, string&gt;();
-                config[&quot;LogId&quot;] = &quot;6aeabe21-e2e9-4d07-a338-c2380e575fc1&quot;;
+                config[&quot;apiKey&quot;] = &quot;798de90b25ae4c849a18dc136c3ac94f&quot;;
+                config[&quot;logId&quot;] = &quot;6aeabe21-e2e9-4d07-a338-c2380e575fc1&quot;;
                 var log = new Elmah.Io.ErrorLog(config);
 
                 container.AddService(typeof(ErrorLog), log);
@@ -429,7 +430,8 @@ namespace ElmahFromCodeExample
 }
 </code></pre>
 
-<p>Let’s look at the code. In line 5, the <code>ElmahConfig</code> class is configured as a <code>PreApplicationStartMethod</code> which means, that ASP.NET (MVC) will execute the Start method when the web application starts up. In line 13 the <code>ServiceCenter.Current</code> property is set to the return type of the <code>CreateServiceProviderQueryHandler</code> method. This method is where the magic happens. Besides creating the new <code>ServiceContainer</code>, we actually created the <code>Elmah.Io.ErrorLog</code> class normally configured through XML. The Dictionary should contain the LogId found on the dashboard of the elmah.io website.</p>
+<p>Replace the value of <code>apiKey</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>logId</code> with a log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+<p>Let’s look at the code. Our class <code>ElmahConfig</code> is configured as a <code>PreApplicationStartMethod</code> which means, that ASP.NET (MVC) will execute the Start method when the web application starts up. Then we set the <code>ServiceCenter.Current</code> property to the return type of the <code>CreateServiceProviderQueryHandler</code> method. This method is where the magic happens. Besides creating the new <code>ServiceContainer</code>, we actually created the <code>Elmah.Io.ErrorLog</code> class normally configured through XML. The Dictionary should contain the API key and log ID as explained earlier.</p>
 <p>Since <code>ServiceContainer</code> and friends are bundled with ELMAH, you still need to configure ELMAH as part of the pipeline. Add the <code>ErrorLogModule</code> to your <code>web.config</code> like this:</p>
 <pre><code class="xml">&lt;system.webserver&gt;
   &lt;modules&gt;

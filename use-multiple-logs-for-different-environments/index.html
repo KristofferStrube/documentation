@@ -400,7 +400,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>To avoid spending numerous hours of debugging, remember that Web Config transformations are only run on deploy and not on build. In other words, deploy your website using Visual Studio, MSBuild or third for the transformations to replace the right ELMAH config.</p>
 </blockquote>
 <p>Whether or not you want errors from localhost logged on elmah.io, start by installing the elmah.io NuGet package:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<pre><code class="powershell">Install-Package Elmah.Io
 </code></pre>
 
 <p>Then choose one of the two paths below.</p>
@@ -408,12 +408,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>Create two new logs at the elmah.io website called something like “My website” and “My website development”. The naming isn’t really important, so pick something telling.</p>
 <p>During installation of the elmah.io package, NuGet will ask you for your elmah.io log id. In this dialog input the log id from the log named “My website development”. The default configuration is used when running your website locally. When installed open the <code>web.release.config</code> file and add the following code:</p>
 <pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;INSERT_HERE&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
 
-<p>Replace the <code>INSERT_HERE</code> value with the log id named “My website”. That’s it! You can now build and deploy your website using different configurations. When nothing is changed, Visual Studio will build your website using the Debug configuration. This configuration looks for the ELMAH code in the <code>web.debug.config</code> file. We didn’t add any ELMAH configuration to this file, why the default values from <code>web.config</code> are used. When selecting the Release configuration, Web. Config transformations will replace the default values in <code>web.config</code> with the new ELMAH configuration from <code>web.release.config</code>.</p>
+<p>Replace the <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). That’s it! You can now build and deploy your website using different configurations. When nothing is changed, Visual Studio will build your website using the Debug configuration. This configuration looks for the ELMAH code in the <code>web.debug.config</code> file. We didn’t add any ELMAH configuration to this file, why the default values from <code>web.config</code> are used. When selecting the Release configuration, Web. Config transformations will replace the default values in <code>web.config</code> with the new ELMAH configuration from <code>web.release.config</code>.</p>
 <h2 id="logging-to-elmahio-from-production-only">Logging to elmah.io from production only</h2>
 <p>During the installation, NuGet will ask you for your elmah.io log id. You don't need to write anything in this dialog, since we will remove the default elmah.io config in a moment. When installed open the <code>web.config</code> file and locate the <code>&lt;elmah&gt;</code> element. Remove the <code>&lt;errorLog&gt;</code> element and set the <code>allowRemoveAccess</code> attribute to <code>true</code>. Your configuration should look like this now:</p>
 <pre><code class="xml">&lt;elmah&gt;
@@ -423,12 +423,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>Open the <code>web.release.config</code> file and insert the following code:</p>
 <pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;INSERT_HERE&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
 
-<p>Like above, replace the <code>INSERT_HERE</code> value with the log id from your log at elmah.io. That's it! Errors happening on your local machine will be logged using ELMAH's default error logger (in-memory) and errors happening in production will be logged to elmah.io.</p>
+<p>Like above, replace <code>API_KEY</code> and <code>LOG_ID</code> with the correct values. Errors happening on your local machine will be logged using ELMAH's default error logger (in-memory) and errors happening in production will be logged to elmah.io.</p>
 
 <br/>
 <p>

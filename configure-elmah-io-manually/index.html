@@ -395,13 +395,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-9" role="main"><div class="docs-box">
 
 <h1 id="configure-elmahio-manually">Configure elmah.io manually</h1>
-<p>The <a href="https://www.nuget.org/packages/elmah.io/">elmah.io NuGet package</a> normally adds all of the necessary configuration, in order to get up and running with elmah.io. In fact, this is one of our killer features and our customers tell us, that we have the simplest installer on the market. In some cases, you may experience problems with the automatic configuration, though. Different reasons can cause the configuration not to be added automatically. The most common reason is restrictions to executing PowerShell inside Visual Studio.</p>
-<p>Start by installing the elmah.io package:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<p>The <a href="https://www.nuget.org/packages/elmah.io/">Elmah.Io NuGet package</a> normally adds all of the necessary configuration, in order to get up and running with elmah.io. In fact, this is one of our killer features and our customers tell us, that we have the simplest installer on the market. In some cases, you may experience problems with the automatic configuration, though. Different reasons can cause the configuration not to be added automatically. The most common reason is restrictions to executing PowerShell inside Visual Studio.</p>
+<p>Start by installing the <code>Elmah.Io</code> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io
 </code></pre>
 
-<p>Input your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) during the installation. Don't worry if the configuration isn't added, since we will verify this later.</p>
-<p>Add the following to the <code>&lt;configSections&gt;</code> element in your web.config:</p>
+<p>If a dialog is shown during the installation, input your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). Don't worry if the configuration isn't added, since we will verify this later.</p>
+<p>Add the following to the <code>&lt;configSections&gt;</code> element in your <code>web.config</code>:</p>
 <pre><code class="xml">&lt;sectionGroup name=&quot;elmah&quot;&gt;
   &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
   &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
@@ -410,28 +410,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 &lt;/sectionGroup&gt;
 </code></pre>
 
-<p>Add the following to the <code>&lt;httpModules&gt;</code> element (inside <code>&lt;system.web&gt;</code>) in your web.config:</p>
+<p>Add the following to the <code>&lt;httpModules&gt;</code> element (inside <code>&lt;system.web&gt;</code>) in your <code>web.config</code>:</p>
 <pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; /&gt;
 &lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; /&gt;
 &lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot;/&gt;
 </code></pre>
 
-<p>Add the following to the <code>&lt;modules&gt;</code> element (inside <code>&lt;system.webServer&gt;</code>) in your web.config:</p>
+<p>Add the following to the <code>&lt;modules&gt;</code> element (inside <code>&lt;system.webServer&gt;</code>) in your <code>web.config</code>:</p>
 <pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
 &lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
 &lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
 </code></pre>
 
-<p>Add the following as a root element beneath the <code>&lt;configuration&gt;</code> element in your web.config:</p>
+<p>Add the following as a root element beneath the <code>&lt;configuration&gt;</code> element in your <code>web.config</code>:</p>
 <pre><code class="xml">&lt;elmah&gt;
     &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; LogId=&quot;INSERT_LOG_ID&quot; /&gt;
+    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
 
-<p>Replace <code>INSERT_LOG_ID</code> with your log ID from the elmah.io website.</p>
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>That's it. You managed to install elmah.io manually and you should go to your LinkedIn profile and update with a new certification called "Certified elmah.io installer" :)</p>
-<p>In case you need to access your error log on /elmah.axd, you need to add the following to the <code>&lt;configuration&gt;</code> element in your web.config:</p>
+<p>In case you need to access your error log on <code>/elmah.axd</code>, you need to add the following to the <code>&lt;configuration&gt;</code> element in your <code>web.config</code>:</p>
 <pre><code class="xml">&lt;location path=&quot;elmah.axd&quot; inheritInChildApplications=&quot;false&quot;&gt;
     &lt;system.web&gt;
         &lt;httpHandlers&gt;

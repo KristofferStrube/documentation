@@ -398,10 +398,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>Sitefinity is a CMS from Telerik, implemented on top of ASP.NET. Like other content management systems build on top of ASP.NET, ELMAH is supported out of the box.</p>
 <p>To install elmah.io in a Sitefinity web-site, start by opening the web-site in Visual Studio by selecting <em>File | Open Web Site...</em> and navigate to the Sitefinity projects folder (something similar to this: <code>C:\Program Files (x86)\Telerik\Sitefinity\Projects\Default</code>).</p>
 <p>Right click the web site and install the elmah.io NuGet package or install it through Package Manager Console:</p>
-<pre><code class="powershell">Install-Package elmah.io
+<pre><code class="powershell">Install-Package Elmah.Io
 </code></pre>
 
-<p>During installation you will be prompted for your log id, available from the settings page of your log on elmah.io.</p>
+<p>During installation you will be prompted for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>That's it! Uncaught errors in Sitefinity are logged to your elmah.io log. To test that the integration works, right click the web site and add a new Web Form named ELMAH.aspx. In the code behind file add the following code:</p>
 <pre><code class="chsarp">protected void Page_Load(object sender, EventArgs e)
 {

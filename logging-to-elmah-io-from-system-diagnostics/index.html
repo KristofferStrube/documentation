@@ -394,6 +394,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
+<p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-trace"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/n90mht5w7nhrysg3?svg=true" /></a>
+<a href="https://www.nuget.org/packages/Elmah.Io.Trace"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Trace.svg" /></a></p>
 <h1 id="logging-from-systemdiagnostics">Logging from System.Diagnostics</h1>
 <p>.NET comes with its own tracing/logging feature located in the <a href="https://msdn.microsoft.com/en-us/library/gg145030(v=vs.110).aspx">System.Diagnostics namespaces</a>. A core part of <code>System.Diagnostics</code> is the <code>Trace</code> class, but that namespace contains utilities for performance counters, working with the event log and a lot of other features. In this article, we will focus on logging to elmah.io from <code>System.Diagnostics.Trace</code>.</p>
 <p>To start logging, install the <a href="https://www.nuget.org/packages/Elmah.Io.Trace/">Elmah.Io.Trace</a> package:</p>
@@ -401,10 +403,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>As default, <code>Trace</code> logs to the Win32 OutputDebugString function, but it is possible to log to multiple targets (like appenders in log4net). To do so, tell <code>Trace</code> about elmah.io:</p>
-<pre><code class="csharp">System.Diagnostics.Trace.Listeners.Add(new ElmahIoTraceListener(new Guid(&quot;LOG_ID&quot;)));
+<pre><code class="csharp">System.Diagnostics.Trace.Listeners.Add(
+    new ElmahIoTraceListener(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)));
 </code></pre>
 
-<p>Replace <code>LOG_ID</code> with your log id (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log id (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>To start logging, call the <code>Trace</code> API:</p>
 <pre><code class="csharp">try
 {

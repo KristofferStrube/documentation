@@ -394,13 +394,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
+<p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-umbraco"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/hn4jr5q06ba7vp7c?svg=true" /></a>
+<a href="https://www.nuget.org/packages/elmah.io.umbraco/"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.umbraco.svg" /></a>
+<a href="https://github.com/elmahio/elmah.io.umbraco/tree/master/Elmah.Io.Umbraco.Example"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
 <h1 id="logging-from-umbraco">Logging from Umbraco</h1>
-<p>Since Umbraco itself is written in ASP.NET, ELMAH works like a dream inside Umbraco. Besides logging uncaught errors, elmah.io also supports other types of messages like information and debug. In fact, all the log levels that you already know from log4net, NLog and Serilog, are supported on elmah.io as well. Logging in Umbraco CMS is based on log4net, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">which elmah.io also support</a>. We have brought all these pieces together into a NuGet package that we call: <a href="https://www.nuget.org/packages/elmah.io.umbraco/">elmah.io.umbraco</a>.</p>
-<p>To start utilizing elmah.io from your Umbraco site, all you need to do is install the elmah.io.umbraco package:</p>
-<pre><code class="powershell">Install-Package elmah.io.umbraco
+<p>Since Umbraco itself is written in ASP.NET, ELMAH works like a dream inside Umbraco. Besides logging uncaught errors, elmah.io also supports other types of messages like information and debug. In fact, all the log levels that you already know from log4net, NLog and Serilog, are supported on elmah.io as well. Logging in Umbraco CMS is based on log4net, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">which elmah.io also support</a>. We have brought all these pieces together into a NuGet package that we call: <a href="https://www.nuget.org/packages/elmah.io.umbraco/">Elmah.Io.Umbraco</a>.</p>
+<p>To start utilizing elmah.io from your Umbraco site, all you need to do is install the <code>Elmah.Io.Umbraco</code> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Umbraco
 </code></pre>
 
+<p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>Hit F5 and watch messages start flowing into elmah.io.</p>
+<h2 id="umbraco-cloud">Umbraco Cloud</h2>
+<p>When using Umbraco Cloud, you may not have a local clone of the source code. To install elmah.io on Umbraco cloud, execute the following steps:</p>
+<ul>
+<li>
+<p>Clone your Umbraco Cloud project to a local folder as explained here: <a href="https://our.umbraco.org/documentation/Umbraco-Cloud/Set-Up/Visual-Studio/">Visual Studio Setup</a>.</p>
+</li>
+<li>
+<p>Install <code>Elmah.Io.Umbraco</code> into your local clone. During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+</li>
+</ul>
+<pre><code class="powershell">Install-Package Elmah.Io.Umbraco
+</code></pre>
+
+<ul>
+<li>Commit and push all changes to the git respository. This will add elmah.io logging to your remote Umbraco Cloud project.</li>
+</ul>
+<p>In case you want logging to different elmah.io logs from each Umbraco Cloud environment, please check out Umbraco's support for config transformations here: <a href="https://our.umbraco.org/documentation/Umbraco-Cloud/Set-Up/Config-Transforms/">Config transforms</a>.</p>
 
 <br/>
 <p>
