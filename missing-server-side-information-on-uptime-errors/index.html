@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/elmah-and-custom-errors/">
+        <link rel="canonical" href="https://docs.elmah.io/missing-server-side-information-on-uptime-errors/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>ELMAH and custom errors | elmah.io</title>
+		<title>Missing server side information on uptime errors | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="ELMAH and custom errors">
+		<meta name="twitter:title" content="Missing server side information on uptime errors">
 		
 		
-		<meta property="og:title" content="ELMAH and custom errors">
+		<meta property="og:title" content="Missing server side information on uptime errors">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/elmah-and-custom-errors/">
+		<meta property="og:url" content="https://docs.elmah.io/missing-server-side-information-on-uptime-errors/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -352,8 +352,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../include-filename-and-line-number-in-stacktraces/">Include filename and like number in stack traces</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">ELMAH and custom errors</a>
+				<li >
+					<a href="../elmah-and-custom-errors/">ELMAH and custom errors</a>
 				</li>
 			
 				<li >
@@ -380,8 +380,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../where-is-my-api-key/">Where is my API key</a>
 				</li>
 			
-				<li >
-					<a href="../missing-server-side-information-on-uptime-errors/">Missing server side information on uptime errors</a>
+				<li class="active">
+					<a href="./">Missing server side information on uptime errors</a>
 				</li>
 			
 				<li >
@@ -402,30 +402,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="elmah-and-custom-errors">ELMAH and custom errors</h1>
-<p>ELMAH and ASP.NET (MVC) custom errors isn't exactly known to be best friends. Question after question have been posted on forums like Stack Overflow, from people having problems with ELMAH, when custom errors are configured. In fact, these problems make perfect sense, since both ELMAH and custom errors are designed to catch errors and do something about them.</p>
-<p>Before looking at some code, we really recommend you to read Duston Moris Gorskis blog post <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>. It provides a great introduction to different ways of implementing custom error pages in ASP.NET MVC.</p>
-<p>Back to ELMAH. In most implementations of custom error pages, ASP.NET actually swallows any uncaught exceptions, putting ELMAH out of play. To overcome this issue, you can utilize MVC's <code>IExceptionFilter</code> to log all exceptions, whether or not it is handled by a custom error page:</p>
-<pre><code class="csharp">public class ElmahExceptionLogger : IExceptionFilter
-{
-    public void OnException (ExceptionContext context)
-    {
-        if (context.ExceptionHandled)
-        {
-            ErrorSignal.FromCurrentContext().Raise(context.Exception);
-        }
-    }
- }
-</code></pre>
-
-<p>The <code>OnException</code> method on <code>ElmahExceptionLogger</code> is executed every time an error is happening, by registering it in <code>Application_Start</code>:</p>
-<pre><code class="csharp">protected void Application_Start()
-{
-    ...
-    GlobalConfiguration.Configuration.Filters.Add(new ElmahExceptionLogger());
-    ...
-}
-</code></pre>
+<h1 id="missing-server-side-information-on-uptime-errors">Missing server side information on uptime errors</h1>
+<p>To decorate uptime errors with server side error information, you will need a few things:</p>
+<ol>
+<li>The monitored website should be configured to log errors to elmah.io.</li>
+<li>You will need to use one of the integrations utilizing our version 3 API. Packages using this version of our API, have <code>3</code> as major version in the NuGet package.</li>
+<li>The uptime check needs to be created on the same log as the monitored website.</li>
+<li>The uptime error needs to be logged after October 2017.</li>
+</ol>
 
 <br/>
 <p>
