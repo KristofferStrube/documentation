@@ -410,12 +410,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
+<p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-functions"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/wijhscta71muvd5b?svg=true" /></a>
+<a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a>
+<a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
 <h1 id="logging-from-azure-functions">Logging from Azure Functions</h1>
-<p>Logging errors from Azure Functions, requires only a few lines of code. To start logging exceptions from a Function, install the Elmah.Io.Client NuGet package into your Function project:</p>
+<p>Logging errors from Azure Functions, requires only a few lines of code. To start logging exceptions from a Function, choose one of two methods:</p>
+<h3 id="manually-using-elmahioclient-the-stable-choice">Manually using <code>Elmah.Io.Client</code> (the stable choice)</h3>
+<p>Install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package into your Function project:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Client
 </code></pre>
 
-<p>Functions don't provide any mechanism for logging all uncaught exceptions, why you will need to wrap your Function code in try-catch:</p>
+<p>Wrap your Function code in try-catch:</p>
 <pre><code class="csharp">public class Function
 {
     public static void Run()
@@ -436,6 +441,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the ID of the log you want to log to.</p>
 <p>By re-throwing the catched exception, Azure Function features like retry works smoothly.</p>
+<h3 id="automatic-using-elmahiofunctions-the-prerelease-choice">Automatic using <code>Elmah.Io.Functions</code> (the prerelease choice)</h3>
+<p>We've created a client specifically for Azure Functions. Before you start, make sure to install <code>Microsoft.Azure.WebJobs</code> version <code>2.1.0-beta4</code> into your Function App:</p>
+<pre><code class="powershell">Install-Package Microsoft.Azure.WebJobs -Version 2.1.0-beta4 -Pre
+</code></pre>
+
+<p>Then install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
+</code></pre>
+
+<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
+<pre><code class="csharp">[ElmahIoExceptionFilter(&quot;API_KEY&quot;, &quot;LOG_ID&quot;)]
+public static class Function1
+{
+    [FunctionName(&quot;Function1&quot;)]
+    public static void Run([TimerTrigger(&quot;0 */1 * * * *&quot;)]TimerInfo myTimer, TraceWriter log)
+    {
+        throw new Exception(&quot;Some exception&quot;);
+    }
+}
+</code></pre>
+
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID.</p>
 
 <br/>
 <p>

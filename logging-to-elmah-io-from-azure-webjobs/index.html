@@ -410,8 +410,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
+<p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-functions"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/wijhscta71muvd5b?svg=true" /></a>
+<a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a>
+<a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
 <h1 id="logging-from-azure-webjobs">Logging from Azure WebJobs</h1>
-<p>Logging errors from Azure WebJobs, requires only a few lines of code. To start logging exceptions from WebJobs, install the Elmah.Io.Client NuGet package into your WebJob project:</p>
+<p>Logging errors from Azure WebJobs, requires only a few lines of code. To start logging exceptions from WebJobs, choose one of two methods:</p>
+<h3 id="manually-using-elmahioclient-the-stable-choice">Manually using <code>Elmah.Io.Client</code> (the stable choice)</h3>
+<p>Install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package into your WebJob project:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Client
 </code></pre>
 
@@ -438,6 +443,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the ID of the log you want to log to.</p>
 <p>Azure WebJobs automatically executes the <code>Log</code>-method when an exception is thrown. In this example, we simply log the exception registered in <code>UnhandledExceptionEventArgs</code>.</p>
+<h3 id="automatic-using-elmahiofunctions-the-prerelease-choice">Automatic using <code>Elmah.Io.Functions</code> (the prerelease choice)</h3>
+<p>We've created a client specifically for Azure WebJobs. Install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
+</code></pre>
+
+<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
+<pre><code class="csharp">[ElmahIoExceptionFilter(&quot;API_KEY&quot;, &quot;LOG_ID&quot;)]
+public class Functions
+{
+    public static void ProcessQueueMessage([QueueTrigger(&quot;queue&quot;)] string msg, TextWriter log)
+    {
+        throw new Exception(&quot;Some exception&quot;);
+    }
+}
+</code></pre>
+
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID.</p>
 
 <br/>
 <p>
