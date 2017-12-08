@@ -419,7 +419,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><a href="#using-powershell">Using PowerShell</a></li>
 <li><a href="#using-kudu">Using Kudu</a></li>
 <li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
-<li><a href="#using-visual-studio-team-services">Using Visual Studio Team Services</a></li>
+<li><a href="#using-visual-studio-team-services-releases">Using Visual Studio Team Services (Releases)</a></li>
+<li><a href="#using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</a></li>
 <li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
 </ul>
 </li>
@@ -521,8 +522,8 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>And we're done. On every new deployment, Octopus Deploy will notify elmah.io</p>
-<h3 id="using-visual-studio-team-services">Using Visual Studio Team Services</h3>
-<p>If you are using Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
+<h3 id="using-visual-studio-team-services-releases">Using Visual Studio Team Services (Releases)</h3>
+<p>If you are using Release Management in Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
 <ol>
 <li>
 <p>Go to the <a href="https://marketplace.visualstudio.com/items?itemName=elmahio.deploy-tasks">elmah.io Deployment Tasks extension</a> on the Visual Studio Marketplace and click <em>Install</em> (log in if not already).
@@ -546,6 +547,36 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
+<h3 id="using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</h3>
+<p>Notifying elmah.io about new deployments is possible as a build step in Visual Studio Team Services, by adding a bit of PowerShell:</p>
+<ol>
+<li>
+<p>Edit the build definition currently building your project(s).</p>
+</li>
+<li>
+<p>Click the <em>Add task</em> button and locate the <em>PowerShell</em> task. Click <em>Add</em>.
+<img alt="Add PowerShell task" src="../images/add_powershell_task.png" /></p>
+</li>
+<li>
+<p>Fill in the details as shown in the screenshot.
+<img alt="Fill in PowerShell content" src="../images/fill_powershell_task.png" /></p>
+</li>
+</ol>
+<p>... and here's the code from the screenshot above:</p>
+<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
+
+$url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
+$body = @{
+  version = &quot;$env:BUILD_BUILDNUMBER&quot;
+  description = &quot;$env:BUILD_SOURCEVERSIONMESSAGE&quot;
+  userName = &quot;$env:BUILD_REQUESTEDFOR&quot;
+  userEmail = &quot;$env:BUILD_REQUESTEDFOREMAIL&quot;
+  logId = &quot;LOG_ID&quot;
+}
+Invoke-RestMethod -Method Post -Uri $url -Body $body
+</code></pre>
+
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the id of the log representing the application deployed by this build configuration.</p>
 <h3 id="using-umbraco-cloud">Using Umbraco Cloud</h3>
 <p>Umbraco Cloud uses Azure to host Umbraco websites, why supporting deployment tracking pretty much corresponds the steps specified in <a href="#using-kudu">Using Kudu</a>. Navigate to <code>https://your-umbraco-site.scm.s1.umbraco.io</code> where <code>your-umbraco-site</code> is the name of your Umbraco site. Click the Debug console link and navigate to <code>site\deployments\tools\PostDeploymentActions\deploymenthooks</code> (create it if it doesn't exist). Notice the folder <code>deploymenthooks</code>, which is required in order for your scripts to run on Umbraco Cloud.</p>
 <p>Unlike Kudu, Umbraco Cloud only executes <code>cmd</code> and <code>bat</code> files. Create a new <code>cmd</code> file:</p>
