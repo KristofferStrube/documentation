@@ -441,6 +441,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>The above example is of course greatly simplified.</p>
 <p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port you are using).</p>
+<h2 id="proxies-with-usernamepassword">Proxies with username/password</h2>
+<p>Some proxies require a username/password. Unfortunately, the <code>defaultProxy</code> element doesn't support authentication. You have two ways to set this up:</p>
+<h3 id="use-default-credentials">Use default credentials</h3>
+<p>Make sure to set the <code>useDefaultCredentials</code> attribute to <code>true</code>:</p>
+<pre><code class="xml">&lt;system.net&gt;
+  &lt;defaultProxy useDefaultCredentials=&quot;true&quot;&gt;
+    ...
+  &lt;/defaultProxy&gt;
+&lt;/system.net&gt;
+</code></pre>
+
+<p>Run your web app (application pool) as a user with access to the proxy.</p>
+<h3 id="implement-your-own-proxy">Implement your own proxy</h3>
+<p>Add the following class:</p>
+<pre><code class="csharp">public class AuthenticatingProxy : IWebProxy
+{
+    public ICredentials Credentials
+    {
+        get { return new NetworkCredential(&quot;username&quot;, &quot;password&quot;); }
+        set {}
+    }
+
+    public Uri GetProxy(Uri destination)
+    {
+        return new Uri(&quot;http://localhost:8888&quot;);
+    }
+
+    public bool IsBypassed(Uri host)
+    {
+        return false;
+    }
+}
+</code></pre>
+
+<p>Configure the new proxy in <code>web.config</code>:</p>
+<pre><code class="xml">&lt;defaultProxy useDefaultCredentials=&quot;false&quot;&gt;
+  &lt;module type=&quot;YourNamespace.AuthenticatingProxy, YourAssembly&quot; /&gt;
+&lt;/defaultProxy&gt;
+</code></pre>
 
 <br/>
 <p>

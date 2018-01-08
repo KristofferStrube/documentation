@@ -505,6 +505,15 @@ settings.HandledStatusCodesToLog.Add(400);
 app.UseElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), settings);
 </code></pre>
 
+<h3 id="logging-through-a-proxy">Logging through a proxy</h3>
+<p>Since ASP.NET Core no longer support proxy configuration through <code>web.config</code>, you can log to elmah.io by configuring a proxy manually:</p>
+<pre><code class="csharp">var settings = new ElmahIoSettings();
+settings.WebProxy = new System.Net.WebProxy(&quot;localhost&quot;, 8888);
+app.UseElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), settings);
+</code></pre>
+
+<p>In this example, the elmah.io client routes all traffic through <code>http://localhost:8000</code>.</p>
+
 <br/>
 <p>
 <small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small>
