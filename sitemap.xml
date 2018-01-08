@@ -382,6 +382,12 @@
     </url>
         
     <url>
+     <loc>https://docs.elmah.io//export-data-from-elmah-io-to-json/</loc>
+     <lastmod>2018-01-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>https://docs.elmah.io//elmah-and-elmah-io-differences/</loc>
      <lastmod>2018-01-08</lastmod>
      <changefreq>daily</changefreq>
