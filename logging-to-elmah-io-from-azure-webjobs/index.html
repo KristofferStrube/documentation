@@ -468,6 +468,9 @@ public class Functions
 </code></pre>
 
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID.</p>
+<blockquote>
+<p>If your WebJob method is declared as async, remember to change the return type to <code>Task</code>. Without it, <code>ElmahIoExceptionFilter</code> is never invoked.</p>
+</blockquote>
 
 <br/>
 <p>
