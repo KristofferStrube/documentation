@@ -471,6 +471,18 @@ public class Functions
 <blockquote>
 <p>If your WebJob method is declared as async, remember to change the return type to <code>Task</code>. Without it, <code>ElmahIoExceptionFilter</code> is never invoked.</p>
 </blockquote>
+<p>The filter also supports config variables:</p>
+<pre><code class="csharp">[ElmahIoExceptionFilter(&quot;%apiKey%&quot;, &quot;%logId%&quot;)]
+</code></pre>
+
+<p>The variables above, would require you to add your API key and log ID to your <code>App.config</code>:</p>
+<pre><code class="xml">&lt;configuration&gt;
+  &lt;appSettings&gt;
+    &lt;add key=&quot;apiKey&quot; value=&quot;API_KEY&quot;/&gt;
+    &lt;add key=&quot;logId&quot; value=&quot;LOG_ID&quot;/&gt;
+  &lt;/appSettings&gt;
+&lt;/configuration&gt;
+</code></pre>
 
 <br/>
 <p>
