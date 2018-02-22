@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/using-the-rest-api/">
+        <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-orchard/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Using the REST API | elmah.io</title>
+		<title>Logging from Orchard | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Using the REST API">
+		<meta name="twitter:title" content="Logging from Orchard">
 		
 		
-		<meta property="og:title" content="Using the REST API">
+		<meta property="og:title" content="Logging from Orchard">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/using-the-rest-api/">
+		<meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-orchard/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -236,8 +236,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../logging-to-elmah-io-from-devexpress/">Logging from DevExpress (eXpressApp Framework)</a>
 				</li>
 			
-				<li >
-					<a href="../logging-to-elmah-io-from-orchard/">Logging from Orchard</a>
+				<li class="active">
+					<a href="./">Logging from Orchard</a>
 				</li>
 			
 				<li >
@@ -372,8 +372,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../using-the-elmah-io-extension-for-visual-studio/">Using the elmah.io extension for Visual Studio</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Using the REST API</a>
+				<li >
+					<a href="../using-the-rest-api/">Using the REST API</a>
 				</li>
 			
 				<li >
@@ -422,163 +422,64 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="using-the-rest-api">Using the REST API</h1>
-<div class="toc">
-<ul>
-<li><a href="#using-the-rest-api">Using the REST API</a><ul>
-<li><a href="#security">Security</a></li>
-<li><a href="#messages">Messages</a><ul>
-<li><a href="#creating-messages">Creating messages</a></li>
-<li><a href="#getting-a-message">Getting a message</a></li>
-<li><a href="#searching-messages">Searching messages</a></li>
-<li><a href="#deleting-a-message">Deleting a message</a></li>
-<li><a href="#deleting-messages">Deleting messages</a></li>
-<li><a href="#hiding-a-message">Hiding a message</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Under the hood, everything related to communicating with elmah.io happens through our REST API. In this article, we will present the possibilities using the API in a use case driven approach. For a details reference of the various endpoints, visit the <a href="https://api.elmah.io/swagger/ui/index">API V3 documentation</a> or the <a href="https://elmah.io/api/v2">API V2 documentation</a>.</p>
-<h2 id="security">Security</h2>
-<p>Security in V3 of our API is implemented using API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). When creating a new organization, a default API key is automatically created:</p>
-<p><img alt="API Keys" src="../images/api-keys.png" /></p>
-<p>You can create new keys and revoke an existing key, if you suspect that the key has been compromised. The API key acts as a secret and should not be available to people outside your team/organization.</p>
-<p>All requests to the elmah.io API needs the API key as either a HTTP header or query string parameter named <code>api_key</code> like this:</p>
-<pre><code class="bash">GET https://api.elmah.io/v3/messages/LOG_ID?api_key=MY_API_KEY
+<h1 id="logging-from-orchard-cms">Logging from Orchard CMS</h1>
+<p>Orchard CMS is a free, open source community-focused content management system built on the ASP.NET MVC and ASP.NET Core platforms. This tutorial is written for the ASP.NET Core version of Orchard. If you want to log to elmah.io from the MVC version, you should follow our <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-mvc/">tutorial for MVC</a>.</p>
+<p>To start logging to elmah.io, install the following two packages (in that order):</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Client
+Install-Package Elmah.Io.AspNetCore
 </code></pre>
 
-<p>API V2 doesn't require (or support) API keys, why someone could extract information from your log using the log ID only. The log ID is used to tell elmah.io which log to put a new error into, when logged from your application (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). As long as V2 of our API is available, the log ID needs to be kept secret as well.</p>
-<h2 id="messages">Messages</h2>
-<h3 id="creating-messages">Creating messages</h3>
-<p>Before doing anything, we will need some messages to play with. The <code>Create Message</code> endpoint does just that. To create a simple message, POST to:</p>
-<pre><code class="bash"># API V3
-POST https://api.elmah.io/v3/messages/LOG_ID
-
-# API V2
-POST https://elmah.io/api/v2/messages?logid=LOG_ID
-</code></pre>
-
-<p>with a JSON body:</p>
-<pre><code class="json">{
-    &quot;title&quot;: &quot;This is a test message&quot;
-}
-</code></pre>
-
-<p>(replace <code>LOG_ID</code> with your log ID):</p>
-<p>The <code>title</code> field is the only required field on a message, but fields for specifying severity, timestamp etc. are there. For more information, check out the <a href="https://api.elmah.io/swagger/ui/index">documentation</a>.</p>
-<p>If everything where successful, the API returns a HTTP status code of <code>201</code> and a location to where to fetch the new message. If the endpoint fails, the response will contain a description of what went wrong. Forgetting to set <code>Content-Length</code>, <code>Content-Type</code> and similar, will result in an invalid request.</p>
-<h3 id="getting-a-message">Getting a message</h3>
-<p>In the example above, the API returned the URL for getting the newly created message:</p>
-<pre><code class="bash"># API V3
-GET https://api.elmah.io/v3/messages/LOG_ID/81C7C282C9FDAEA3
-
-# API V2
-GET https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID
-</code></pre>
-
-<p>By making a GET request to this URL, we get back the message details:</p>
-<pre><code class="json">{
-  &quot;id&quot;: &quot;99CDEA3D6A631F09&quot;,
-  &quot;title&quot;: &quot;This is a test message&quot;,
-  &quot;dateTime&quot;: &quot;2016-07-03T14:25:46.087857Z&quot;,
-  &quot;severity&quot;: &quot;Information&quot;
-}
-</code></pre>
-
-<p>As shown in the returned body, elmah.io automatically inserted some missing fields like a timestamp and a severity. If no severity is specified during creating, a message is threated as information.</p>
-<h3 id="searching-messages">Searching messages</h3>
-<p>For the demo, we have inserted a couple of additional messages, which leads us to the next endpoint: searching messages. The search endpoint shares the root path with the get message endpoint, but only take a log ID. The simplest possible configuration, queries the API for a list of the 15 most recent messages by calling:</p>
-<pre><code class="bash"># API V3
-GET https://api.elmah.io/v3/messages/LOG_ID
-
-# API V2
-GET https://elmah.io/api/v2/messages?logid=LOG_ID
-</code></pre>
-
-<p>The response body looks like this:</p>
-<pre><code class="json">{
-  &quot;messages&quot;: [
+<p>Then modify your <code>Startup.cs</code> file:</p>
+<pre><code class="csharp">public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
     {
-      &quot;id&quot;: &quot;81C7C282C9FDAEA3&quot;,
-      &quot;title&quot;: &quot;This is another test message&quot;,
-      &quot;dateTime&quot;: &quot;2016-07-03T14:31:45.053851Z&quot;,
-      &quot;severity&quot;: &quot;Information&quot;
-    },
-    {
-      &quot;id&quot;: &quot;99CDEA3D6A631F09&quot;,
-      &quot;title&quot;: &quot;This is a test message&quot;,
-      &quot;dateTime&quot;: &quot;2016-07-03T14:25:46.087857Z&quot;,
-      &quot;severity&quot;: &quot;Information&quot;
-    },
-    ...
-  ],
-  &quot;total&quot;: 42
-}
-</code></pre>
-
-<p>For simplicity, the response has been simplified by not showing all of the results. The important thing to notice here, is the list of <code>messages</code> and the <code>total</code> count. <code>messages</code> contain 15 messages, which is the default page size in the search endpoint. To increase the number of returned messages, set the <code>pagesize</code> parameter in the URL (max 100 messages per request). The <code>total</code> count tells you, if there are more messages matching your search. To select messages from the next page, use the <code>pageindex</code> parameter.</p>
-<p>Returning all messages may be fine, but being able to search by terms is even more fun. To search, use the <code>query</code>, <code>from</code> and <code>to</code> parameters as shown here:</p>
-<pre><code class="bash"># API V3
-GET https://api.elmah.io/v3/messages/LOG_ID?query=another
-
-# API V2
-GET https://elmah.io/api/v2/messages?logid=LOG_ID?query=another
-</code></pre>
-
-<p>Searching for <code>another</code> will return the following response:</p>
-<pre><code class="json">{
-  &quot;messages&quot;: [
-    {
-      &quot;id&quot;: &quot;81C7C282C9FDAEA3&quot;,
-      &quot;title&quot;: &quot;This is another test message&quot;,
-      &quot;dateTime&quot;: &quot;2016-07-03T14:25:46.087857Z&quot;,
-      &quot;severity&quot;: &quot;Information&quot;
+        ...
+        services.AddElmahIo(o =&gt;
+        {
+            o.ApiKey = &quot;API_KEY&quot;;
+            o.LogId = new Guid(&quot;LOG_ID&quot;);
+        });
     }
-  ],
-  &quot;total&quot;: 1
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    {
+        ...
+        app.UseElmahIo();
+        ...
+    }
 }
 </code></pre>
 
-<p>Now only <code>81C7C282C9FDAEA3</code> shows up, since that message contains the text <code>another</code> in the <code>title</code> field. Like specifying the <code>query</code> parameter, you can limit the number of messages using the <code>from</code>, <code>to</code> and <code>pagesize</code> parameters.</p>
-<h3 id="deleting-a-message">Deleting a message</h3>
-<p>When fixing the bug causing an error logged at elmah.io, you may want to delete the error. Deleting a single error is as easy as fetching it. Create a DELETE request to the errors unique URL:</p>
-<pre><code class="bash"># API V3
-DELETE https://api.elmah.io/v3/messages/LOG_ID/81C7C282C9FDAEA3
-
-# API V2
-DELETE https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the id of the log (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) where you want errors logged.</p>
+<p>Like with any other ASP.NET Core application, it's important to call the <code>UseElmahIo</code>-method after setting up other middleware handling exceptions (like <code>UseDeveloperExceptionPage</code>).</p>
+<p>Orchard uses NLog as the internal logging framework. Hooking into this pipeline is a great way to log warnings and errors through NLog to elmah.io as well.</p>
+<p>Install the <code>Elmah.Io.Nlog</code> NuGet package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.NLog -Pre
 </code></pre>
 
-<p>When successfully deleted, the delete endpoint returns a HTTP status code of <code>200</code>.</p>
-<h3 id="deleting-messages">Deleting messages</h3>
-<p>Deleting messages one by one can be tedious work. To delete multiple errors, you can utilize the Delete Messages endpoint by creating a DELETE request to:</p>
-<pre><code class="bash"># API V3
-DELETE https://api.elmah.io/v3/messages/LOG_ID
+<p>Add the elmah.io target to the <code>NLog.config</code>-file:</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;nlog ...&gt;
 
-# API V2
-DELETE https://elmah.io/api/v2/messages?logid=LOG_ID
+  &lt;extensions&gt;
+    ...
+    &lt;add assembly=&quot;Elmah.Io.NLog&quot;/&gt;
+  &lt;/extensions&gt;
+
+  &lt;targets&gt;
+    ...
+    &lt;target name=&quot;elmahio&quot; type=&quot;elmah.io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot;/&gt;
+  &lt;/targets&gt;
+
+  &lt;rules&gt;
+    ...
+    &lt;logger name=&quot;*&quot; minlevel=&quot;Warn&quot; writeTo=&quot;elmahio&quot; /&gt;
+  &lt;/rules&gt;
+&lt;/nlog&gt;
 </code></pre>
 
-<p>The request <strong>must</strong> contain a body with at least a query:</p>
-<pre><code class="json">{
-    &quot;query&quot;: &quot;test&quot;
-}
-</code></pre>
-
-<p>An option for deleting messages by date range is available as well. Check out the API documentation for details.</p>
-<h3 id="hiding-a-message">Hiding a message</h3>
-<p>Depending on your use case, you may want to hide a message, rather than deleting it. Hidden messages are not shown as default through neither the UI, nor the REST API. But you will be able to search for them by enabling the <code>Hidden</code> checkbox on the UI.</p>
-<p>To hide a message, use the <code>_hide</code> endpoints like this:</p>
-<pre><code class="bash"># API V3
-POST https://api.elmah.io/v3/messages/LOG_ID/99CDEA3D6A631F09/_hide
-
-# API V2
-POST https://elmah.io/api/v2/messages/_hide?id=99CDEA3D6A631F09&amp;logid=LOG_ID
-</code></pre>
-
-<p>If successful, the endpoint returns a HTTP status code of <code>200</code>.</p>
+<p>Make sure not to log Trace and Debug messages to elmah.io, which will quickly use up the included storage.</p>
 
 <br/>
 <p>
