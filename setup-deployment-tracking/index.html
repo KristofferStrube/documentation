@@ -430,6 +430,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><a href="#using-visual-studio-team-services-releases">Using Visual Studio Team Services (Releases)</a></li>
 <li><a href="#using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</a></li>
 <li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
+<li><a href="#using-bitbucket-pipelines">Using Bitbucket Pipelines</a></li>
 </ul>
 </li>
 <li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
@@ -634,6 +635,20 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 
 <p>Replace <code>your-umbraco-site</code> with the name of your site, <code>MY_USERNAME</code> with your Umbraco Cloud username, <code>MY_PASSWORD</code> with your Umbraco Cloud password, <code>LOG_ID</code> with the id if the elmah.io log that should contain the deployments (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) and finally <code>API_KEY</code> with your elmah.io API key, found and your organization settings page.</p>
 <p>There you go. When deploying changes to your Umbraco Cloud site, a new deployment is automatically created on elmah.io.</p>
+<h3 id="using-bitbucket-pipelines">Using Bitbucket Pipelines</h3>
+<p>Pipelines uses scripts, embedded in YAML-files, to configure the different steps required to build and deploy software. To notify elmah.io as part of a build/deployment, the first you will need to do, is to add your API key as a secure environment variable. To do so, go to <em>Settings</em> | <em>Pipelines</em> | <em>Environment variables</em> and add a new variable:</p>
+<p><img alt="Add environment variable" src="../images/pipelines_environment_variable.png" /></p>
+<p><a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a></p>
+<p>Then add a new script to your build YAML-file after building and deploying your software:</p>
+<pre><code class="yaml">pipelines:
+  default:
+    - step:
+        script:
+          ...
+          - curl -X POST -d &quot;{\&quot;version\&quot;:\&quot;$BITBUCKET_BUILD_NUMBER\&quot;}&quot; -H &quot;Content-Type:application/json&quot; https://api.elmah.io/v3/deployments?api_key=$ELMAHIO_APIKEY
+</code></pre>
+
+<p>The script uses <code>curl</code> to invoke the elmah.io Deployments endpoint with the API key (<code>$ELMAHIO_APIKEY</code>) and a version number (<code>$BITBUCKET_BUILD_NUMBER</code>). The posted JSON can be extended to support additional properties like changelog and the name of the person triggering the deployment. Check out the <a href="http://api.elmah.io/swagger/ui/index">API documentation</a> for details.</p>
 <h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
 <p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="https://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
 <h2 id="versioning-different-services">Versioning Different Services</h2>
