@@ -454,7 +454,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <blockquote>
-<p>Make sure to call the <code>UseElmahIo</code>-method <strong>after</strong> installation of other pieces of middleware handling exceptions (like <code>UseDeveloperExceptionPage</code> and <code>UseExceptionHandler</code>)</p>
+<p>Make sure to call the <code>UseElmahIo</code>-method <strong>after</strong> installation of other pieces of middleware handling exceptions (like <code>UseDeveloperExceptionPage</code> and <code>UseExceptionHandler</code>), but <strong>before</strong> any calls to <code>UseStaticFiles</code>, <code>UseMvc</code> and similar.</p>
 </blockquote>
 <p>That's it. Every uncaught exception will be logged to elmah.io.</p>
 <h2 id="configuring-api-key-and-log-id-in-options">Configuring API key and log ID in options</h2>
