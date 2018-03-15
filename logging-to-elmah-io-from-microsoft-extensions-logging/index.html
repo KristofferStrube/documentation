@@ -479,7 +479,7 @@ logger.LogError(1, ex, &quot;Unexpected error&quot;);
 <p>To log everything from log level <code>Information</code> and up, use the <code>AddElmahIo</code> overload which accepts a filter:</p>
 <pre><code class="csharp">factory.AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), new FilterLoggerSettings
 {
-    {&quot;elmah.io&quot;, LogLevel.Information}
+    {&quot;*&quot;, LogLevel.Information}
 });
 </code></pre>
 
