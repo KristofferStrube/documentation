@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/logging-through-a-http-proxy/">
+        <link rel="canonical" href="https://docs.elmah.io/upgrade-elmah-io-from-v2-to-v3/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Logging through a HTTP proxy | elmah.io</title>
+		<title>Upgrade elmah.io from v2 to v3 | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Logging through a HTTP proxy">
+		<meta name="twitter:title" content="Upgrade elmah.io from v2 to v3">
 		
 		
-		<meta property="og:title" content="Logging through a HTTP proxy">
+		<meta property="og:title" content="Upgrade elmah.io from v2 to v3">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/logging-through-a-http-proxy/">
+		<meta property="og:url" content="https://docs.elmah.io/upgrade-elmah-io-from-v2-to-v3/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -248,8 +248,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../configure-elmah-io-from-code/">Configure elmah.io from code</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Logging through a HTTP proxy</a>
+				<li >
+					<a href="../logging-through-a-http-proxy/">Logging through a HTTP proxy</a>
 				</li>
 			
 			</ul>
@@ -400,8 +400,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../export-data-from-elmah-io-to-json/">Export data from elmah.io to JSON</a>
 				</li>
 			
-				<li >
-					<a href="../upgrade-elmah-io-from-v2-to-v3/">Upgrade elmah.io from v2 to v3</a>
+				<li class="active">
+					<a href="./">Upgrade elmah.io from v2 to v3</a>
 				</li>
 			
 				<li >
@@ -426,72 +426,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-through-a-http-proxy">Logging through a HTTP proxy</h1>
-<p>You may find yourself in a situation, where your production web servers aren't allowing HTTP requests towards the public Internet. This also impacts the elmah.io client, which requires access to the URL https://api.elmah.io. A popular choice of implementing this kind of restriction nowadays, is through a HTTP proxy like squid.</p>
-<p>Luckily the elmah.io client supports proxy configuration out of the box. Let’s look at how to configure a HTTP proxy through <code>web.config</code>:</p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;configuration&gt;
-  &lt;configSections&gt;
-    &lt;sectionGroup name=&quot;elmah&quot;&gt;
-      &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorMail&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorMailSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorFilter&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorFilterSectionHandler, Elmah&quot; /&gt;
-    &lt;/sectionGroup&gt;
-  &lt;/configSections&gt;
-  &lt;elmah&gt;
-    &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;...&quot; LogId=&quot;...&quot; /&gt;
-  &lt;/elmah&gt;
-  &lt;system.net&gt;
-    &lt;defaultProxy&gt;
-      &lt;proxy usesystemdefault=&quot;True&quot; proxyaddress=&quot;http://192.168.0.1:3128&quot; bypassonlocal=&quot;False&quot;/&gt;
-    &lt;/defaultProxy&gt;
-  &lt;/system.net&gt;
-&lt;/configuration&gt;
+<h1 id="upgrade-elmahio-from-v2-to-v3">Upgrade elmah.io from v2 to v3</h1>
+<p>When we launched the new version of our API (<a href="http://api.elmah.io/swagger/ui/index">v3</a>), we used the jump in major version to fix some issues that would require major changes in our client. One of them being a move to netstandard, which makes the new client usable from .NET Core. With interface changes in the client, upgrading from 2.x to 3.x requires more than simply upgrading the NuGet package. This is a guide to upgrading the Elmah.Io package.</p>
+<blockquote>
+<p>If you are logging to elmah.io from ASP.NET Core, you are already using the 3.x client.</p>
+</blockquote>
+<h2 id="updating-the-nuget-package">Updating the NuGet package</h2>
+<p>First, you need to upgrade the Elmah.Io NuGet package:</p>
+<pre><code class="ps">Update-Package Elmah.Io
 </code></pre>
 
-<p>The above example is of course greatly simplified.</p>
-<p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port you are using).</p>
-<h2 id="proxies-with-usernamepassword">Proxies with username/password</h2>
-<p>Some proxies require a username/password. Unfortunately, the <code>defaultProxy</code> element doesn't support authentication. You have two ways to set this up:</p>
-<h3 id="use-default-credentials">Use default credentials</h3>
-<p>Make sure to set the <code>useDefaultCredentials</code> attribute to <code>true</code>:</p>
-<pre><code class="xml">&lt;system.net&gt;
-  &lt;defaultProxy useDefaultCredentials=&quot;true&quot;&gt;
-    ...
-  &lt;/defaultProxy&gt;
-&lt;/system.net&gt;
+<p>This installs the latest 3.x client. After doing so, we recommend to update to the latest Elmah.Io.Client package as well (updating Elmah.Io already updated Elmah.Io.Client, but to the lowest possible version):</p>
+<pre><code class="ps">Update-Package Elmah.Io.Client
 </code></pre>
 
-<p>Run your web app (application pool) as a user with access to the proxy.</p>
-<h3 id="implement-your-own-proxy">Implement your own proxy</h3>
-<p>Add the following class:</p>
-<pre><code class="csharp">public class AuthenticatingProxy : IWebProxy
-{
-    public ICredentials Credentials
-    {
-        get { return new NetworkCredential(&quot;username&quot;, &quot;password&quot;); }
-        set {}
-    }
-
-    public Uri GetProxy(Uri destination)
-    {
-        return new Uri(&quot;http://localhost:8888&quot;);
-    }
-
-    public bool IsBypassed(Uri host)
-    {
-        return false;
-    }
-}
+<p>The elmah.io.core package is no longer needed and can be uninstalled:</p>
+<pre><code class="ps">Uninstall-Package elmah.io.core
 </code></pre>
 
-<p>Configure the new proxy in <code>web.config</code>:</p>
-<pre><code class="xml">&lt;defaultProxy useDefaultCredentials=&quot;false&quot;&gt;
-  &lt;module type=&quot;YourNamespace.AuthenticatingProxy, YourAssembly&quot; /&gt;
-&lt;/defaultProxy&gt;
+<p>Next, you will need to add your API key to your <code>web.config</code>. Where the 2.x client only required a log ID in order to log messages to elmah.io, the new API improves security by introducing API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). Copy your API key and extend the <code>errorLog</code>-element in <code>web.config</code>:</p>
+<pre><code class="xml">&lt;elmah&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
+&lt;/elmah&gt;
 </code></pre>
+
+<p>If you didn't utilize elmah.io's code from C#, you are ready to rock and roll.</p>
+<h2 id="code-changes">Code changes</h2>
+<p>The 3.x client is auto generated from our new Swagger endpoint. This means that the code doesn't work like previously. We have tried to create extension methods to make some of the API work like previously, but since the client now supports both Messages, Logs and Deployments, code changes are needed.</p>
+<p>If you are using the <code>ErrorSignal</code> class from ELMAH (the open source project) to log exceptions manually, everything works as previously. If you are using methods from the Elmah.Io.Client package, there's a new API documented here: <a href="https://docs.elmah.io/logging-to-elmah-io-from-console-application/">Logging from Console</a>.</p>
+<h2 id="elmahiomvc-and-elmahiowebapi">Elmah.Io.Mvc and Elmah.Io.WebApi</h2>
+<p>When launching the packages for 3.x, we also decided to create two new proxy packages: Elmah.Io.Mvc and Elmah.Io.WebApi. The reason I call them proxy packages is, that they do nothing more than simply install the dependencies needed to log from each framework. The packages are intended for new installs only, so if your code already logs exceptions to elmah.io, there is no need to install any of these packages.</p>
 
 <br/>
 <p>
