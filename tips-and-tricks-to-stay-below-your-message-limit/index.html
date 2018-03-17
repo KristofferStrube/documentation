@@ -464,14 +464,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre>
 
 <p>If you're using ASP.NET Core, our client supports the <code>OnFilter</code> action:</p>
-<p>services.AddElmahIo(o =&gt;
+<pre><code class="csharp">services.AddElmahIo(o =&gt;
 {
     ...
     o.OnFilter = message =&gt;
     {
         return message.StatusCode == 404;
     };
-});</p>
+});
+</code></pre>
+
 <h2 id="monitor-current-usage">Monitor current usage</h2>
 <p>We sent you an email when you have used 90% of your limit. We also send you an email daily, when you have reached your limit. Monitoring your usage is a good supplement to the emails, since you are able to react early on (by upgrading, ignoring errors or something else). There's a usage graph on the Organisation Settings view:</p>
 <p><img alt="Usage Graph" src="../images/usage_graph.png" /></p>
