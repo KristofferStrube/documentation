@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,700" media="all">
         
         <meta name="author" content="Thomas Ardal">
-        <link rel="canonical" href="https://docs.elmah.io/use-multiple-logs-for-different-environments/">
+        <link rel="canonical" href="https://docs.elmah.io/tips-and-tricks-to-stay-below-your-message-limit/">
         <link rel="shortcut icon" href="https://docs.elmah.io/favicon.ico">
 
-		<title>Use multiple logs for different environments | elmah.io</title>
+		<title>Tips and tricks to stay below your message limit | elmah.io</title>
 
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
@@ -34,13 +34,13 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@elmah_io">
 		<meta name="twitter:creator" content="@elmah_io">
-		<meta name="twitter:title" content="Use multiple logs for different environments">
+		<meta name="twitter:title" content="Tips and tricks to stay below your message limit">
 		
 		
-		<meta property="og:title" content="Use multiple logs for different environments">
+		<meta property="og:title" content="Tips and tricks to stay below your message limit">
 		
 		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://docs.elmah.io/use-multiple-logs-for-different-environments/">
+		<meta property="og:url" content="https://docs.elmah.io/tips-and-tricks-to-stay-below-your-message-limit/">
 		
 		<meta property="fb:app_id" content="218008838347208" />
 
@@ -316,8 +316,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<h4 href="#" class="bs-sidenav-header">Help</h4>
 			<ul class="nav bs-sidenav bs-sidenav-group">
 			
-				<li >
-					<a href="../tips-and-tricks-to-stay-below-your-message-limit/">Tips and tricks to stay below your message limit</a>
+				<li class="active">
+					<a href="./">Tips and tricks to stay below your message limit</a>
 				</li>
 			
 				<li >
@@ -352,8 +352,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					<a href="../use-extended-user-details-without-email-as-id/">Use Extended User Details without Email as Id</a>
 				</li>
 			
-				<li class="active">
-					<a href="./">Use multiple logs for different environments</a>
+				<li >
+					<a href="../use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>
 				</li>
 			
 				<li >
@@ -430,41 +430,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="use-multiple-logs-for-different-environments">Use multiple logs for different environments</h1>
-<p>We bet that you use at least two environments for hosting your website: localhost and a production environment. You probably need to log website errors on all your environments, but you don’t want to mix errors from different environments in the same error log. Lucky for you, Microsoft provides a great way of differentiating configuration for different environments called <a href="https://msdn.microsoft.com/en-us/library/dd465326(v=vs.110).aspx">Web Config transformation</a>.</p>
-<blockquote>
-<p>To avoid spending numerous hours of debugging, remember that Web Config transformations are only run on deploy and not on build. In other words, deploy your website using Visual Studio, MSBuild or third for the transformations to replace the right ELMAH config.</p>
-</blockquote>
-<p>Whether or not you want errors from localhost logged on elmah.io, start by installing the elmah.io NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
+<h1 id="tips-and-tricks-to-stay-below-your-message-limit">Tips and tricks to stay below your message limit</h1>
+<p>Each plan on elmah.io include a maximum number of messages per month. The number of messages are calculated from how many times your applications have called our API and successfully stored a message (in most cases messages equals errors). Deleting messages either one by one or in batches are fully supported, but do not result in a decrease in the current message count. Our costs are primarily around receiving, indexing and notifying about messages, why we cannot allow someone on a lower plan like the Small Business, to log millions and yet millions of messages and then just clean up regularly. We're sure that everyone understand the challenge here.</p>
+<p>With that said, we want to help you stay within your message limits. Luckily, there's a lot of ways to limit messages. This article contains a list of the most common tactics to staying below your message limit.</p>
+<h2 id="ignore-rules">Ignore Rules</h2>
+<p>The easiest way to limit logged messages, is by ignoring some of them. Ignored messages do not count towards the message limit. Message rules can be configured through the Rules tab on the Log Settings view.</p>
+<p>Rules consist of a query and an action. The query can either be a full-text query or written using Lucene Query Syntax. To create a new ignore rule, input a query on the Rules tab:</p>
+<p><img alt="Create Ignore Rule" src="../images/create_ignore_rule.png" /></p>
+<p>All new rules are created with an ignore action as default, why you don't need to click the <em>Then</em> link for this type of rules. The example above, ignore all messages with a status code of <code>404</code>.</p>
+<p>For more information about the possibilities with rules, check out <a href="https://docs.elmah.io/creating-rules-to-perform-actions-on-messages/">Creating Rules to Perform Actions on Messages</a>.</p>
+<h2 id="filters">Filters</h2>
+<p>Filters are basically Ignore Rules in disguise. With Filters we have collected the most common ignore rules and made them available as a set of checkboxes. To ignore all message matching a specific filter, enable one of the checkboxes on the Filters tab on Log Settings:</p>
+<p><img alt="Filters" src="../images/filters.png" /></p>
+<h2 id="ignore-future-messages-like-this">Ignore future messages like this</h2>
+<p>Sometimes you may find yourself on the Search tab with a search result thinking: "I don't really care about these messages". By clicking the caret next to the query filters, an <em>Ignore future messages like this</em> option is revealed:</p>
+<p><img alt="Ignore Like This" src="../images/ignore_like_this.png" /></p>
+<p>Clicking this option automatically ignore any future messages matching your current search result.</p>
+<h2 id="disable-logs">Disable logs</h2>
+<p>Each log can be disabled from Log Settings:</p>
+<p><img alt="Enabled/Disable Log" src="../images/enabled_disable_log.png" /></p>
+<p>Disables logs are shown as semi transparent on the dashboard, to help you remember that you disabled a log.</p>
+<h2 id="client-side-message-filtering">Client-side message filtering</h2>
+<p>Most of our clients support client filtering. All of the filtering options described above, filters messages server-side. This means that your application still communicates with elmah.io's API and need to wait for that to answer (even fore ignored messages).</p>
+<p>Filtering client-side from ASP.NET, MVC, Web API and other frameworks built on top of ASP.NET, can be done using ELMAH's (the open source project) <a href="https://code.google.com/p/elmah/wiki/ErrorFiltering">filtering</a> feature. To filter message, create a method named <code>ErrorLog_Filtering</code> in the <code>Global.asax.cs</code> file:</p>
+<pre><code class="csharp">void ErrorLog_Filtering(object sender, ExceptionFilterEventArgs args)
+{
+    var httpContext = args.Context as HttpContext;
+    if (httpContext.Response.StatusCode == 404)
+    {
+        args.Dismiss();
+    }
+}
 </code></pre>
 
-<p>Then choose one of the two paths below.</p>
-<h2 id="logging-to-elmahio-from-both-localhost-and-production">Logging to elmah.io from both localhost and production</h2>
-<p>Create two new logs at the elmah.io website called something like “My website” and “My website development”. The naming isn’t really important, so pick something telling.</p>
-<p>During installation of the elmah.io package, NuGet will ask you for your elmah.io log id. In this dialog input the log id from the log named “My website development”. The default configuration is used when running your website locally. When installed open the <code>web.release.config</code> file and add the following code:</p>
-<pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
-  &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-&lt;/elmah&gt;
-</code></pre>
-
-<p>Replace the <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). That’s it! You can now build and deploy your website using different configurations. When nothing is changed, Visual Studio will build your website using the Debug configuration. This configuration looks for the ELMAH code in the <code>web.debug.config</code> file. We didn’t add any ELMAH configuration to this file, why the default values from <code>web.config</code> are used. When selecting the Release configuration, Web. Config transformations will replace the default values in <code>web.config</code> with the new ELMAH configuration from <code>web.release.config</code>.</p>
-<h2 id="logging-to-elmahio-from-production-only">Logging to elmah.io from production only</h2>
-<p>During the installation, NuGet will ask you for your elmah.io log id. You don't need to write anything in this dialog, since we will remove the default elmah.io config in a moment. When installed open the <code>web.config</code> file and locate the <code>&lt;elmah&gt;</code> element. Remove the <code>&lt;errorLog&gt;</code> element and set the <code>allowRemoveAccess</code> attribute to <code>true</code>. Your configuration should look like this now:</p>
-<pre><code class="xml">&lt;elmah&gt;
-  &lt;security allowRemoteAccess=&quot;true&quot; /&gt;
-&lt;/elmah&gt;
-</code></pre>
-
-<p>Open the <code>web.release.config</code> file and insert the following code:</p>
-<pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
-  &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-&lt;/elmah&gt;
-</code></pre>
-
-<p>Like above, replace <code>API_KEY</code> and <code>LOG_ID</code> with the correct values. Errors happening on your local machine will be logged using ELMAH's default error logger (in-memory) and errors happening in production will be logged to elmah.io.</p>
+<p>If you're using ASP.NET Core, our client supports the <code>OnFilter</code> action:</p>
+<p>services.AddElmahIo(o =&gt;
+{
+    ...
+    o.OnFilter = message =&gt;
+    {
+        return message.StatusCode == 404;
+    };
+});</p>
+<h2 id="monitor-current-usage">Monitor current usage</h2>
+<p>We sent you an email when you have used 90% of your limit. We also send you an email daily, when you have reached your limit. Monitoring your usage is a good supplement to the emails, since you are able to react early on (by upgrading, ignoring errors or something else). There's a usage graph on the Organisation Settings view:</p>
+<p><img alt="Usage Graph" src="../images/usage_graph.png" /></p>
+<h2 id="fix-bugs">Fix bugs</h2>
+<p>Seeing the same error over and over again? Maybe the best idea is to fix it :) I mean, that's the whole purpose of elmah.io: to help you fix bugs. And remember, the less bugs you have, the cheaper elmah.io gets. The ultimate motivation!</p>
 
 <br/>
 <p>
