@@ -462,7 +462,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the ID of the log you want to log to.</p>
 <p>By re-throwing the catched exception, Azure Function features like retry works smoothly.</p>
 <h3 id="automatic-using-elmahiofunctions-the-prerelease-choice">Automatic using <code>Elmah.Io.Functions</code> (the prerelease choice)</h3>
-<p>We've created a client specifically for Azure Functions. Before you start, make sure to install <code>Microsoft.Azure.WebJobs</code> version <code>2.1.0-beta4</code> into your Function App:</p>
+<p>We've created a client specifically for Azure Functions.</p>
+<p><ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#v2" aria-controls="home" role="tab" data-toggle="tab">Azure Functions v2</a></li>
+    <li role="presentation"><a href="#v1" aria-controls="profile" role="tab" data-toggle="tab">Azure Functions v1</a></li>
+  </ul></p>
+<p><div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="v2">
+Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions v2 project:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
+</code></pre>
+
+<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:
+    </div>
+    <div role="tabpanel" class="tab-pane" id="v1">
+Before you start, make sure to install <code>Microsoft.Azure.WebJobs</code> version <code>2.1.0-beta4</code> into your Function App:</p>
 <pre><code class="powershell">Install-Package Microsoft.Azure.WebJobs -Version 2.1.0-beta4 -Pre
 </code></pre>
 
@@ -470,7 +484,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
 </code></pre>
 
-<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
+<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:
+    </div>
+  </div></p>
 <pre><code class="csharp">[ElmahIoExceptionFilter(&quot;API_KEY&quot;, &quot;LOG_ID&quot;)]
 public static class Function1
 {
