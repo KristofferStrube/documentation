@@ -434,7 +434,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div></div>
             <div class="col-md-9" role="main"><div class="docs-box">
 
-<h1 id="logging-from-powershell">Logging from PowerShell</h1>
+<h1 id="logging-to-elmahio-from-powershell">Logging to elmah.io from PowerShell</h1>
 <p>In order for you to be able to log to elmah.io from PowerShell, you will need the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package. This package contains the raw client libraries for communicating with the <a href="https://elmah.io/api/v2">elmah.io API</a>.</p>
 <p>First of all, you will need to include <code>elmah.io.client.dll</code> in your PowerShell script. How you do this is entirely up to you of course. You can place this assembly with your script or you can download it through NuGet on every execution. To download the elmah.io.client package through NuGet, you will need <code>nuget.exe</code>:</p>
 <pre><code class="powershell">$source = &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot;
