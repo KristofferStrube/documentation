@@ -269,10 +269,11 @@
 
 <p>Locate your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID. The two values will be referenced as <code>API_KEY</code> and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) in the following.</p>
 <h2 id="logging-from-aspnet-core">Logging from ASP.NET Core</h2>
-<p><ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#setup2" aria-controls="home" role="tab" data-toggle="tab">ASP.NET Core 2.x</a></li>
-    <li role="presentation"><a href="#setup1" aria-controls="profile" role="tab" data-toggle="tab">ASP.NET Core 1.x</a></li>
-  </ul></p>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="nav-item"><a class="nav-link active" href="#setup2" aria-controls="home" role="tab" data-toggle="tab">ASP.NET Core 2.x</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#setup1" aria-controls="profile" role="tab" data-toggle="tab">ASP.NET Core 1.x</a></li>
+</ul>
+
 <p><div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="setup2">
 In the <code>Program.cs</code> file, call the <code>ConfigureLogging</code>-method and configure elmah.io like shown here:</p>
@@ -325,10 +326,11 @@ Call <code>AddElmahIo</code> in the <code>Configure</code>-method in <code>Start
 <h2 id="filtering-log-messages">Filtering log messages</h2>
 <p>As default, the elmah.io logger for Microsoft.Extensions.Logging only logs warnings, errors and fatals. The rationale behind this is that we build an error management system and really doesn't do much to support millions of debug messages from your code. Sometimes you may want to log non-exception messages, though. To do so, use filters in Microsoft.Extensions.Logging.</p>
 <p>To log everything from log level <code>Information</code> and up, do the following:</p>
-<p><ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">ASP.NET Core 2.x</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">ASP.NET Core 1.x</a></li>
-  </ul></p>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="nav-item"><a class="nav-link active" href="#home" aria-controls="home" role="tab" data-toggle="tab">ASP.NET Core 2.x</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">ASP.NET Core 1.x</a></li>
+</ul>
+
 <p><div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="home">
 Inside the <code>ConfigureLogging</code>-method in <code>Startup.cs</code>, change the minimum level:</p>
@@ -471,7 +473,7 @@ logger.LogError(1, ex, &quot;Unexpected error&quot;);
     		<div class="container">
     			<div class="text-center">
 					<p>2013 - 2018 @ elmah.io. All Rights Reserved.</p>
-					<p><a href="https://elmah.io/termsofuse/">Terms of Use</a> | <a href="https://elmah.io/legal/privacy-policy/">Privacy Policy</a> | <a href="https://elmah.io/legal/refund-policy/">Refund Policy</a></p>
+					<p><a href="https://elmah.io/legal/terms-of-use/">Terms of Use</a> | <a href="https://elmah.io/legal/privacy-policy/">Privacy Policy</a> | <a href="https://elmah.io/legal/refund-policy/">Refund Policy</a></p>
 				</div>
     		</div>
     	</div>
