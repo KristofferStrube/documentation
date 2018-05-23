@@ -271,6 +271,7 @@
 <li><a href="#using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</a></li>
 <li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
 <li><a href="#using-bitbucket-pipelines">Using Bitbucket Pipelines</a></li>
+<li><a href="#using-atlassian-bamboo">Using Atlassian Bamboo</a></li>
 </ul>
 </li>
 <li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
@@ -489,6 +490,30 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
 <p>The script uses <code>curl</code> to invoke the elmah.io Deployments endpoint with the API key (<code>$ELMAHIO_APIKEY</code>) and a version number (<code>$BITBUCKET_BUILD_NUMBER</code>). The posted JSON can be extended to support additional properties like changelog and the name of the person triggering the deployment. Check out the <a href="http://api.elmah.io/swagger/ui/index">API documentation</a> for details.</p>
+<h3 id="using-atlassian-bamboo">Using Atlassian Bamboo</h3>
+<p>Setting up elmah.io Deployment Tracking on Bamboo, is easy using a bit of PowerShell.</p>
+<ol>
+<li>
+<p>Add a new Script Task and select <em>Windows PowerShell</em> in <em>Interpreter</em>.</p>
+</li>
+<li>
+<p>Select <em>Inline</em> in <em>Script location</em> and add the following PowerShell to <em>Script body</em>:</p>
+</li>
+</ol>
+<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
+
+Write-Host $bamboo_buildNumber
+
+$url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
+$body = @{
+  version = $Env:bamboo_buildNumber
+  logId = &quot;LOG_ID&quot;
+}
+Invoke-RestMethod -Method Post -Uri $url -Body $body
+</code></pre>
+
+<p><img alt="PowerShell task in Bamboo" src="../images/bamboo.png" /></p>
+<p>Replace <code>API_KEY</code> and <code>LOG_ID</code> and everything is configured. The script uses the build number of the current build as version number (<code>$Env:bamboo_buildNumber</code>). If you prefer another scheme, Bamboo offers a range of <a href="https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html" target="_blank" rel="noopener noreferrer">variables</a>.</p>
 <h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
 <p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="https://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
 <h2 id="versioning-different-services">Versioning Different Services</h2>
