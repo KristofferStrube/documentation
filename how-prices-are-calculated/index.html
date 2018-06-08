@@ -10,19 +10,19 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from BlogEngine.NET">
+    <meta name="twitter:title" content="How prices are calculated">
     
     
-    <meta property="og:title" content="Logging from BlogEngine.NET">
+    <meta property="og:title" content="How prices are calculated">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-blogengine-net/">
+    <meta property="og:url" content="https://docs.elmah.io/how-prices-are-calculated/">
     
     <meta property="fb:app_id" content="218008838347208" />
 
-    <title>Logging from BlogEngine.NET | elmah.io</title>
+    <title>How prices are calculated | elmah.io</title>
 
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-blogengine-net/">
+    <link rel="canonical" href="https://docs.elmah.io/how-prices-are-calculated/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -121,7 +121,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-servicestack/">Logging from ServiceStack</a></li>
                   
-                  <li class="active"><a href="./">Logging from BlogEngine.NET</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-blogengine-net/">Logging from BlogEngine.NET</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-umbraco/">Logging from Umbraco</a></li>
                   
@@ -241,7 +241,7 @@
                   
                   <li ><a href="../upgrade-elmah-io-from-v2-to-v3/">Upgrade elmah.io from v2 to v3</a></li>
                   
-                  <li ><a href="../how-prices-are-calculated/">How prices are calculated</a></li>
+                  <li class="active"><a href="./">How prices are calculated</a></li>
                   
                   <li ><a href="../elmah-and-elmah-io-differences/">ELMAH and elmah.io differences</a></li>
                   
@@ -260,26 +260,14 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-to-elmahio-from-blogenginenet">Logging to elmah.io from BlogEngine.NET</h1>
-<p>Because BlogEngine.NET is written in ASP.NET, it doesn’t really need any custom code to use ELMAH and elmah.io. In fact, ELMAH works out of the box for most web frameworks by Microsoft. If you are building and deploying the code yourself, installing elmah.io is achieved using our NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
-</code></pre>
-
-<p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>When installed, BlogEngine.NET starts reporting errors to elmah.io. To check it out, force an internal server error or similar, and visit /elmah.axd or the search area of your log at elmah.io.</p>
-<p>Some of you may use the BlogEngine.NET binaries or even installed it using a one-click installer. In this case you will need to add elmah.io manually. To do that, use a tool like NuGet Package Explorer to download the most recent versions of ELMAH and elmah.io. Copy Elmah.dll and Elmah.Io.dll to the bin directory of your BlogEngine.NET installation. Also modify your web.config to include the ELMAH config as shown in the config example. Last but not least, remember to add the elmah.io error logger configuration as a child node to the <code>&lt;elmah&gt;</code> element:</p>
-<pre><code class="xml">&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
-</code></pre>
-
-<p>Where <code>API_KEY</code> is your API key and <code>LOG_ID</code> is your log ID.</p>
-<p>To wrap this up, you may have noticed that there’s a <a href="https://www.nuget.org/packages/Elmah.BlogEngine.Net/">NuGet package</a> to bring ELMAH support into BlogEngine.NET. This package adds the ELMAH assembly and config as well as adds a nice BlogEngine.NET compliant URL for browsing errors. Feel free to use this package, but remember to add it after the elmah.io package. Also, make sure to clean up the dual error log configuration:</p>
-<pre><code class="xml">&lt;elmah&gt;
-  &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;APIKEY&quot; LogId=&quot;LOGID&quot; /&gt;
-  &lt;security allowRemoteAccess=&quot;true&quot; /&gt;
-  &lt;errorLog type=&quot;Elmah.SqlServerCompactErrorLog, Elmah&quot; connectionStringName=&quot;elmah-sqlservercompact&quot; /&gt;
-&lt;/elmah&gt;
-</code></pre>
+            <h1 id="how-prices-are-calculated">How prices are calculated</h1>
+<p>When using elmah.io, you may experience the need to switch plan, update your credit card and other tasks which will require changes to your current payment. Every time you change something that requires a new or upcoming charge on your credit card, we reset your subscription. This means that we charge you the difference from what you already paid, to the cost of what you are switching to.</p>
+<p><strong>Example 1: Switch to a higher plan</strong></p>
+<p>If you purchased a Small Business ($29) at June 1. and want to upgrade to Business ($49) on June 15, we charge you ~ $35. You already paid $15 for half of June on the Small Business plan, why the remaining amount is deducted from the $49. Your next payment will be on July 15.</p>
+<p><strong>Example 2: Switch to a lower plan</strong></p>
+<p>If your purchased a Business plan ($49) on June 15. and downgrade to a Small Business plan ($29) on July 1. you will be charged $49 on June 15. and $29 on July 15. You commit to either a month or a year in advance. When downgrading to a lower plan, you will stay on the current plan until your subscription is renewed. When that happens, you are charged the price of the lower plan.</p>
+<p><strong>Example 3: Update your credit card</strong></p>
+<p>Our payment provider requires a payment, when inputting a new credit card. Updating credit cards therefore works exactly like when upgrading to a larger plan. We look at what you have already paid and calculate a discount based on that as well as the price for the plan you are already on.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
