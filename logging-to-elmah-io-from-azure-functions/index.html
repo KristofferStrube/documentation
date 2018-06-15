@@ -264,60 +264,15 @@
 <a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a>
 <a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-3-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-azure-functions">Logging to elmah.io from Azure Functions</h1>
-<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. To start logging exceptions from a Function, choose one of two methods:</p>
-<h3 id="manually-using-elmahioclient-the-stable-choice">Manually using <code>Elmah.Io.Client</code> (the stable choice)</h3>
-<p>Install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package into your Function project:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Client
+<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. We've created a client specifically for Azure Functions.</p>
+<blockquote>
+<p>For Functions v1, make sure to install the <code>Microsoft.Azure.WebJobs</code> in minimum version <code>2.2.0</code></p>
+</blockquote>
+<p>Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions project:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Functions
 </code></pre>
 
-<p>Wrap your Function code in try-catch:</p>
-<pre><code class="csharp">public class Function
-{
-    public static void Run()
-    {
-        try
-        {
-            // Business logic goes here
-        }
-        catch (Exception e)
-        {
-            var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
-            client.Messages.Error(new Guid(&quot;LOG_ID&quot;), e, &quot;An error message&quot;);
-            throw;
-        }
-    }
-}
-</code></pre>
-
-<p>Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the ID of the log you want to log to.</p>
-<p>By re-throwing the catched exception, Azure Function features like retry works smoothly.</p>
-<h3 id="automatic-using-elmahiofunctions-the-prerelease-choice">Automatic using <code>Elmah.Io.Functions</code> (the prerelease choice)</h3>
-<p>We've created a client specifically for Azure Functions.</p>
-<ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="nav-item"><a class="nav-link active" href="#v2" aria-controls="home" role="tab" data-toggle="tab">Azure Functions v2</a></li>
-    <li role="presentation" class="nav-item"><a class="nav-link" href="#v1" aria-controls="profile" role="tab" data-toggle="tab">Azure Functions v1</a></li>
-</ul>
-
-<p><div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="v2">
-Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions v2 project:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
-</code></pre>
-
-<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:
-    </div>
-    <div role="tabpanel" class="tab-pane" id="v1">
-Before you start, make sure to install <code>Microsoft.Azure.WebJobs</code> version <code>2.1.0-beta4</code> into your Function App:</p>
-<pre><code class="powershell">Install-Package Microsoft.Azure.WebJobs -Version 2.1.0-beta4 -Pre
-</code></pre>
-
-<p>Then install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
-</code></pre>
-
-<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:
-    </div>
-  </div></p>
+<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
 <pre><code class="csharp">[ElmahIoExceptionFilter(&quot;API_KEY&quot;, &quot;LOG_ID&quot;)]
 public static class Function1
 {

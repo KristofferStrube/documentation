@@ -264,38 +264,9 @@
 <a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a>
 <a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-3-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-azure-webjobs">Logging to elmah.io from Azure WebJobs</h1>
-<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure WebJobs</a>, requires only a few lines of code. To start logging exceptions from WebJobs, choose one of two methods:</p>
-<h3 id="manually-using-elmahioclient-the-stable-choice">Manually using <code>Elmah.Io.Client</code> (the stable choice)</h3>
-<p>Install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package into your WebJob project:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Client
-</code></pre>
-
-<p>Add the following code to your <code>Program.cs</code> file:</p>
-<pre><code class="csharp">class Program
-{
-    static void Main()
-    {
-        AppDomain.CurrentDomain.UnhandledException += Log;
-        ...
-    }
-
-    private static void Log(object sender, UnhandledExceptionEventArgs e)
-    {
-        var exception = e.ExceptionObject as Exception;
-        if (exception != null)
-        {
-            var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
-            client.Messages.Error(new Guid(&quot;LOG_ID&quot;), exception, &quot;An error message&quot;);
-        }
-    }
-}
-</code></pre>
-
-<p>Remember to replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the ID of the log you want to log to.</p>
-<p>Azure WebJobs automatically executes the <code>Log</code>-method when an exception is thrown. In this example, we simply log the exception registered in <code>UnhandledExceptionEventArgs</code>.</p>
-<h3 id="automatic-using-elmahiofunctions-the-prerelease-choice">Automatic using <code>Elmah.Io.Functions</code> (the prerelease choice)</h3>
-<p>We've created a client specifically for Azure WebJobs. Install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions -Pre
+<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure WebJobs</a>, requires only a few lines of code. We've created a client specifically for Azure WebJobs.</p>
+<p>Install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Functions
 </code></pre>
 
 <p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
