@@ -304,8 +304,15 @@ In the <code>Program.cs</code> file, call the <code>ConfigureLogging</code>-meth
 }
 </code></pre>
 
-<p>Then use the <code>AddElmahIo</code> overload without the options action:</p>
-<pre><code class="csharp">logging.AddElmahIo();
+<p>Then configure the section and use the <code>AddElmahIo</code> overload (without any parameters):</p>
+<pre><code class="csharp">WebHost.CreateDefaultBuilder(args)
+    .UseStartup&lt;Startup&gt;()
+    .ConfigureLogging((ctx, logging) =&gt;
+    {
+        logging.Services.Configure&lt;ElmahIoProviderOptions&gt;(ctx.Configuration.GetSection(&quot;ElmahIo&quot;));
+        logging.AddElmahIo();
+    })
+    .Build();
 </code></pre>
 
 <p></div>
