@@ -293,8 +293,22 @@ In the <code>Program.cs</code> file, call the <code>ConfigureLogging</code>-meth
     .Build();
 </code></pre>
 
-<p>By calling, the <code>AddFilter</code>-method, you ensure that only warnings and up are logged to elmah.io.
-</div>
+<p>By calling, the <code>AddFilter</code>-method, you ensure that only warnings and up are logged to elmah.io.</p>
+<p>API key and log ID can also be configured in <code>appsettings.json</code>:</p>
+<pre><code class="json">{
+  ...
+  &quot;ElmahIo&quot;: {
+    &quot;ApiKey&quot;: &quot;API_KEY&quot;,
+    &quot;LogId&quot;: &quot;LOG_ID&quot;
+  }
+}
+</code></pre>
+
+<p>Then use the <code>AddElmahIo</code> overload without the options action:</p>
+<pre><code class="csharp">logging.AddElmahIo();
+</code></pre>
+
+<p></div>
     <div role="tabpanel" class="tab-pane" id="setup1">
 Call <code>AddElmahIo</code> in the <code>Configure</code>-method in <code>Startup.cs</code>:</p>
 <pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory fac)
