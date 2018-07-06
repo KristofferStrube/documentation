@@ -327,6 +327,26 @@
 &lt;/defaultProxy&gt;
 </code></pre>
 
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<p>ASP.NET Core websites doesn't have a <code>web.config</code> file. In this case, you will need to configure the proxy through code:</p>
+<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+{
+    services.AddElmahIo(options =&gt;
+    {
+        options.ApiKey = &quot;API_KEY&quot;;
+        options.LogId = new Guid(&quot;LOG_ID&quot;);
+
+        options.WebProxy = new WebProxy(&quot;localhost&quot;, 8888);
+    });
+    ...
+}
+</code></pre>
+
+<p>In the example above, a proxy running on port 8888 locally, is set up using the <code>WebProxy</code> property of the elmah.io options.</p>
+<blockquote>
+<p>ASP.NET Core 2.1 seems to have some problems when setting up authenticated proxies. We will update the documentation as soon as we know more.</p>
+</blockquote>
+
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
             <p class="text-center">
