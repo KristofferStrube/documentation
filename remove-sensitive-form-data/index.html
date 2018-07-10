@@ -257,22 +257,39 @@
           <div class="main-content-body">
 
             <h1 id="remove-sensitive-form-data">Remove sensitive form data</h1>
-<p>You may have something like usernames and passwords in form posts on your website. Since ELMAH automatically logs the content of a failing form POST, sensitive data potentially ends up in your log. No one else but you and your company should really get to look inside your log, but remember that everyone connected to the Internet, is a potential hacking victim.</p>
-<p>There’s no build-in feature to remove data from the error data, before logging it to ELMAH. Luckily <a href="https://code.google.com/p/elmah/wiki/ErrorFiltering">ELMAH’s Error Filtering</a> feature lets you accomplish that anyway by writing a bit of additional code in your <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">void ErrorLog_Filtering(object sender, ExceptionFilterEventArgs args)
+<p>You may have something like usernames and passwords in form posts on your website. Since elmah.io automatically logs the content of a failing form POST, sensitive data potentially ends up in your log. No one else but you and your company should really get to look inside your log, but remember that everyone connected to the Internet, is a potential hacking victim.</p>
+<h2 id="aspnet-mvc-web-api">ASP.NET / MVC / Web API</h2>
+<p>In this example, we hide the value of a form value named <code>SomeSecretFormField</code>. Add the following code in the <code>Application_Start</code> method in the <code>global.asax.cs</code> file:</p>
+<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
+var logger = Elmah.Io.ErrorLog.Client;
+logger.OnMessage += (sender, args) =&gt;
 {
-    var httpContext = args.Context as HttpContext;
-    if (httpContext != null &amp;&amp; httpContext.Request.Form.AllKeys.Any(k =&gt; k == &quot;SomeSecretFormField&quot;))
+    var form = args.Message.Form.FirstOrDefault(f =&gt; f.Key == &quot;SomeSecretFormField&quot;);
+    if (form != null)
     {
-        var error = new Error(args.Exception, httpContext);
-        error.Form.Set(&quot;SomeSecretFormField&quot;, &quot;***hidden***&quot;);
-        ErrorLog.GetDefault(httpContext).Log(error);
-        args.Dismiss();
+        form.Value = &quot;***hidden***&quot;;
     }
-}
+};
 </code></pre>
 
-<p>The <code>ErrorLog_Filtering</code> method is called by ELMAH, every time a new exception is about to get logged. The purpose of the method is to be able to tell ELMAH not to log certain kinds of exceptions, but in this case we use the method as a hook to modify the logged error. Since you cannot modify the Form property of the HTTP request, we create a new Error object and update the value of the “SomeSecretFormField” key. The new Error object is then manually logged to the default ELMAH error logger and we dismiss the original error. It’s essential to remember to call <code>Dismiss()</code>, because if you don’t, the original error containing the sensitive form field is logged as well.</p>
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<p>Our integration for ASP.NET Core (<code>Elmah.Io.AspNetCore</code>) provides you with a hook to overwrite values, before sending them to elmah.io. In order to do this, implement the <code>OnMessage</code> handler as part of calling the <code>AddElmahIo</code> method.</p>
+<p>In this example, we remove the server variable named <code>Secret-Key</code> from all messages, before sending them to elmah.io.</p>
+<pre><code class="csharp">services.AddElmahIo(options =&gt;
+{
+    options.ApiKey = &quot;API_KEY&quot;;
+    options.LogId = new Guid(&quot;LOG_ID&quot;);
+
+    options.OnMessage = msg =&gt;
+    {
+        var item = msg.ServerVariables.FirstOrDefault(x =&gt; x.Key == &quot;Secret-Key&quot;); 
+        if (item != null)
+        {
+            msg.ServerVariables.Remove(item);
+        }
+    };
+});
+</code></pre>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
