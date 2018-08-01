@@ -260,6 +260,15 @@
 <a href="https://www.nuget.org/packages/Serilog.Sinks.ElmahIo"><img alt="NuGet" src="https://img.shields.io/nuget/v/Serilog.Sinks.ElmahIo.svg" /></a>
 <a href="https://github.com/serilog/serilog-sinks-elmahio/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</a><ul>
+<li><a href="#logging-custom-properties">Logging custom properties</a></li>
+<li><a href="#aspnet-core">ASP.NET Core</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>Serilog is a great addition to the flowering .NET logging community, described as “A no-nonsense logging library for the NoSQL era” on their project page. Serilog works just like other logging frameworks such as log4net and NLog, but offers a great fluent API and the concept of sinks (a bit like appenders in log4net). Sinks are superior to appenders, because they threat errors as objects rather than strings, a perfect fit for elmah.io which itself is built on NoSQL. Serilog already comes with native support for elmah.io, which makes it easy to integrate with any application using Serilog.</p>
 <p>In this example we’ll use a ASP.NET MVC project as an example. Neither Serilog nor elmah.io are bound to log errors from web applications. Adding this type of logging to your windows and console applications is just as easy. Add the <code>Serilog.Sinks.ElmahIo</code> NuGet package to your project:</p>
 <pre><code class="powershell">Install-Package Serilog.Sinks.ElmahIo
@@ -302,6 +311,32 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 </code></pre>
 
 <p>Beneath the Data tab on the logged message details, the <code>ApplicationIdentifier</code>, <code>ThreadId</code> and <code>Type</code> properties can be found.</p>
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<p>Serilog provides a package for ASP.NET Core, that routes log messages from inside core through Serilog. We recommend to use this package together with the elmah.io sink, in order to capture warnings and errors happening inside ASP.NET Core.</p>
+<p>To use this, install the following packages:</p>
+<pre><code class="powershell">Install-Package Serilog.AspNetCore -DependencyVersion Highest
+Install-Package Elmah.Io.Client
+Install-Package Serilog.Sinks.ElmahIo
+</code></pre>
+
+<p>(We install the <code>Elmah.Io.Client</code> manually, to make sure we run on the most recent version)</p>
+<p>Configure Serilog as usual:</p>
+<pre><code class="csharp">Log.Logger = new LoggerConfiguration()
+    ...
+    .WriteTo.ElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), LogEventLevel.Warning)
+    .CreateLogger();
+</code></pre>
+
+<p>Finally, call the <code>UseSerilog</code>-method:</p>
+<pre><code class="csharp">public static IWebHost BuildWebHost(string[] args) =&gt;
+    WebHost
+        .CreateDefaultBuilder(args)
+        .UseStartup&lt;Startup&gt;()
+        .UseSerilog()
+        .Build();
+</code></pre>
+
+<p>Now, all warnings, errors and fatals happening inside ASP.NET Core are logged to elmah.io.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
