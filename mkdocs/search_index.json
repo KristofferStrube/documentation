@@ -176,6 +176,16 @@
             "title": "Logging from a console application"
         }, 
         {
+            "location": "/logging-to-elmah-io-from-javascript/", 
+            "text": "Logging to elmah.io from JavaScript\n\n\nWe currently support logging from JavaScript through a closed beta. \nLog in to elmah.io\n and contact us through the support widget for instructions.", 
+            "title": "Logging from JavaScript"
+        }, 
+        {
+            "location": "/logging-to-elmah-io-from-javascript/#logging-to-elmahio-from-javascript", 
+            "text": "We currently support logging from JavaScript through a closed beta.  Log in to elmah.io  and contact us through the support widget for instructions.", 
+            "title": "Logging to elmah.io from JavaScript"
+        }, 
+        {
             "location": "/logging-to-elmah-io-from-entity-framework-core/", 
             "text": "Logging to elmah.io from Entity Framework Core\n\n\nBoth elmah.io and Entity Framework Core supports logging through Microsoft.Extensions.Logging. To log all errors happening inside Entity Framework Core, install the \nElmah.Io.Extensions.Logging\n NuGet package:\n\n\nInstall-Package Elmah.Io.Extensions.Logging\n\n\n\n\nThen add elmah.io to a new or existing \nLoggerFactory\n:\n\n\nvar loggerFactory = new LoggerFactory()\n    .AddElmahIo(\nAPI_KEY\n, new Guid(\nLOG_ID\n));\n\n\n\n\nReplace \nAPI_KEY\n with your API key (\nWhere is my API key?\n) and \nLOG_ID\n with the log ID (\nWhere is my log ID?\n) that should receive errors from Entity Framework.\n\n\n\n\nWhen using Entity Framework Core from ASP.NET Core, you never create your own \nLoggerFactory\n. Factories are provided through DI by ASP.NET Core. Check out \nthis sample\n for details.\n\n\n\n\nFinally, enable logging in Entity Framework Core:\n\n\noptionsBuilder\n    .UseLoggerFactory(loggerFactory)\n    .UseSqlServer(...);\n\n\n\n\n(\nUseSqlServer\n included for illustration purposes only - elmah.io works with any provider)\n\n\nThat's it! All errors happening in Entity Framework Core, are now logged in elmah.io.", 
             "title": "Logging from Entity Framework Core"
