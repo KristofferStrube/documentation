@@ -10,19 +10,19 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging through a HTTP proxy">
+    <meta name="twitter:title" content="How to configure API key permissions">
     
     
-    <meta property="og:title" content="Logging through a HTTP proxy">
+    <meta property="og:title" content="How to configure API key permissions">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-through-a-http-proxy/">
+    <meta property="og:url" content="https://docs.elmah.io/how-to-configure-api-key-permissions/">
     
     <meta property="fb:app_id" content="218008838347208" />
 
-    <title>Logging through a HTTP proxy | elmah.io</title>
+    <title>How to configure API key permissions | elmah.io</title>
 
-    <link rel="canonical" href="https://docs.elmah.io/logging-through-a-http-proxy/">
+    <link rel="canonical" href="https://docs.elmah.io/how-to-configure-api-key-permissions/">
     <link rel="shortcut icon" href="../.././favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -151,7 +151,7 @@
                   
                   <li ><a href="../configure-elmah-io-from-code/">Configure elmah.io from code</a></li>
                   
-                  <li class="active"><a href="./">Logging through a HTTP proxy</a></li>
+                  <li ><a href="../logging-through-a-http-proxy/">Logging through a HTTP proxy</a></li>
                   
                 </ul>
               </li>
@@ -241,7 +241,7 @@
                   
                   <li ><a href="../how-prices-are-calculated/">How prices are calculated</a></li>
                   
-                  <li ><a href="../how-to-configure-api-key-permissions/">How to configure API key permissions</a></li>
+                  <li class="active"><a href="./">How to configure API key permissions</a></li>
                   
                   <li ><a href="../elmah-and-elmah-io-differences/">ELMAH and elmah.io differences</a></li>
                   
@@ -260,91 +260,16 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-through-a-http-proxy">Logging through a HTTP proxy</h1>
-<p>You may find yourself in a situation, where your production web servers aren't allowing HTTP requests towards the public Internet. This also impacts the elmah.io client, which requires access to the URL https://api.elmah.io. A popular choice of implementing this kind of restriction nowadays, is through a HTTP proxy like squid.</p>
-<p>Luckily the elmah.io client supports proxy configuration out of the box. Let’s look at how to configure a HTTP proxy through <code>web.config</code>:</p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;configuration&gt;
-  &lt;configSections&gt;
-    &lt;sectionGroup name=&quot;elmah&quot;&gt;
-      &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorMail&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorMailSectionHandler, Elmah&quot; /&gt;
-      &lt;section name=&quot;errorFilter&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorFilterSectionHandler, Elmah&quot; /&gt;
-    &lt;/sectionGroup&gt;
-  &lt;/configSections&gt;
-  &lt;elmah&gt;
-    &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-    &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;...&quot; LogId=&quot;...&quot; /&gt;
-  &lt;/elmah&gt;
-  &lt;system.net&gt;
-    &lt;defaultProxy&gt;
-      &lt;proxy usesystemdefault=&quot;True&quot; proxyaddress=&quot;http://192.168.0.1:3128&quot; bypassonlocal=&quot;False&quot;/&gt;
-    &lt;/defaultProxy&gt;
-  &lt;/system.net&gt;
-&lt;/configuration&gt;
-</code></pre>
-
-<p>The above example is of course greatly simplified.</p>
-<p>The elmah.io client automatically picks up the <code>defaultProxy</code> configuration through the <code>system.net</code> element. <code>defaultProxy</code> tunnels every request from your server, including requests to elmah.io, through the proxy located on 192.18.0.1 port 3128 (or whatever IP/hostname and port you are using).</p>
-<h2 id="proxies-with-usernamepassword">Proxies with username/password</h2>
-<p>Some proxies require a username/password. Unfortunately, the <code>defaultProxy</code> element doesn't support authentication. You have two ways to set this up:</p>
-<h3 id="use-default-credentials">Use default credentials</h3>
-<p>Make sure to set the <code>useDefaultCredentials</code> attribute to <code>true</code>:</p>
-<pre><code class="xml">&lt;system.net&gt;
-  &lt;defaultProxy useDefaultCredentials=&quot;true&quot;&gt;
-    ...
-  &lt;/defaultProxy&gt;
-&lt;/system.net&gt;
-</code></pre>
-
-<p>Run your web app (application pool) as a user with access to the proxy.</p>
-<h3 id="implement-your-own-proxy">Implement your own proxy</h3>
-<p>Add the following class:</p>
-<pre><code class="csharp">public class AuthenticatingProxy : IWebProxy
-{
-    public ICredentials Credentials
-    {
-        get { return new NetworkCredential(&quot;username&quot;, &quot;password&quot;); }
-        set {}
-    }
-
-    public Uri GetProxy(Uri destination)
-    {
-        return new Uri(&quot;http://localhost:8888&quot;);
-    }
-
-    public bool IsBypassed(Uri host)
-    {
-        return false;
-    }
-}
-</code></pre>
-
-<p>Configure the new proxy in <code>web.config</code>:</p>
-<pre><code class="xml">&lt;defaultProxy useDefaultCredentials=&quot;false&quot;&gt;
-  &lt;module type=&quot;YourNamespace.AuthenticatingProxy, YourAssembly&quot; /&gt;
-&lt;/defaultProxy&gt;
-</code></pre>
-
-<h2 id="aspnet-core">ASP.NET Core</h2>
-<p>ASP.NET Core websites doesn't have a <code>web.config</code> file. In this case, you will need to configure the proxy through code:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    services.AddElmahIo(options =&gt;
-    {
-        options.ApiKey = &quot;API_KEY&quot;;
-        options.LogId = new Guid(&quot;LOG_ID&quot;);
-
-        options.WebProxy = new WebProxy(&quot;localhost&quot;, 8888);
-    });
-    ...
-}
-</code></pre>
-
-<p>In the example above, a proxy running on port 8888 locally, is set up using the <code>WebProxy</code> property of the elmah.io options.</p>
+            <h1 id="how-to-configure-api-key-permissions">How to configure API key permissions</h1>
+<p>Security on the elmah.io API is handled through the use of API keys. All requests to the API must be accompanied by an API key. When creating your organization, a default API key was automatically created. API keys can be revoked and you can create multiple API keys for different purposes and projects. Much like a user can be awarded different levels of access on elmah.io, API keys also have a set of permissions. The default created API key for your organization, only have permission to write log messages to elmah.io.</p>
 <blockquote>
-<p>ASP.NET Core 2.1 seems to have some problems when setting up authenticated proxies. We will update the documentation as soon as we know more.</p>
+<p>API key permissions were added in August 2018, why keys created before that have all permissions enabled. We recommend those of you with old API keys to configure the needed permissions.</p>
+</blockquote>
+<p>To configure permissions for a new or existing API key, either click the <code>Edit</code> or <code>Add API Key</code> button on the API Keys tab of your organization settings. This will show the API key editor view:</p>
+<p><img alt="Edit API key" src="../images/edit_api_key.png" /></p>
+<p>Like mentioned previously, new keys have the <code>messages_write</code> permission enabled only. This permission will cover logging from your application to elmah.io. If your application needs to browse messages from elmah.io, create new logs/applications, etc. you will need to enable the corresponding permission. Notice that read permissions don't need to be enabled, in order for you to browse logs and log messages on the elmah.io UI. API keys are used by the range of client integrations only.</p>
+<blockquote>
+<p>Your API key shouldn't be shared outside your organization. In some situations, you will need to share your API key (like when logging from JavaScript). In these cases, it's essential that your API key only have the <code>messages_write</code> permission enabled. With all permissions enabled, everyone will be able to browse your logs.</p>
 </blockquote>
 
             <br/>
