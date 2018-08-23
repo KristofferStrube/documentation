@@ -261,7 +261,130 @@
           <div class="main-content-body">
 
             <h1 id="logging-to-elmahio-from-javascript">Logging to elmah.io from JavaScript</h1>
-<p>We currently support logging from JavaScript through a closed beta. <a href="https://app.elmah.io/">Log in to elmah.io</a> and contact us through the support widget for instructions.</p>
+<p>elmah.io doesn't only support server-side .NET logging. We also log JavaScript errors happening on your website. Logging client-side errors, requires nothing more than installing the <code>elmahio.js</code> script on your website.</p>
+<p>Pick an installation method of your choice:</p>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="nav-item"><a class="nav-link active" href="#manually" aria-controls="home" role="tab" data-toggle="tab">Manually</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#cdn" aria-controls="home" role="tab" data-toggle="tab">CDN</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#npm" aria-controls="profile" role="tab" data-toggle="tab">npm</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#bower" aria-controls="profile" role="tab" data-toggle="tab">Bower</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#libman" aria-controls="profile" role="tab" data-toggle="tab">Library Manager</a></li>
+</ul>
+
+<p><div class="tab-content">
+<div role="tabpanel" class="tab-pane active" id="manually"></p>
+<p>Download the latest release as a zip: <a href="https://github.com/elmahio/elmah.io.js/releases">https://github.com/elmahio/elmah.io.js/releases</a></p>
+<p>Unpack and copy <code>elmahio.min.js</code> to the <code>Scripts</code> folder or whatever folder you use to store JavaScript files.</p>
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;~/Scripts/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="cdn"></p>
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;https://cdn.rawgit.com/elmahio/elmah.io.js/1.0.2/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="npm"></p>
+<p>Install the elmah.io.js npm package:</p>
+<pre><code class="ps">npm install elmah.io.js
+</code></pre>
+
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;~/node_modules/elmah.io.js/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="bower"></p>
+<p>Install the <code>elmah.io.js</code> Bower package:</p>
+<pre><code class="ps">bower install elmah.io.js
+</code></pre>
+
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;~/bower_components/elmah.io.js/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="libman"></p>
+<p>Add the <code>elmah.io.js</code> library in your <code>libman.json</code> file:</p>
+<pre><code class="json">{
+  ...
+  &quot;libraries&quot;: [
+    ...
+    {
+      &quot;provider&quot;: &quot;filesystem&quot;,
+      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.js/1.0.2/dist/elmahio.min.js&quot;,
+      &quot;destination&quot;: &quot;wwwroot/lib/elmahio&quot;
+    }
+  ]
+}
+</code></pre>
+
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;~/lib/elmahio/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+</div></p>
+<p>That's it. All uncaught errors on your website, are now logged to elmah.io.</p>
+<h2 id="configuration-in-code">Configuration in code</h2>
+<p>If you prefer configuring in code (or need to access the options for something else), API key and log ID can be configured by referencing the <code>elmahio.min.js</code> script with parameters:</p>
+<pre><code class="html">&lt;script src=&quot;~/scripts/elmahio.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Then initialize the logger in JavaScript:</p>
+<pre><code class="javascript">new Elmahio({
+    apiKey: 'YOUR-API-KEY',
+    logId: 'YOUR-LOG-ID'
+});
+</code></pre>
+
+<p>The <code>application</code> property on elmah.io, can be set on all log messages by setting the <code>application</code> option:</p>
+<pre><code class="javascript">new Elmahio({
+    apiKey: 'YOUR-API-KEY',
+    logId: 'YOUR-LOG-ID',
+    application: 'My application name'
+});
+</code></pre>
+
+<p>For debug purposes, debug output from the logger to the console can be enabled using the <code>debug</code> option:</p>
+<pre><code class="javascript">new Elmahio({
+    apiKey: 'YOUR-API-KEY',
+    logId: 'YOUR-LOG-ID',
+    debug: true
+});
+</code></pre>
+
+<h2 id="logging-manually">Logging manually</h2>
+<p>You may want to log errors manually or even log information messages from JavaScript. To do so, <code>Elmahio</code> is actually a logging framework too:</p>
+<pre><code class="javascript">var logger = new Elmahio({
+    apiKey: 'YOUR-API-KEY',
+    logId: 'YOUR-LOG-ID'
+  });
+
+log.verbose('This is verbose');
+log.verbose('This is verbose', new Error(&quot;A JavaScript error object&quot;));
+
+log.debug('This is debug');
+log.debug('This is debug', new Error(&quot;A JavaScript error object&quot;));
+
+log.information('This is information');
+log.information('This is information', new Error(&quot;A JavaScript error object&quot;));
+
+log.warning('This is warning');
+log.warning('This is warning', new Error(&quot;A JavaScript error object&quot;));
+
+log.error('This is error');
+log.error('This is error', new Error(&quot;A JavaScript error object&quot;));
+
+log.fatal('This is fatal');
+log.fatal('This is fatal', new Error(&quot;A JavaScript error object&quot;));
+</code></pre>
+
+<blockquote>
+<p>Manual logging only works when initializing the elmah.io logger from code.</p>
+</blockquote>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

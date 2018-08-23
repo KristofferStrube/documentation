@@ -261,8 +261,8 @@
           <div class="main-content-body">
 
             <h1 id="handle-elmahio-downtime">Handle elmah.io downtime</h1>
-<p>Like every other SaaS product out there, we cannot promise you 100% uptime on elmah.io. We understand, that your logging data is extremely important for your business and we do everything in our power to secure that elmah.io is running smoothly. In fact, we normally have an average of <a href="http://status.elmah.io/1105484">99.9 % uptime</a> on our API.</p>
-<p>But how do you handle that remaining 0.01 % of the time where you need to log a message in elmah.io and the service is down? You have a few options actually:</p>
+<p>Like every other SaaS product out there, we cannot promise you 100% uptime on elmah.io. We understand, that your logging data is extremely important for your business and we do everything in our power to secure that elmah.io is running smoothly. To monitor our API's and websites, check out <a href="http://status.elmah.io/">status.elmah.io</a>.</p>
+<p>But how do you handle the time where you need to log a message in elmah.io and the service is down? You have a few options actually:</p>
 <p><strong>Subscribe to the <code>OnMessageFail</code> event</strong></p>
 <p>You can subscribe an event handler to listen for this situation (where communicating with the elmah.io API fails). To hook up an event handler, write this piece of code in your initialization code:</p>
 <pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
@@ -275,9 +275,38 @@ logger.OnMessageFail += (sender, args) =&gt;
 };
 </code></pre>
 
+<p>The example is for ASP.NET and using the <code>Elmah.Io.Client</code> package. Similar options are available for other web and logging frameworks.</p>
 <p><strong>Log to multiple logs</strong></p>
-<p>If you want to be able to rollback to another solution, in case elmah.io goes down, you can actually log to multiple error logs as described here: <a href="logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</a>.</p>
+<p>If you want to be able to rollback to another solution, in case elmah.io goes down, you can actually log to multiple error logs as described here: <a href="logging-to-multiple-elmah-logs">Logging to multiple ELMAH logs</a>. If you are using one of our integrations for other web and logging framework, various options are available too. This could be logging to a local file or database.</p>
 <p>We constantly work to improve the uptime of the entire solution.</p>
+<h2 id="response-explaination">Response explaination</h2>
+<p>Here's an overview of the types of errors you can experience from the API:</p>
+<table>
+<thead>
+<tr>
+<th>Response</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Timeout</td>
+<td>Something is very wrong with our API or Azure. You can be sure that we are working 24/7 to fix it.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>The API is reachable, but we have a problem like communicating with Azure Service bus. Azure has great uptime and all of our resources are dedicated and replicated. Still, we experience short periods of dowmtime from time to time.</td>
+</tr>
+<tr>
+<td>429</td>
+<td>We allow a maximum (per API key) of 500 requests per minute and 3600 per hour. 429 means that you have crossed that line. This status code doesn't indicate that the API is down.</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>Something is wrong with the request. Check out the <a href="http://api.elmah.io/swagger/ui/index">API documentation</a> for details. This status code doesn't indicate that the API is down.</td>
+</tr>
+</tbody>
+</table>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
