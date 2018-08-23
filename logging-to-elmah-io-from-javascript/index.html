@@ -261,6 +261,9 @@
           <div class="main-content-body">
 
             <h1 id="logging-to-elmahio-from-javascript">Logging to elmah.io from JavaScript</h1>
+<blockquote>
+<p>We are currently building elmah.io.js. The description below is an example of how installation and usage may turn out. Nothing of the below works yet! :)</p>
+</blockquote>
 <p>elmah.io doesn't only support server-side .NET logging. We also log JavaScript errors happening on your website. Logging client-side errors, requires nothing more than installing the <code>elmahio.js</code> script on your website.</p>
 <p>Pick an installation method of your choice:</p>
 <ul class="nav nav-tabs" role="tablist">
@@ -319,6 +322,10 @@
     }
   ]
 }
+</code></pre>
+
+<p>or using the LibMan CLI:</p>
+<pre><code class="powershell">libman install https://github.com/elmahio/elmah.io.js/blob/1.0.2/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
