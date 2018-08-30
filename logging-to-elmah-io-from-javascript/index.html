@@ -288,8 +288,9 @@
     <li role="presentation" class="nav-item"><a class="nav-link active" href="#manually" aria-controls="home" role="tab" data-toggle="tab">Manually</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#cdn" aria-controls="home" role="tab" data-toggle="tab">CDN</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#npm" aria-controls="profile" role="tab" data-toggle="tab">npm</a></li>
-    <li role="presentation" class="nav-item"><a class="nav-link" href="#bower" aria-controls="profile" role="tab" data-toggle="tab">Bower</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#nuget" aria-controls="profile" role="tab" data-toggle="tab">NuGet</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#libman" aria-controls="profile" role="tab" data-toggle="tab">Library Manager</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#bower" aria-controls="profile" role="tab" data-toggle="tab">Bower</a></li>
 </ul>
 
 <p><div class="tab-content">
@@ -318,8 +319,20 @@
 
 <p></div>
   <div role="tabpanel" class="tab-pane" id="bower"></p>
-<p>Install the <code>elmah.io.js</code> Bower package:</p>
-<pre><code class="ps">bower install elmah.io.js
+<p>Since Bower is <a href="https://bower.io/blog/2017/how-to-migrate-away-from-bower/" target="_blank" rel="noopener noreferrer">no longer maintained</a>, installing <code>elmah.io.js</code> through Bower, is supported using <code>bower-npm-resolver</code>. Install the resolver:</p>
+<pre><code class="ps">npm install bower-npm-resolver --save
+</code></pre>
+
+<p>Add the resolver in your <code>.bowerrc</code> file:</p>
+<pre><code class="json">{
+  &quot;resolvers&quot;: [
+    &quot;bower-npm-resolver&quot;
+  ]
+}
+</code></pre>
+
+<p>Install the <code>elmah.io.js</code> npm package:</p>
+<pre><code class="ps">bower install npm:elmah.io.js --save
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
@@ -348,6 +361,16 @@
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
 <pre><code class="html">&lt;script src=&quot;~/lib/elmahio/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="nuget"></p>
+<p>Install the <code>elmah.io.js</code> NuGet package:</p>
+<pre><code class="ps">Install-Package elmah.io.js
+</code></pre>
+
+<p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
+<pre><code class="html">&lt;script src=&quot;~/Scripts/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 <p></div>
