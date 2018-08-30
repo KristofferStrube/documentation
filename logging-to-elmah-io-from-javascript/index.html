@@ -366,7 +366,7 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="nuget"></p>
 <p>Install the <code>elmah.io.js</code> NuGet package:</p>
-<pre><code class="ps">Install-Package elmah.io.js
+<pre><code class="ps">Install-Package elmah.io.js -Prerelease
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
@@ -430,7 +430,7 @@ logger.fatal('This is fatal');
 logger.fatal('This is fatal', new Error('A JavaScript error object'));
 
 logger.log({
-  title: 'This is a custom log message'),
+  title: 'This is a custom log message',
   type: 'Of some type',
   severity: 'Error'
 });
@@ -458,6 +458,7 @@ logger.log({
 <pre><code class="javascript">new Elmahio({
     ...
     onMessage: function(msg) {
+        if (!msg.data) msg.data = [];
         msg.data.push({key: 'MyCustomKey', value: 'MyCustomValue'});
     }
 });
