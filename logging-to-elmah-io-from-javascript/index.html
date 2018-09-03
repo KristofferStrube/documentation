@@ -262,7 +262,7 @@
 
             <p><a href="https://www.nuget.org/packages/elmah.io.js"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Js.svg" /></a>
 <a href="https://img.shields.io/npm/v/elmah.io.js.svg"><img alt="npm" src="https://img.shields.io/nuget/v/Elmah.Io.Js.svg" /></a>
-<a href="https://github.com/elmahio/elmah.io.js/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
+<a href="https://github.com/elmahio/elmah.io.js/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-3-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-javascript">Logging to elmah.io from JavaScript</h1>
 <blockquote>
 <p>elmah.io.js is currently in beta. We don't recommend this for production just yet. Feel free to play around with it, but remember to <a href="https://headwayapp.co/elmah-io-changelog/deprecating-the-v2-api-68030" target="_blank" rel="noopener noreferrer">disable access to the v2 API</a> on your log and <a href="https://blog.elmah.io/api-key-permissions/">generate a new API key</a> with <code>messages_write</code> permission only. Without these changes, everyone will be able to browse your logs (<a href="https://www.troyhunt.com/aspnet-session-hijacking-with-google/" target="_blank" rel="noopener noreferrer">you don't want that!</a>).</p>
@@ -279,6 +279,8 @@
 <li><a href="#handling-errors">Handling errors</a></li>
 </ul>
 </li>
+<li><a href="#angular">Angular</a></li>
+<li><a href="#react">React</a></li>
 <li><a href="#message-reference">Message reference</a></li>
 </ul>
 </li>
@@ -479,6 +481,79 @@ logger.log({
 </code></pre>
 
 <p>In the example, all errors are written to the console.</p>
+<h2 id="angular">Angular</h2>
+<p><code>elmah.io.js</code> works great with Angular applications too. To log all errors happening in your Angular app, install <code>elmah.io.js</code> through npm as described above. Then add <code>elmahio.min.js</code> to the <code>scripts</code> section in the <code>.angular-cli.json</code> file (<code>angular.json</code> in Angular 6):</p>
+<pre><code class="json">{
+  &quot;$schema&quot;: &quot;./node_modules/@angular/cli/lib/config/schema.json&quot;,
+  ...
+  &quot;apps&quot;: [
+    {
+      ...
+      &quot;scripts&quot;: [
+        &quot;../node_modules/elmah.io.js/dist/elmahio.min.js&quot;
+      ],
+      ...
+    }
+  ],
+  ...
+}
+</code></pre>
+
+<p>In the <code>app.module.ts</code> file, add a new <code>ErrorHandler</code> and add it to the <code>providers</code> section:</p>
+<pre><code class="typescript">import { NgModule, ErrorHandler } from '@angular/core';
+...
+
+class ElmahIoErrorHandler implements ErrorHandler {
+  logger: any;
+  constructor() {
+    this.logger = new Elmahio({
+      apiKey: 'API_KEY',
+      logId: 'LOG_ID',
+    });
+  }
+  handleError(error) {
+    if (error &amp;&amp; error.message) {
+      this.logger.error(error.message, error);
+    } else {
+      this.logger.error('Error in application', error);
+    }
+  }
+}
+
+@NgModule({
+  declarations: [
+    ...
+  ],
+  imports: [
+    ...
+  ],
+  providers: [{ provide: ErrorHandler, useClass: ElmahIoErrorHandler }],
+  ...
+})
+</code></pre>
+
+<p>All errors are shipped to the <code>handleError</code>-function by Angular and logged to elmah.io. Check out the <a href="https://github.com/elmahio/elmah.io.js/tree/master/samples/Elmah.Io.Js.Angular" target="_blank" rel="noopener noreferrer">Elmah.Io.Js.Angular</a> sample for some real working code.</p>
+<h2 id="react">React</h2>
+<p>To log all errors from a React application, install the <code>elmah.io.js</code> npm package as described above. Then modify the <code>App.js</code> file:</p>
+<pre><code class="javascript">...
+import Elmahio from '../node_modules/elmah.io.js/dist/elmahio';
+
+export default class App extends Component {
+  ...
+
+  constructor() {
+    super();
+    var log = new Elmahio({
+      apiKey: 'API_KEY',
+      logId: 'LOG_ID'
+    });
+  }
+
+  ...
+}
+</code></pre>
+
+<p>When initializing your React app, elmah.io is configured and all errors happening in the application are logged.</p>
 <h2 id="message-reference">Message reference</h2>
 <p>This is an example of the elmah.io.js <code>msg</code> object that is used in various callbacks, etc.:</p>
 <pre><code class="javascript">{
