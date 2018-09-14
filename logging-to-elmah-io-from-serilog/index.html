@@ -270,6 +270,7 @@
 <li><a href="#logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</a><ul>
 <li><a href="#logging-custom-properties">Logging custom properties</a></li>
 <li><a href="#aspnet-core">ASP.NET Core</a></li>
+<li><a href="#config-using-appsettingsjson">Config using appsettings.json</a></li>
 </ul>
 </li>
 </ul>
@@ -342,6 +343,40 @@ Install-Package Serilog.Sinks.ElmahIo
 </code></pre>
 
 <p>Now, all warnings, errors and fatals happening inside ASP.NET Core are logged to elmah.io.</p>
+<h2 id="config-using-appsettingsjson">Config using appsettings.json</h2>
+<p>While Serilog provides a great fluent C# API, some prefer to configure Serilog using an <code>appsettings.json</code> file. To configure the elmah.io sink this way, you will need to install the <code>Serilog.Settings.Configuration</code> NuGet package. Then configure elmah.io in your <code>appsettings.json</code> file:</p>
+<pre><code class="json">{
+    ...
+    &quot;Serilog&quot;:{
+        &quot;Using&quot;:[
+            &quot;Serilog.Sinks.ElmahIo&quot;
+        ],
+        &quot;MinimumLevel&quot;: &quot;Warning&quot;,
+        &quot;WriteTo&quot;:[
+            {
+                &quot;Name&quot;: &quot;ElmahIo&quot;,
+                &quot;Args&quot;:{
+                    &quot;apiKey&quot;: &quot;API_KEY&quot;,
+                    &quot;logId&quot;: &quot;LOG_ID&quot;
+                }
+            }
+        ]
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Make sure to specify the <code>apiKey</code> and <code>logId</code> arguments with the first character in lowercase.</p>
+</blockquote>
+<p>Finally, tell Serilog to read the configuration from the <code>appsettings.json</code> file:</p>
+<pre><code class="csharp">var configuration = new ConfigurationBuilder()
+    .AddJsonFile(&quot;appsettings.json&quot;)
+    .Build();
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+</code></pre>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
