@@ -382,12 +382,12 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="aspnetcore"></p>
 <p>If not already configured, follow the guide <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/">installing elmah.io in ASP.NET Core</a>.</p>
-<p>Install the <code>Elmah.Io.AspNetCore.Mvc</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Mvc
+<p>Install the <code>Elmah.Io.AspNetCore.TagHelpers</code> NuGet package:</p>
+<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.TagHelpers
 </code></pre>
 
 <p>Copy and paste the following line to the top of the <code>_Layout.cshtml</code> file:</p>
-<pre><code class="html">@addTagHelper *, Elmah.Io.AspNetCore.Mvc
+<pre><code class="html">@addTagHelper *, Elmah.Io.AspNetCore.TagHelpers
 </code></pre>
 
 <p>In the bottom of the file (but before referencing other JavaScript files), add the following tag helper:</p>
