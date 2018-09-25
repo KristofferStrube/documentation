@@ -295,6 +295,7 @@
     <li role="presentation" class="nav-item"><a class="nav-link" href="#npm" aria-controls="profile" role="tab" data-toggle="tab">npm</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#nuget" aria-controls="profile" role="tab" data-toggle="tab">NuGet</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#libman" aria-controls="profile" role="tab" data-toggle="tab">Library Manager</a></li>
+    <li role="presentation" class="nav-item"><a class="nav-link" href="#aspnetcore" aria-controls="profile" role="tab" data-toggle="tab">ASP.NET Core</a></li>
     <li role="presentation" class="nav-item"><a class="nav-link" href="#bower" aria-controls="profile" role="tab" data-toggle="tab">Bower</a></li>
 </ul>
 
@@ -378,6 +379,23 @@
 <pre><code class="html">&lt;script src=&quot;~/Scripts/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 </code></pre>
 
+<p></div>
+  <div role="tabpanel" class="tab-pane" id="aspnetcore"></p>
+<p>If not already configured, follow the guide <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/">installing elmah.io in ASP.NET Core</a>.</p>
+<p>Install the <code>Elmah.Io.AspNetCore.Mvc</code> NuGet package:</p>
+<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Mvc
+</code></pre>
+
+<p>Copy and paste the following line to the top of the <code>_Layout.cshtml</code> file:</p>
+<pre><code class="html">@addTagHelper *, Elmah.Io.AspNetCore.Mvc
+</code></pre>
+
+<p>In the bottom of the file (but before referencing other JavaScript files), add the following tag helper:</p>
+<pre><code class="html">&lt;elmah-io/&gt;
+</code></pre>
+
+<p>If you want to log JavaScript errors from production only, make sure to move the <code>elmah-io</code> element inside the tag <code>&lt;environment exclude="Development"&gt;</code>.</p>
+<p>elmah.io automatically pulls your API key and log ID from the options specified as part of the installation for logging serverside errors from ASP.NET Core.</p>
 <p></div>
 </div></p>
 <p>That's it. All uncaught errors on your website, are now logged to elmah.io.</p>
