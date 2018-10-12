@@ -280,7 +280,7 @@
 
 <p>Next, you will need to add your API key to your <code>web.config</code>. Where the 2.x client only required a log ID in order to log messages to elmah.io, the new API improves security by introducing API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). Copy your API key and extend the <code>errorLog</code>-element in <code>web.config</code>:</p>
 <pre><code class="xml">&lt;elmah&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
 

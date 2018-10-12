@@ -268,14 +268,14 @@
 <p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>When installed, BlogEngine.NET starts reporting errors to elmah.io. To check it out, force an internal server error or similar, and visit /elmah.axd or the search area of your log at elmah.io.</p>
 <p>Some of you may use the BlogEngine.NET binaries or even installed it using a one-click installer. In this case you will need to add elmah.io manually. To do that, use a tool like NuGet Package Explorer to download the most recent versions of ELMAH and elmah.io. Copy Elmah.dll and Elmah.Io.dll to the bin directory of your BlogEngine.NET installation. Also modify your web.config to include the ELMAH config as shown in the config example. Last but not least, remember to add the elmah.io error logger configuration as a child node to the <code>&lt;elmah&gt;</code> element:</p>
-<pre><code class="xml">&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
+<pre><code class="xml">&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 </code></pre>
 
 <p>Where <code>API_KEY</code> is your API key and <code>LOG_ID</code> is your log ID.</p>
 <p>To wrap this up, you may have noticed that there’s a <a href="https://www.nuget.org/packages/Elmah.BlogEngine.Net/">NuGet package</a> to bring ELMAH support into BlogEngine.NET. This package adds the ELMAH assembly and config as well as adds a nice BlogEngine.NET compliant URL for browsing errors. Feel free to use this package, but remember to add it after the elmah.io package. Also, make sure to clean up the dual error log configuration:</p>
 <pre><code class="xml">&lt;elmah&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;APIKEY&quot; LogId=&quot;LOGID&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;APIKEY&quot; logId=&quot;LOGID&quot; /&gt;
   &lt;security allowRemoteAccess=&quot;true&quot; /&gt;
   &lt;errorLog type=&quot;Elmah.SqlServerCompactErrorLog, Elmah&quot; connectionStringName=&quot;elmah-sqlservercompact&quot; /&gt;
 &lt;/elmah&gt;

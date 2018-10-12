@@ -274,7 +274,7 @@
 <p>Create two new logs at the elmah.io website called something like “My website” and “My website development”. The naming isn’t really important, so pick something telling.</p>
 <p>During installation of the elmah.io package, NuGet will ask you for your elmah.io log id. In this dialog input the log id from the log named “My website development”. The default configuration is used when running your website locally. When installed open the <code>web.release.config</code> file and add the following code:</p>
 <pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
@@ -289,7 +289,7 @@
 
 <p>Open the <code>web.release.config</code> file and insert the following code:</p>
 <pre><code class="xml">&lt;elmah xdt:Transform=&quot;Replace&quot;&gt;
-  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; ApiKey=&quot;API_KEY&quot; LogId=&quot;LOG_ID&quot; /&gt;
+  &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
   &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
 &lt;/elmah&gt;
 </code></pre>
