@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="ELMAH and custom errors | elmah.io">
+    <meta name="twitter:title" content="Azure Boards | elmah.io">
     
     
-    <meta property="og:title" content="ELMAH and custom errors | elmah.io">
+    <meta property="og:title" content="Azure Boards | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/elmah-and-custom-errors/">
+    <meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-azure-boards/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>ELMAH and custom errors | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/elmah-and-custom-errors/">
+    <title>Azure Boards | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-azure-boards/">
     <link rel="shortcut icon" href="../.././favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -184,7 +184,7 @@
                   
                   <li ><a href="../elmah-io-apps-gitlab/">GitLab</a></li>
                   
-                  <li ><a href="../elmah-io-apps-azure-boards/">Azure Boards</a></li>
+                  <li class="active"><a href="./">Azure Boards</a></li>
                   
                   <li ><a href="../creating-apps-for-elmah-io/">Creating apps for elmah.io</a></li>
                   
@@ -221,7 +221,7 @@
                   
                   <li ><a href="../include-filename-and-line-number-in-stacktraces/">Include filename and like number in stack traces</a></li>
                   
-                  <li class="active"><a href="./">ELMAH and custom errors</a></li>
+                  <li ><a href="../elmah-and-custom-errors/">ELMAH and custom errors</a></li>
                   
                   <li ><a href="../using-the-elmah-io-extension-for-visual-studio/">Using the elmah.io extension for Visual Studio</a></li>
                   
@@ -262,30 +262,16 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="elmah-and-custom-errors">ELMAH and custom errors</h1>
-<p>ELMAH and ASP.NET (MVC) custom errors isn't exactly known to be best friends. Question after question have been posted on forums like Stack Overflow, from people having problems with ELMAH, when custom errors are configured. In fact, these problems make perfect sense, since both ELMAH and custom errors are designed to catch errors and do something about them.</p>
-<p>Before looking at some code, we really recommend you to read Duston Moris Gorskis blog post <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>. It provides a great introduction to different ways of implementing custom error pages in ASP.NET MVC.</p>
-<p>Back to ELMAH. In most implementations of custom error pages, ASP.NET actually swallows any uncaught exceptions, putting ELMAH out of play. To overcome this issue, you can utilize MVC's <code>IExceptionFilter</code> to log all exceptions, whether or not it is handled by a custom error page:</p>
-<pre><code class="csharp">public class ElmahExceptionLogger : IExceptionFilter
-{
-    public void OnException (ExceptionContext context)
-    {
-        if (context.ExceptionHandled)
-        {
-            ErrorSignal.FromCurrentContext().Raise(context.Exception);
-        }
-    }
- }
-</code></pre>
-
-<p>The <code>OnException</code> method on <code>ElmahExceptionLogger</code> is executed every time an error is happening, by registering it in <code>Application_Start</code>:</p>
-<pre><code class="csharp">protected void Application_Start()
-{
-    ...
-    GlobalConfiguration.Configuration.Filters.Add(new ElmahExceptionLogger());
-    ...
-}
-</code></pre>
+            <h1 id="install-azure-boards-app-for-elmahio">Install Azure Boards App for elmah.io</h1>
+<h2 id="get-your-personal-access-token">Get your personal access token</h2>
+<p>In order to create bugs on Azure Boards, you will need to generate a personal access token. Go to Azure DevOps and click your user in the top right corner. Click <em>Security</em> in the dropdown and select the <em>Personal access token</em> item in the left menu. Finally, click the <em>New token</em> button and fill in the details as shown below:</p>
+<p><img alt="Create personal access token" src="../images/apps/azureboards/personal-access-token.png" /></p>
+<p>For this example, I have picket the longest possible expiration period, but you can decide for a shorter period if you'd like. Remember to enable the <em>Read &amp; write</em> scope. Next, click the <em>Create</em> button and copy the generated token.</p>
+<h2 id="install-the-azure-boards-app-on-elmahio">Install the Azure Boards App on elmah.io</h2>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Azure Boards app and click the <em>Install</em> button:</p>
+<p><img alt="Install Azure Boards App" src="../images/apps/azureboards/install-settings.png" /></p>
+<p>Paste the token copied in the previous step into the <em>Token</em> textbox. In the <em>Organization</em> textbox, input the name of your organization. For https://dev.azure.com/myorg/myproject, the organization name would be <em>myorg</em>. In the <em>Project</em> textbox, input the name of the project containing your board. For https://dev.azure.com/myorg/myproject, the project name would be <em>myproject</em>.</p>
+<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, bugs are automatically created in the configured Azure Board.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
