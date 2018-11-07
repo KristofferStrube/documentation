@@ -305,7 +305,12 @@ log.Info(infoMessage);
 <pre><code class="csharp">log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
 </code></pre>
 
-<p>In the example, NLog will log the message <code>Property named "Donald"</code>, but the key (<code>FirstName</code>) and value (<code>Donald</code>), will also be available in the Data tab inside elmah.io.</p>
+<p>In the example, NLog will log the message <code>Property named "Donald"</code>, but the key (<code>FirstName</code>) and value (<code>Donald</code>), will also be available in the <em>Data</em> tab inside elmah.io.</p>
+<p>Elmah.Io.NLog provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the <code>User</code> field using structured logging only:</p>
+<pre><code class="csharp">log.Info(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
+</code></pre>
+
+<p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add two key/value pairs (<code>Quote</code> and <code>User</code>) to the <em>Data</em> tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
