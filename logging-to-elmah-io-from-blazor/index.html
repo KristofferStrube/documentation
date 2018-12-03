@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from log4net | elmah.io">
+    <meta name="twitter:title" content="Logging from Blazor | elmah.io">
     
     
-    <meta property="og:title" content="Logging from log4net | elmah.io">
+    <meta property="og:title" content="Logging from Blazor | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-blazor/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from log4net | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">
+    <title>Logging from Blazor | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-blazor/">
     <link rel="shortcut icon" href="../.././favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -103,7 +103,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-serilog/">Logging from Serilog</a></li>
                   
-                  <li class="active"><a href="./">Logging from log4net</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-log4net/">Logging from log4net</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-nlog/">Logging from NLog</a></li>
                   
@@ -147,7 +147,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-orchard/">Logging from Orchard</a></li>
                   
-                  <li ><a href="../logging-to-elmah-io-from-blazor/">Logging from Blazor</a></li>
+                  <li class="active"><a href="./">Logging from Blazor</a></li>
                   
                   <li ><a href="../configure-elmah-io-manually/">Configure elmah.io manually</a></li>
                   
@@ -264,74 +264,76 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-log4net"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/xdujoaelpbyg8lov?svg=true" /></a>
-<a href="https://www.nuget.org/packages/elmah.io.log4net"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.log4net.svg" /></a>
-<a href="https://github.com/elmahio/elmah.io.log4net/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
-<h1 id="logging-to-elmahio-from-log4net">Logging to elmah.io from Log4net</h1>
-<p>In this tutorial we’ll add logging to elmah.io from an ASP.NET MVC project through log4net. The process is identical with other project types. Create a new MVC project and install the elmah.io appender:</p>
-<pre><code class="powershell">Install-Package elmah.io.log4net
+            <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-blazor"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/70hjy8k0twlgjqqg?svg=true" /></a>
+<a href="https://www.nuget.org/packages/Elmah.Io.Blazor"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Blazor.svg" /></a>
+<a href="https://github.com/elmahio/Elmah.Io.Blazor/tree/master/sample"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
+<h1 id="logging-to-elmahio-from-blazor">Logging to elmah.io from Blazor</h1>
+<blockquote>
+<p>Like Blazor itself, <code>Elmah.Io.Blazor</code> is highly experimental and should not be used for production use.</p>
+</blockquote>
+<p>To start logging exceptions from Blazor, install the NuGet package:</p>
+<pre><code class="powershell">Install-Package Elmah.Io.Blazor -IncludePrerelease
 </code></pre>
 
-<p>Add the following to your AssemblyInfo.cs file:</p>
-<pre><code class="csharp">[assembly: log4net.Config.XmlConfigurator(Watch = true)]
-</code></pre>
+<p>In the <code>Startup.cs</code> file, add the elmah.io integration for Blazor:</p>
+<pre><code class="csharp">...
+using Elmah.Io.Blazor;
 
-<p>Add the following config section to your web.config file:</p>
-<pre><code class="xml">&lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler, log4net&quot; /&gt;
-</code></pre>
-
-<p>Finally, add the log4net configuration element to web.config:</p>
-<pre><code class="xml">&lt;log4net&gt;
-  &lt;appender name=&quot;ElmahIoAppender&quot; type=&quot;elmah.io.log4net.ElmahIoAppender, elmah.io.log4net&quot;&gt;
-    &lt;logId value=&quot;LOG_ID&quot; /&gt;
-    &lt;apiKey value=&quot;API_KEY&quot; /&gt;
-  &lt;/appender&gt;
-  &lt;root&gt;
-    &lt;level value=&quot;Info&quot; /&gt;
-    &lt;appender-ref ref=&quot;ElmahIoAppender&quot; /&gt;
-  &lt;/root&gt;
-&lt;/log4net&gt;
-</code></pre>
-
-<p>That’s it! log4net is now configured and log messages to elmah.io. Remember to replace <code>API_KEY</code>(<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your actual log Id. To start logging, write your usual log4net log statements:</p>
-<pre><code class="csharp">var log = log4net.LogManager.GetLogger(typeof(HomeController));
-try
+namespace MyBlazorApp
 {
-    log.Info(&quot;Trying something&quot;);
-    throw new ApplicationException();
-}
-catch (ApplicationException ex)
-{
-    log.Error(&quot;Error happening&quot;, ex);
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddLogging(l =&gt; l
+                .AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)));
+        }
+
+        ...
+    }
 }
 </code></pre>
 
-<h2 id="context-properties">Context Properties</h2>
-<p>log4net offers a feature called context properties. With context properties, you can log additional key/value pairs with every log message. The elmah.io appender for log4net, supports context properties as well. Context properties are handled like <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> in the elmah.io UI.</p>
-<p>Let's utilize two different hooks in log4net, to add context properties to elmah.io:</p>
-<pre><code class="csharp">log4net.GlobalContext.Properties[&quot;ApplicationIdentifier&quot;] = &quot;MyCoolApp&quot;;
-log4net.ThreadContext.Properties[&quot;ThreadId&quot;] = Thread.CurrentThread.ManagedThreadId;
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+<p>As of writing this article, Blazor doesn't support global error handling. Exceptions can be logged manually, by injecting an <code>ILogger</code> into your view and adding <code>try/catch</code>:</p>
+<pre><code class="csharp">@using Microsoft.Extensions.Logging
+@inject ILogger&lt;FetchData&gt; logger
 
-log.Info(&quot;This is a message with custom properties&quot;);
+...
+
+@functions {
+    WeatherForecast[] forecasts;
+
+    protected override async Task OnInitAsync()
+    {
+        try
+        {
+            forecasts = await Http.GetJsonAsync&lt;WeatherForecast[]&gt;(&quot;api/SampleData/WeatherForecasts-nonexisting&quot;);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, e.Message);
+        }
+    }
+}
 </code></pre>
 
-<p>Basically, we set two custom properties on contextual classes provided by log4net. To read more about the choices in log4net, check out the <a href="https://logging.apache.org/log4net/release/manual/contexts.html">log4net manual</a>.</p>
-<p>When looking up the log message in elmah.io, we see the context properties in the Data tab. Besides the two custom variables that we set through <code>GlobalContext</code> and <code>ThreadContext</code>, we see a couple of build-in properties in log4net, both prefixed with <code>log4net:</code>.</p>
-<h2 id="override-properties">Override Properties</h2>
-<p>In case you want to set one or more core properties on each elmah.io message logged, you will need to add a bit of log4net magic. Examples could be, setting the <code>User</code> property on all log messages or setting a version number in the <code>Version</code> property. In the following code, we set the currently logged in username on all log messages:</p>
-<pre><code class="csharp">Hierarchy hier = log4netassembly.LogManager.GetRepository() as Hierarchy;
-var elmahIoAppender = (ElmahIoAppender)(hier?.GetAppenders())
-    .FirstOrDefault(appender =&gt; appender.Name
-        .Equals(&quot;ElmahIoAppender&quot;, StringComparison.InvariantCultureIgnoreCase));
+<p><code>Information</code> and other severities can be logged as well:</p>
+<pre><code class="csharp">@using Microsoft.Extensions.Logging
+@inject ILogger&lt;Counter&gt; logger
 
-elmahIoAppender.ActivateOptions();
-elmahIoAppender.Client.Messages.OnMessage += (sender, a) =&gt;
-{
-    a.Message.User = Thread.CurrentPrincipal?.Identity?.Name;
-};
+...
+
+@functions {
+    int currentCount = 0;
+
+    void IncrementCount()
+    {
+        currentCount++;
+        logger.LogInformation(&quot;Incremented count to {currentCount}&quot;, currentCount);
+    }
+}
 </code></pre>
-
-<p>This rather ugly piece of code would go into an initalization block, depending on the project type. The code starts by getting the configured elmah.io appender (typically set up in <code>web.config</code> or <code>log4net.config</code>). With the appender, you can access the underlying elmah.io client and subscribe to the <code>OnMessage</code> event. This let you trigger a small piece of code, just before sending log messages to elmah.io. In this case, we set the <code>User</code> property to the currently logged in user. Remember to call the <code>ActiveOptions</code> method, to make sure that the <code>Client</code> property is initialized.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
