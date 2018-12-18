@@ -268,9 +268,6 @@
 <a href="https://img.shields.io/npm/v/elmah.io.javascript.svg"><img alt="npm" src="https://img.shields.io/npm/v/elmah.io.javascript.svg" /></a>
 <a href="https://github.com/elmahio/elmah.io.javascript/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-4-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-javascript">Logging to elmah.io from JavaScript</h1>
-<blockquote>
-<p>elmah.io.javascript is currently in beta. We don't recommend this for production just yet. Feel free to play around with it, but remember to <a href="https://headwayapp.co/elmah-io-changelog/deprecating-the-v2-api-68030" target="_blank" rel="noopener noreferrer">disable access to the v2 API</a> on your log and <a href="https://blog.elmah.io/api-key-permissions/">generate a new API key</a> with <code>messages_write</code> permission only. Without these changes, everyone will be able to browse your logs (<a href="https://www.troyhunt.com/aspnet-session-hijacking-with-google/" target="_blank" rel="noopener noreferrer">you don't want that!</a>).</p>
-</blockquote>
 <div class="toc">
 <ul>
 <li><a href="#logging-to-elmahio-from-javascript">Logging to elmah.io from JavaScript</a><ul>
@@ -296,6 +293,9 @@
 </ul>
 </div>
 <p>elmah.io doesn't only support server-side .NET logging. We also log JavaScript errors happening on your website. Logging client-side errors, requires nothing more than installing the <code>elmahio.js</code> script on your website.</p>
+<blockquote>
+<p>Remember to <a href="https://headwayapp.co/elmah-io-changelog/deprecating-the-v2-api-68030" target="_blank" rel="noopener noreferrer">disable access to the v2 API</a> on your log and <a href="https://blog.elmah.io/api-key-permissions/">generate a new API key</a> with <code>messages_write</code> permission only. Without these changes, everyone will be able to browse your logs (<a href="https://www.troyhunt.com/aspnet-session-hijacking-with-google/" target="_blank" rel="noopener noreferrer">you don't want that!</a>).</p>
+</blockquote>
 <h2 id="installation">Installation</h2>
 <p>Pick an installation method of your choice:</p>
 <ul class="nav nav-tabs" role="tablist">
@@ -319,7 +319,7 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="cdn"></p>
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
-<pre><code class="html">&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.0.0-beta3/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+<pre><code class="html">&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.0.0/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 <p></div>
@@ -363,7 +363,7 @@
     ...
     {
       &quot;provider&quot;: &quot;filesystem&quot;,
-      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.0.0-beta3/dist/elmahio.min.js&quot;,
+      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.0.0/dist/elmahio.min.js&quot;,
       &quot;destination&quot;: &quot;wwwroot/lib/elmahio&quot;
     }
   ]
@@ -371,7 +371,7 @@
 </code></pre>
 
 <p>or using the LibMan CLI:</p>
-<pre><code class="powershell">libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.0.0-beta3/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
+<pre><code class="powershell">libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.0.0/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
@@ -381,7 +381,7 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="nuget"></p>
 <p>Install the <code>elmah.io.javascript</code> NuGet package:</p>
-<pre><code class="ps">Install-Package elmah.io.javascript -Prerelease
+<pre><code class="ps">Install-Package elmah.io.javascript
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
@@ -609,7 +609,7 @@ export default class App extends Component {
 }
 </code></pre>
 
-<p>For a complete definition, check out the <code>Message</code> interface in the <a href="https://github.com/elmahio/elmah.io.javascript/blob/master/elmahio.d.ts">elmah.io.javascript TypeScript mappings</a>.</p>
+<p>For a complete definition, check out the <code>Message</code> interface in the <a href="https://github.com/elmahio/elmah.io.javascript/blob/master/typescript/elmahio.d.ts">elmah.io.javascript TypeScript mappings</a>.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
