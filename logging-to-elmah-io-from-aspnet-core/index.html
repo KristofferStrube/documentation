@@ -334,6 +334,15 @@
 }
 </code></pre>
 
+<p>Finally, call the <code>AddElmahIo</code> (as you would do with config in C# too):</p>
+<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    ...
+    app.UseElmahIo();
+    ...
+}
+</code></pre>
+
 <p>You can still configure additional options on the <code>ElmahIoOptions</code> object:</p>
 <pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
 {
