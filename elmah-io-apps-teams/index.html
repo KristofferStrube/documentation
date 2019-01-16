@@ -264,11 +264,17 @@
           <div class="main-content-body">
 
             <h1 id="install-microsoft-teams-app-for-elmahio">Install Microsoft Teams App for elmah.io</h1>
-<h2 id="install-webhook-connector-on-microsoft-teams">Install webhook connector on Microsoft Teams</h2>
-<p>In order to send messages to Microsoft Teams, you will need to install the Webhook connector on teams by clicking ... next to the channel you want for the elmah.io messages and click <em>Connectors</em>. If the <em>Connectors</em> item isn't shown, make sure to install the app named <strong>Incoming Webhook</strong> through the Teams Store. Locate the <em>Incoming Webhook</em> app and click <em>Add</em>/<em>Configure</em>. Input 'elmah.io' in the name text box and upload an image if you'd like (could be this one: <a href="https://elmah.io/icons/AppIcon512x512.png">https://elmah.io/icons/AppIcon512x512.png</a>). After clicking the <em>Create</em> button, you will see a webhook URL to use for the integration:</p>
-<p><img alt="Webhook URL" src="../images/teams_webhook.png" /></p>
-<p>Copy the URL.</p>
-<h2 id="install-the-microsoft-teams-app-on-elmahio">Install the Microsoft Teams App on elmah.io</h2>
+<p>To install the integration with Microsoft Teams, go to teams and click the <em>Store</em> menu item. Search for "elmah.io" and click the app:</p>
+<p><img alt="Search for elmah.io" src="../images/apps/teams/step1.png" /></p>
+<p>Select your team and click the <em>Install</em> button:</p>
+<p><img alt="Add to a team" src="../images/apps/teams/step2.png" /></p>
+<p>Select which channel you want elmah.io messages in and click the <em>Set up</em> button:</p>
+<p><img alt="Select the channel" src="../images/apps/teams/step3.png" /></p>
+<p>A new webhook URL is generated. Click the <em>Copy Text</em> button followed by the <em>Save</em> button:</p>
+<p><img alt="Copy the webhook URL" src="../images/apps/teams/step4.png" /></p>
+<p>The elmah.io integration is now configured on Microsoft Teams and you should see the following screen:</p>
+<p><img alt="Configured" src="../images/apps/teams/step5.png" /></p>
+<p>The final step is to input the webhook URL that you just copied, into elmah.io.</p>
 <p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Microsoft Teams app and click the <em>Install</em> button. In the overlay, paste the URL from the previous step:</p>
 <p><img alt="Install Microsoft Teams app" src="../images/teams_installapp.png" /></p>
 <p>Click <em>Save</em> and the app is added to your log. When new errors are logged, messages start appearing in the channel that you configured.</p>
