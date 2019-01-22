@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from JSNLog | elmah.io">
+    <meta name="twitter:title" content="Set up Uptime Monitoring | elmah.io">
     
     
-    <meta property="og:title" content="Logging from JSNLog | elmah.io">
+    <meta property="og:title" content="Set up Uptime Monitoring | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-jsnlog/">
+    <meta property="og:url" content="https://docs.elmah.io/setup-uptime-monitoring/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from JSNLog | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-jsnlog/">
+    <title>Set up Uptime Monitoring | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/setup-uptime-monitoring/">
     <link rel="shortcut icon" href="../.././favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -137,7 +137,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Logging Frameworks</a>
                 <ul>
                   
@@ -151,7 +151,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-logary/">Logging from Logary</a></li>
                   
-                  <li class="active"><a href="./">Logging from JSNLog</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-jsnlog/">Logging from JSNLog</a></li>
                   
                 </ul>
               </li>
@@ -241,11 +241,11 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Uptime Monitoring</a>
                 <ul>
                   
-                  <li ><a href="../setup-uptime-monitoring/">Set up Uptime Monitoring</a></li>
+                  <li class="active"><a href="./">Set up Uptime Monitoring</a></li>
                   
                   <li ><a href="../missing-server-side-information-on-uptime-errors/">Missing server side information on uptime errors</a></li>
                   
@@ -307,45 +307,33 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-to-elmahio-from-jsnlog">Logging to elmah.io from JSNLog</h1>
-<blockquote>
-<p>While logging through JSNLog still works, we recommend to use our native integration with JavaScript: <a href="https://docs.elmah.io/logging-to-elmah-io-from-javascript/">Logging to elmah.io from JavaScript</a></p>
-</blockquote>
-<p>Using JSNLog you will be able to log JavaScript errors to elmah.io. In this sample, we will focus about logging JavaScript errors from a ASP.NET MVC web application, but you can use JSNLog to log anything to elmah.io, so please check out their documentation.</p>
-<p>Start by installing the JSNLog.Elmah package:</p>
-<pre><code class="powershell">Install-Package JSNLog.Elmah
-</code></pre>
+            <h1 id="set-up-uptime-monitoring">Set Up Uptime Monitoring</h1>
+<div class="toc">
+<ul>
+<li><a href="#set-up-uptime-monitoring">Set Up Uptime Monitoring</a><ul>
+<li><a href="#uptime-checks">Uptime checks</a></li>
+<li><a href="#ssl-certificate-expire-checks">SSL certificate expire checks</a></li>
+<li><a href="#domain-name-expire-checks">Domain name expire checks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>elmah.io Uptime Monitoring is the perfect companion for error logging. When your websites log errors, you are notified through elmah.io. But in the case where your website doesn't even respond to web requests, you will need something else to tell you that something is wrong. This is where Uptime Monitoring comes in. When set up, uptime monitoring automatically ping your websites from 5 different locations every 5 minutes.</p>
+<p>For a complete overview of the possibilities with uptime monitoring, watch this video tutorial:</p>
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/EZ9iNfB9Blw?rel=0" allowfullscreen></iframe>
+</div>
 
-<p>This installs and setup JSNLog into your project, using ELMAH as an appender. Then, install <code>Elmah.Io</code>:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
-</code></pre>
-
-<p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>Add the JSNLog code before any script imports in your _Layout.cshtml file:</p>
-<pre><code class="csharp">@Html.Raw(JSNLog.JavascriptLogging.Configure())
-</code></pre>
-
-<p>You are ready to log errors from JavaScript til elmah.io. To test that everything is installed correctly, launch your web application and execute the following JavaScript using Chrome Developer Tools or similar:</p>
-<pre><code class="javascript">JL().fatal(&quot;log message&quot;);
-</code></pre>
-
-<p>Navigate to you log at elmah.io and observe the new error. As you can see, logging JavaScript errors is now extremely simple and can be built into any try-catch, jQuery fail handlers and pretty much anywhere else. To log every JavaScript error, add the following to the bottom of the _Layout.cshtml file:</p>
-<pre><code class="javascript">&lt;script&gt;
-window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-
-    // Send object with all data to server side log, using severity fatal,
-    // from logger &quot;onerrorLogger&quot;
-    JL(&quot;onerrorLogger&quot;).fatalException({
-        &quot;msg&quot;: &quot;Exception!&quot;,
-        &quot;errorMsg&quot;: errorMsg, &quot;url&quot;: url,
-        &quot;line number&quot;: lineNumber, &quot;column&quot;: column
-    }, errorObj);
-
-    // Tell browser to run its own error handler as well  
-    return false;
-}
-&lt;/script&gt;
-</code></pre>
+<p><br/></p>
+<h2 id="uptime-checks">Uptime checks</h2>
+<p>Uptime checks are automatic HTTP requests that you may already know from Azure, Pingdom, or a similar service. Uptime checks are created from the Uptime tab, directly on each log:</p>
+<p><img alt="Uptime checks" src="../images/uptime_check_with_error.png" /></p>
+<h2 id="ssl-certificate-expire-checks">SSL certificate expire checks</h2>
+<p>Expiring SSL certificates causes errors in your users browser. If you ever tried forgetting to renew a SSL certificate, you know how many problems it can cause. With the SSL check option available when creating a new uptime check, elmah.io automatically validates your SSL certificates daily:</p>
+<p><img alt="SSL checks" src="../images/ssl-checks.gif" /></p>
+<p>When your SSL certificate is up for renewal, we start notifying you through the error logs.</p>
+<h2 id="domain-name-expire-checks">Domain name expire checks</h2>
+<p>Much like SSL checks, Domain name expire checks, will notify you through your log, when your domain names are about to expire. To enable this feature, enable the <em>Domain Expiration</em> toggle when creating a new uptime check.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
