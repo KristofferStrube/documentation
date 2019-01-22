@@ -321,6 +321,22 @@
 <li>Make sure that you don't have any code catching all exceptions happening in your system and ignoring them (could be a logging filter or similar).</li>
 <li>If you are using custom errors, make sure to configure it correctly. For more details, check out the following post: <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging" target="_blank" rel="noopener noreferrer">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>.</li>
 </ul>
+<h2 id="common-exceptions-and-how-to-fix-them">Common exceptions and how to fix them</h2>
+<p>Here you will a list of common exceptions and how to solve them.</p>
+<h3 id="typeloadexception">TypeLoadException</h3>
+<p><strong>Exception</strong></p>
+<pre><code>[TypeLoadException: Inheritance security rules violated by type: 'System.Net.Http.WebRequestHandler'. Derived types must either match the security accessibility of the base type or be less accessible.]
+   Microsoft.Rest.ServiceClient`1.CreateRootHandler() +0
+   Microsoft.Rest.ServiceClient`1..ctor(DelegatingHandler[] handlers) +59
+   Elmah.Io.Client.ElmahioAPI..ctor(DelegatingHandler[] handlers) +96
+   Elmah.Io.Client.ElmahioAPI..ctor(ServiceClientCredentials credentials, DelegatingHandler[] handlers) +70
+   Elmah.Io.Client.ElmahioAPI.Create(String apiKey, ElmahIoOptions options) +146
+   Elmah.Io.Client.ElmahioAPI.Create(String apiKey) +91
+   Elmah.Io.ErrorLog..ctor(IDictionary config) +109
+</code></pre>
+
+<p><strong>Solution</strong></p>
+<p>This is most likely caused by a problem with the <code>System.Net.Http</code> NuGet package. Make sure to upgrade to the newest version (<code>4.3.4</code> as of writing this). The default template for creating a new web application, installs version <code>4.3.0</code> which is seriously flawed.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
