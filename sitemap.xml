@@ -86,6 +86,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://docs.elmah.io/asp-net-troubleshooting/</loc>
+     <lastmod>2019-01-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/</loc>
      <lastmod>2019-01-22</lastmod>
      <changefreq>daily</changefreq>
