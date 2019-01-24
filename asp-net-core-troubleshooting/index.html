@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="TODO">
+    
     <meta name="author" content="Thomas Ardal">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Authentication on elmah.io | elmah.io">
-    <meta name="twitter:description" content="TODO">
+    <meta name="twitter:title" content="ASP.NET Core troubleshooting | elmah.io">
     
-    <meta property="og:title" content="Authentication on elmah.io | elmah.io">
-    <meta property="og:description" content="TODO">
+    
+    <meta property="og:title" content="ASP.NET Core troubleshooting | elmah.io">
+    
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/authentication/">
+    <meta property="og:url" content="https://docs.elmah.io/asp-net-core-troubleshooting/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Authentication on elmah.io | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/authentication/">
+    <title>ASP.NET Core troubleshooting | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/asp-net-core-troubleshooting/">
     <link rel="shortcut icon" href="../.././favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -84,7 +84,7 @@
                   
                   <li ><a href="..">Quick start</a></li>
                   
-                  <li class="active"><a href="./">Authentication</a></li>
+                  <li ><a href="../authentication/">Authentication</a></li>
                   
                 </ul>
               </li>
@@ -128,7 +128,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">ASP.NET Core</a>
                 <ul>
                   
@@ -136,7 +136,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-javascript/">Logging from JavaScript</a></li>
                   
-                  <li ><a href="../asp-net-core-troubleshooting/">ASP.NET Core troubleshooting</a></li>
+                  <li class="active"><a href="./">ASP.NET Core troubleshooting</a></li>
                   
                 </ul>
               </li>
@@ -311,10 +311,17 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="authentication">Authentication</h1>
-<p>All of our integrations communicates with the elmah.io API. In order to request endpoints on the API, each client will need to provide a valid API key. API keys are available on the Organization Settings view, as well as on the <em>Install</em> tab on the Log Settings screen. We wrote a guide to help you find your API key here: <a href="/where-is-my-api-key/">Where is my API key?</a>. A default API key is created when you create your organization, but new keys can be added, keys revoked, and more.</p>
-<p>Sending the API key to the elmah.io API, is typically handled by the <code>Elmah.Io.Client</code> NuGet package. All integrations have a dependency to this package, which means that it will be automatically installed through NuGet. How you provide your API key depends on the integration you are installing. Some integrations expect the API key in a config file, while others, accept the key in C#. For details about how to provide the API key for each integration, click the various installation guides in the left menu.</p>
-<p>Besides a unique string representing an API key, each key can have a set of permissions. As default, API keys only have the <em>Write Messages</em> permission, which means that the key cannot be used to read data from your logs. In 99% of all scenarios, you will browse through errors using the elmah.io UI, which will require you to sign in using username/password or one of the supported social providers. In the case where you want to enable the <code>/elmah.axd</code> endpoint (ASP.NET only) or you are building a third-party integration to elmah.io, you will need to assign additional permissions to your API key. For details about API key permissions, check out <a href="/how-to-configure-api-key-permissions/">How to configure API key permissions</a>.</p>
+            <h1 id="aspnet-core-troubleshooting">ASP.NET Core Troubleshooting</h1>
+<p>So, your ASP.NET Core application doesn't log errors to elmah.io? We are here with a few things to try out.</p>
+<ul>
+<li>Make sure to reference the most recent version of the <a href="https://www.nuget.org/packages/elmah.io.aspnetcore/" target="_blank" rel="noopener noreferrer">Elmah.Io.AspNetCore</a> NuGet package.</li>
+<li>Make sure that the <a href="https://www.nuget.org/packages/Elmah.Io.Client/" target="_blank" rel="noopener noreferrer">Elmah.Io.Client</a> NuGet package is installed and that the major version matches that of <code>Elmah.Io.AspNetCore</code>.</li>
+<li>Make sure that you are calling both the <code>AddElmahIo</code>- and <code>UseElmahIo</code>-methods in the <code>Startup.cs</code> file, as described on <a href="/logging-to-elmah-io-from-aspnet-core/">Logging to elmah.io from ASP.NET Core</a>.</li>
+<li>Make sure that you call the <code>UseElmah</code>-method after invoking other <code>Use*</code> methods that in any way inspect exceptions (like <code>UseDeveloperExceptionPage</code> and <code>UseExceptionHandler</code>).</li>
+<li>Make sure that your server has an outgoing internet connection and that it can communicate with <code>api.elmah.io</code> on port <code>443</code>. The integration for ASP.NET Core support setting up an HTTP proxy if your server doesn't allow outgoing traffic. Check out <a href="/logging-to-elmah-io-from-aspnet-core/#logging-through-a-proxy">Logging through a proxy</a> for details.</li>
+<li>Make sure that you didn't enable any Ignore filters or set up any Rules with an ignore action on the log in question.</li>
+<li>Make sure that you don't have any code catching all exceptions happening in your system and ignoring them (could be a logging filter, a piece of middleware, or similar).</li>
+</ul>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
