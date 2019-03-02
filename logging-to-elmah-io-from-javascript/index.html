@@ -336,8 +336,12 @@
 </li>
 <li><a href="#logging-manually">Logging manually</a></li>
 <li><a href="#intellisense">IntelliSense</a></li>
+<li><a href="#source-maps">Source maps</a></li>
+<li><a href="#samples">Samples</a><ul>
 <li><a href="#angular">Angular</a></li>
 <li><a href="#react">React</a></li>
+</ul>
+</li>
 <li><a href="#message-reference">Message reference</a></li>
 </ul>
 </li>
@@ -564,7 +568,14 @@ logger.log({
 <pre><code class="xml">/// &lt;reference path=&quot;/path/to/elmahio.d.ts&quot; /&gt;
 </code></pre>
 
-<h2 id="angular">Angular</h2>
+<h2 id="source-maps">Source maps</h2>
+<p><code>elmah.io.javascript</code> automatically tries to translate stack traces from minified code into developer friendly traces using JavaScript source maps. In order for this to work, you will need to publish a valid <code>.map</code> source map file to your production environment and reference it in the end of your JavaScript:</p>
+<pre><code class="javascript">var v = 42;
+//# sourceMappingURL=/script.map
+</code></pre>
+
+<h2 id="samples">Samples</h2>
+<h5 id="angular">Angular</h5>
 <p><code>elmah.io.javascript</code> works great with Angular applications too. To log all errors happening in your Angular app, install <code>elmah.io.javascript</code> through npm as described above. Then add <code>elmahio.min.js</code> to the <code>scripts</code> section in the <code>.angular-cli.json</code> file (<code>angular.json</code> in Angular 6):</p>
 <pre><code class="json">{
   &quot;$schema&quot;: &quot;./node_modules/@angular/cli/lib/config/schema.json&quot;,
@@ -616,7 +627,7 @@ class ElmahIoErrorHandler implements ErrorHandler {
 </code></pre>
 
 <p>All errors are shipped to the <code>handleError</code>-function by Angular and logged to elmah.io. Check out the <a href="https://github.com/elmahio/elmah.io.javascript/tree/master/samples/Elmah.Io.JavaScript.Angular" target="_blank" rel="noopener noreferrer">Elmah.Io.JavaScript.Angular</a> sample for some real working code.</p>
-<h2 id="react">React</h2>
+<h5 id="react">React</h5>
 <p>To log all errors from a React application, install the <code>elmah.io.javascript</code> npm package as described above. Then modify the <code>App.js</code> file:</p>
 <pre><code class="javascript">...
 import Elmahio from '../node_modules/elmah.io.javascript/dist/elmahio';
