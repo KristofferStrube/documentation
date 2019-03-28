@@ -327,6 +327,9 @@
 <pre><code class="powershell">Install-Package elmah.io.nlog
 </code></pre>
 
+<blockquote>
+<p>There is a bug in NLog 4.6.0 that causes the elmah.io target not to load correctly (the bug will be fixed in 4.6.1). For now, use 4.5.11.</p>
+</blockquote>
 <p>To configure the elmah.io target, add the following configuration to your app.config/web.config/nlog.config depending on what kind of project you’ve created:</p>
 <pre><code class="xml">&lt;extensions&gt;
   &lt;add assembly=&quot;Elmah.Io.NLog&quot;/&gt;
@@ -341,7 +344,7 @@
 &lt;/rules&gt;
 </code></pre>
 
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>),</p>
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>In the example we specify the level minimum as Info. This tells NLog to log only information, warning, error and fatal messages. You may adjust this, but be aware that your elmah.io log may run full pretty fast, especially if you log thousands and thousands of trace and debug messages.</p>
 <p>Log messages to elmah.io, just as with every other target and NLog:</p>
 <pre><code class="csharp">log.Warn(&quot;This is a warning message&quot;);
