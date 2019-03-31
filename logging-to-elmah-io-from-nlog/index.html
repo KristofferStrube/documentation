@@ -143,6 +143,8 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-javascript/">Logging from JavaScript</a></li>
                   
+                  <li ><a href="../logging-to-elmah-io-from-blazor/">Logging from Blazor</a></li>
+                  
                   <li ><a href="../asp-net-core-troubleshooting/">ASP.NET Core troubleshooting</a></li>
                   
                 </ul>
@@ -191,8 +193,6 @@
                   <li ><a href="../logging-to-elmah-io-from-servicestack/">Logging from ServiceStack</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-wcf/">Logging from WCF</a></li>
-                  
-                  <li ><a href="../logging-to-elmah-io-from-blazor/">Logging from Blazor</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-express/">Logging from Express</a></li>
                   
@@ -328,7 +328,7 @@
 </code></pre>
 
 <blockquote>
-<p>There is a bug in NLog 4.6.0 that causes the elmah.io target not to load correctly (the bug will be fixed in 4.6.1). For now, use 4.5.11.</p>
+<p>Please don't use NLog <code>4.6.0</code> since that version contains a bug that causes the elmah.io target to not load correctly. <code>4.5.11</code> or <code>4.6.1</code>.</p>
 </blockquote>
 <p>To configure the elmah.io target, add the following configuration to your app.config/web.config/nlog.config depending on what kind of project you’ve created:</p>
 <pre><code class="xml">&lt;extensions&gt;
