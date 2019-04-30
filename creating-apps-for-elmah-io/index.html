@@ -338,7 +338,7 @@
         &quot;query&quot;: &quot;severity: Error&quot;,
         &quot;then&quot;: {
             &quot;type&quot;: &quot;http&quot;,
-            &quot;url&quot;: &quot;http://requestb.in/$bin&quot;,
+            &quot;url&quot;: &quot;https://requestbin.fullcontact.com/$bin&quot;,
             &quot;method&quot;: &quot;post&quot;,
             &quot;contentType&quot;: &quot;application/json&quot;,
             &quot;body&quot;: &quot;{\&quot;timestamp\&quot;: \&quot;$time\&quot;, \&quot;message\&quot;: \&quot;$message\&quot;, \&quot;severity\&quot;: \&quot;$severity\&quot;}&quot;
@@ -350,7 +350,7 @@
 <p>The manifest consists of two blocks: <code>variables</code> and <code>rule</code>. Variables serves as input for generating the UI when users add the app to their log on elmah.io. In variables you can ask the user for information needed in order to execute the rule like username and password, access tokens or as in this example, an id of a bin on RequestBin.</p>
 <p>For now, only <code>text</code>, <code>choice</code> and <code>number</code> variables are available, but we may extend this with other types like <code>bool</code>, <code>ipaddress</code> etc.</p>
 <p>The <code>rule</code> section tell elmah.io what this app should do. Specifying a rule is optional and makes sense when creating apps that listen for messages matching a query. The two important fields to notice here is <code>query</code> and <code>then</code>. These terms match 1:1 to the same terms in the business rules. <code>query</code> should contain either a full-text query string or a Lucene query. Every message logged, matching this query, triggers the <code>then</code> part of this app. For the simple app, we query messages based on <code>severity</code>. For a complete list of search fields, visit the Rules tab on your log settings.</p>
-<p>In the <code>then</code> section we tell elmah.io what to do with messages matching the <code>query</code>. In this case, we want it to create a new HTTP request on http://requestb.in. Notice how the <code>$bin</code> variables from before is used as part of the URL. <code>body</code> contains examples on built-in variables like <code>$message</code> and <code>$time</code>. Built-in variables are documented on the Rules tab of the log settings as well.</p>
+<p>In the <code>then</code> section we tell elmah.io what to do with messages matching the <code>query</code>. In this case, we want it to create a new HTTP request on https://requestbin.fullcontact.com. Notice how the <code>$bin</code> variables from before is used as part of the URL. <code>body</code> contains examples on built-in variables like <code>$message</code> and <code>$time</code>. Built-in variables are documented on the Rules tab of the log settings as well.</p>
 <p>A final note about <code>then</code>. In this example we use the <code>"type": "http"</code> to allow elmah.io to make HTTP requests. Types corresponding to other actions available in the rule engine are available as well. These are <code>ignore</code>, <code>hide</code> and <code>email</code>.</p>
 <h2 id="creating-a-nuspec">Creating a NuSpec</h2>
 <p>Apps for elmah.io are distributed as NuGet packages. There's a few requirements you will need to satisfy in order for your app to show up in the elmah.io UI.</p>
@@ -391,7 +391,7 @@ Your package was pushed.
 <p>(replace <code>MyApiKey</code> with your API Key located on nuget.org)</p>
 <p>That's it folks. The app is now public and available on elmah.io.</p>
 <h2 id="testing-the-package">Testing the Package</h2>
-<p>To test that everything is working, we'll start by creating a new bin on RequestBin. Go to <a href="http://requestb.in/">http://requestb.in/</a> and click the <em>Create a RequestBin</em> button:</p>
+<p>To test that everything is working, we'll start by creating a new bin on RequestBin. Go to <a href="https://requestbin.fullcontact.com/1ka16xf1">RequestBin</a> and click the <em>Create a RequestBin</em> button:</p>
 <p><img alt="Bin Created" src="../images/create_requestbin.png" /></p>
 <p>In this case, the bin ID is <code>1chhlvo1</code>.</p>
 <p>Log into elmah.io and go to the Apps tab on the log settings. The RequestBin app is available from the list of apps in the bottom. Click the <em>Install</em> button:</p>
