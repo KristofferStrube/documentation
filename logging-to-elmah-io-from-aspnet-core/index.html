@@ -320,7 +320,7 @@
 
             <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-aspnetcore"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j57ekc2k9eon3u9u?svg=true" /></a>
 <a href="https://www.nuget.org/packages/Elmah.Io.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.AspNetCore.svg" /></a>
-<a href="https://github.com/elmahio/Elmah.Io.AspNetCore/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-5-brightgreen.svg" /></a></p>
+<a href="https://github.com/elmahio/Elmah.Io.AspNetCore/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-4-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-aspnet-core">Logging to elmah.io from ASP.NET Core</h1>
 <div class="toc">
 <ul>
@@ -386,10 +386,12 @@
 <pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
 {
     services.Configure&lt;ElmahIoOptions&gt;(Configuration.GetSection(&quot;ElmahIo&quot;));
+    services.AddElmahIo();
 }
 </code></pre>
 
-<p>Finally, call the <code>AddElmahIo</code> (as you would do with config in C# too):</p>
+<p>Notice that you still need to call <code>AddElmahIo</code> in order to correctly register middleware dependencies.</p>
+<p>Finally, call the <code>UseElmahIo</code>-method (as you would do with config in C# too):</p>
 <pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
     ...
@@ -409,6 +411,7 @@
             msg.Version = &quot;1.0.0&quot;;
         };
     });
+    services.AddElmahIo();
 }
 </code></pre>
 
@@ -597,10 +600,21 @@ catch (DivideByZeroException e)
     	</div>
     	<div class="copyright">
     		<div class="container">
-    			<div class="text-center">
-					<p>2013 - <script>document.write(new Date().getFullYear());</script> @ elmah.io. All Rights Reserved.</p>
-					<p><a href="https://elmah.io/legal/terms-of-use/">Terms of Use</a> | <a href="https://elmah.io/legal/privacy-policy/">Privacy Policy</a> | <a href="https://elmah.io/legal/refund-policy/">Refund Policy</a></p>
-				</div>
+    			<div class="row">
+                    <div class="col-lg-5 col-md-12 order-2 order-lg-1">
+                        <div class="text-center text-lg-left">
+        					<p>2013 - <script>document.write(new Date().getFullYear());</script> @ elmah.io. All Rights Reserved.</p>
+        					<p><a href="https://elmah.io/legal/terms-of-use/">Terms of Use</a> | <a href="https://elmah.io/legal/privacy-policy/">Privacy Policy</a> | <a href="https://elmah.io/legal/refund-policy/">Refund Policy</a></p>
+        				</div>
+                    </div>
+                    <div class="col-lg-7 col-md-12 order-1 order-lg-2">
+                        <div class="footer-badges text-center text-lg-right">
+                            <img src="../.././assets/img/pcicompliant.png" draggable="false" alt="PCI Compliant" />
+                            <img src="../.././assets/img/gdpr.png" draggable="false" alt="GDPR Compliant" />
+                            <img src="../.././assets/img/shieldssl.png" draggable="false" alt="Alpha SSL" />
+                        </div>
+                    </div>
+                </div>
     		</div>
     	</div>
     </footer>
