@@ -335,6 +335,16 @@
 <p><img alt="Add API key and log ID to application settings" src="https://docs.elmah.io/images/add-api-key-and-log-id-to-application-settings.png" /></p>
 <p>Make sure to use the app setting names <code>ELMAHIO_APIKEY</code> and <code>ELMAHIO_LOGID</code>.</p>
 <p>Your Azure web application now logs all uncaught exceptions to elmah.io. Please notice that this only works for ASP.NET, MVC, Web API, and similar. ASP.NET Core websites should be installed locally and re-deployed. Also, the elmah.io Site Extensions supports .NET Full Framework 4.6 and newer.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>ConfigurationErrorsException: Could not load file or assembly 'Elmah' or one of its dependencies. The system cannot find the file specified.</strong></p>
+<p>After uninstalling the elmah.io site extension, you may see the configuration error above. This means that elmah.io's uninstall script for some reason wasn't allowed to run or resulted in an error.</p>
+<p>To make sure that elmah.io is completely removed, follow these steps:</p>
+<ol>
+<li>Stop your website.</li>
+<li>Browse your website files through Kudu.</li>
+<li>Remove all files starting with <code>Elmah</code>.</li>
+<li>Start your website.</li>
+</ol>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
