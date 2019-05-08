@@ -322,6 +322,22 @@
 <a href="https://www.nuget.org/packages/Elmah.Io.Extensions.Logging"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Extensions.Logging.svg" /></a>
 <a href="https://github.com/elmahio/Elmah.Io.Extensions.Logging/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-5-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-microsoftextensionslogging">Logging to elmah.io from Microsoft.Extensions.Logging</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-to-elmahio-from-microsoftextensionslogging">Logging to elmah.io from Microsoft.Extensions.Logging</a><ul>
+<li><a href="#logging-from-aspnet-core">Logging from ASP.NET Core</a></li>
+<li><a href="#options">Options</a><ul>
+<li><a href="#appsettingsjson-configuration">appsettings.json configuration</a></li>
+<li><a href="#filtering-log-messages">Filtering log messages</a></li>
+<li><a href="#decorating-log-messages">Decorating log messages</a></li>
+<li><a href="#logging-through-a-proxy">Logging through a proxy</a></li>
+</ul>
+</li>
+<li><a href="#logging-from-a-console-application">Logging from a console application</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p><a href="https://github.com/aspnet/Logging">Microsoft.Extensions.Logging</a> is a common logging abstraction from Microsoft, much like log4net and Serilog. Microsoft.Extensions.Logging started as a new logging mechanism for ASP.NET Core, but now acts as a logging framework for all sorts of project types.</p>
 <p>Start by installing the <a href="https://www.nuget.org/packages/Elmah.Io.Extensions.Logging/">Elmah.Io.Extensions.Logging</a> package:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Extensions.Logging
@@ -404,7 +420,33 @@ Call <code>AddElmahIo</code> in the <code>Configure</code>-method in <code>Start
 }
 </code></pre>
 
-<h2 id="filtering-log-messages">Filtering log messages</h2>
+<h2 id="options">Options</h2>
+<h3 id="appsettingsjson-configuration">appsettings.json configuration</h3>
+<p>Some of the configuration for Elmah.Io.Extensions.Logging, can be done through the <code>appsettings.json</code> file when using ASP.NET Core 2.x. To configure the minimum log level, add a new logger named <code>ElmahIo</code> to the settings file:</p>
+<pre><code class="json">{
+  &quot;Logging&quot;: {
+    ...
+    &quot;ElmahIo&quot;: {
+      &quot;LogLevel&quot;: {
+        &quot;Default&quot;: &quot;Warning&quot;
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>Finally, tell the logger to look for this information, by adding a bit of code to the <code>ConfigureLogging</code>-method:</p>
+<pre><code class="csharp">WebHost.CreateDefaultBuilder(args)
+    .UseStartup&lt;Startup&gt;()
+    .ConfigureLogging((ctx, logging) =&gt;
+    {
+        logging.AddConfiguration(ctx.Configuration.GetSection(&quot;Logging&quot;));
+        ...
+    })
+    .Build();
+</code></pre>
+
+<h3 id="filtering-log-messages">Filtering log messages</h3>
 <p>As default, the elmah.io logger for Microsoft.Extensions.Logging only logs warnings, errors and fatals. The rationale behind this is that we build an error management system and really doesn't do much to support millions of debug messages from your code. Sometimes you may want to log non-exception messages, though. To do so, use filters in Microsoft.Extensions.Logging.</p>
 <p>To log everything from log level <code>Information</code> and up, do the following:</p>
 <ul class="nav nav-tabs" role="tablist">
@@ -441,7 +483,7 @@ Use the <code>AddElmahIo</code> overload which accepts a filter:</p>
 logger.LogInformation(&quot;This is an information message&quot;);
 </code></pre>
 
-<h2 id="decorating-log-messages">Decorating log messages</h2>
+<h3 id="decorating-log-messages">Decorating log messages</h3>
 <p>Since Microsoft.Extensions.Logging isn't specific for web applications, messages logged through <code>Elmah.Io.Extensions.Logging</code>, doesn't include any properties from the HTTP context (like <code>Elmah.Io.AspNetCore</code>). To add additional properties, use one of two approaches as described below.</p>
 <p><code>Elmah.Io.Extensions.Logging</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field using structured logging only:</p>
 <pre><code class="csharp">logger.LogInformation(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
@@ -467,31 +509,25 @@ logger.LogInformation(&quot;This is an information message&quot;);
 </code></pre>
 
 <p>For ASP.NET Core 2.x projects, you will need to use the old way of configuring logging (using <code>ILoggerFactory</code>), in order to resolve the <code>IHttpContextAccessor</code> object from DI.</p>
-<h2 id="appsettingsjson-configuration">appsettings.json configuration</h2>
-<p>Some of the configuration for Elmah.Io.Extensions.Logging, can be done through the <code>appsettings.json</code> file when using ASP.NET Core 2.x. To configure the minimum log level, add a new logger named <code>ElmahIo</code> to the settings file:</p>
-<pre><code class="json">{
-  &quot;Logging&quot;: {
-    ...
-    &quot;ElmahIo&quot;: {
-      &quot;LogLevel&quot;: {
-        &quot;Default&quot;: &quot;Warning&quot;
-      }
-    }
-  }
-}
-</code></pre>
-
-<p>Finally, tell the logger to look for this information, by adding a bit of code to the <code>ConfigureLogging</code>-method:</p>
+<h3 id="logging-through-a-proxy">Logging through a proxy</h3>
+<blockquote>
+<p>Proxy configuration requires <code>3.5.39-pre</code> or newer.</p>
+</blockquote>
+<p>You can log through a proxy using options:</p>
 <pre><code class="csharp">WebHost.CreateDefaultBuilder(args)
     .UseStartup&lt;Startup&gt;()
     .ConfigureLogging((ctx, logging) =&gt;
     {
-        logging.AddConfiguration(ctx.Configuration.GetSection(&quot;Logging&quot;));
-        ...
+        logging.AddElmahIo(options =&gt;
+        {
+            ...
+            options.WebProxy = new WebProxy(&quot;localhost&quot;, 8000);
+        });
     })
     .Build();
 </code></pre>
 
+<p>In this example, the elmah.io client routes all traffic through <code>http://localhost:8000</code>.</p>
 <h2 id="logging-from-a-console-application">Logging from a console application</h2>
 <p>Create a new <code>LoggerFactory</code>:</p>
 <pre><code class="csharp">var factory = new LoggerFactory();
