@@ -328,8 +328,8 @@
 <li><a href="#using-powershell">Using PowerShell</a></li>
 <li><a href="#using-kudu">Using Kudu</a></li>
 <li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
-<li><a href="#using-visual-studio-team-services-releases">Using Visual Studio Team Services (Releases)</a></li>
-<li><a href="#using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</a></li>
+<li><a href="#using-azure-devops-releases">Using Azure DevOps Releases</a></li>
+<li><a href="#using-azure-devops-builds">Using Azure DevOps Builds</a></li>
 <li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
 <li><a href="#using-bitbucket-pipelines">Using Bitbucket Pipelines</a></li>
 <li><a href="#using-atlassian-bamboo">Using Atlassian Bamboo</a></li>
@@ -374,6 +374,10 @@ $url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
 $body = @{
   version = $version
 }
+[Net.ServicePointManager]::SecurityProtocol = `
+    [Net.SecurityProtocolType]::Tls12,
+    [Net.SecurityProtocolType]::Tls11,
+    [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
@@ -411,6 +415,10 @@ $body = @{
   userEmail = $deployInfo.author_email
 }
 
+[Net.ServicePointManager]::SecurityProtocol = `
+    [Net.SecurityProtocolType]::Tls12,
+    [Net.SecurityProtocolType]::Tls11,
+    [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
@@ -443,33 +451,33 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>And we're done. On every new deployment, Octopus Deploy will notify elmah.io</p>
-<h3 id="using-visual-studio-team-services-releases">Using Visual Studio Team Services (Releases)</h3>
-<p>If you are using Release Management in Visual Studio Team Services, you should use our VSTS extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
+<h3 id="using-azure-devops-releases">Using Azure DevOps Releases</h3>
+<p>If you are using Releases in Azure DevOps, you should use our extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
 <ol>
 <li>
 <p>Go to the <a href="https://marketplace.visualstudio.com/items?itemName=elmahio.deploy-tasks">elmah.io Deployment Tasks extension</a> on the Visual Studio Marketplace and click <em>Install</em> (log in if not already).
-<img alt="elmah.io VSTS extension" src="../images/vsts_extension.png" /></p>
+<img alt="elmah.io Azure DevOps extension" src="../images/vsts_extension.png" /></p>
 </li>
 <li>
 <p>Select the account to install the extension into and click <em>Confirm</em>:
-<img alt="elmah.io VSTS account" src="../images/vsts_select_account.png" /></p>
+<img alt="elmah.io Azure DevOps account" src="../images/vsts_select_account.png" /></p>
 </li>
 <li>
-<p>Go to your Visual Studio Team Services project and edit your Release definition.
-<img alt="VSTS release definition" src="../images/vsts_release_definition.png" /></p>
+<p>Go to your Azure DevOps project and edit your Release definition.
+<img alt="Azure DevOps release definition" src="../images/vsts_release_definition.png" /></p>
 </li>
 <li>
 <p>Click <em>Add tasks</em> and locate the elmah.io Deployment Notification task. Click <em>Add</em>.
-<img alt="Add VSTS task" src="../images/vsts_add_task.png" /></p>
+<img alt="Add Azure DevOps task" src="../images/vsts_add_task.png" /></p>
 </li>
 <li>
-<p>Copy your API key from your organization settings page and paste it into the <em>API Key</em> field. In most cases, you want to input the ID of the log new deployments belong to. As default, we use the release name on VSTS as the version number string on elmah.io. If you require a custom naming scheme, change the value in the <em>Version</em> field. All <a href="https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/release/variables?view=vsts&amp;tabs=batch">default and custom release variables</a> are available through PowerShell variables. Finally, click <em>Save</em>.
-<img alt="VSTS task added" src="../images/vsts_task_added.png" /></p>
+<p>Copy your API key from your organization settings page and paste it into the <em>API Key</em> field. In most cases, you want to input the ID of the log new deployments belong to. As default, we use the release name on Azure DevOps as the version number string on elmah.io. If you require a custom naming scheme, change the value in the <em>Version</em> field. All <a href="https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/release/variables?view=vsts&amp;tabs=batch">default and custom release variables</a> are available through PowerShell variables. Finally, click <em>Save</em>.
+<img alt="Azure DevOps task added" src="../images/vsts_task_added.png" /></p>
 </li>
 </ol>
-<p>That's it! VSTS will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
-<h3 id="using-visual-studio-team-services-builds">Using Visual Studio Team Services (Builds)</h3>
-<p>Notifying elmah.io about new deployments is possible as a build step in Visual Studio Team Services, by adding a bit of PowerShell:</p>
+<p>That's it! Azure DevOps will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
+<h3 id="using-azure-devops-builds">Using Azure DevOps Builds</h3>
+<p>Notifying elmah.io about new deployments is possible as a build step in Azure DevOps, by adding a bit of PowerShell:</p>
 <ol>
 <li>
 <p>Edit the build definition currently building your project(s).</p>
@@ -494,6 +502,10 @@ $body = @{
   userEmail = &quot;$env:BUILD_REQUESTEDFOREMAIL&quot;
   logId = &quot;LOG_ID&quot;
 }
+[Net.ServicePointManager]::SecurityProtocol = `
+    [Net.SecurityProtocolType]::Tls12,
+    [Net.SecurityProtocolType]::Tls11,
+    [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
@@ -542,6 +554,10 @@ $body = @{
   logId = $logId
 }
 
+[Net.ServicePointManager]::SecurityProtocol = `
+    [Net.SecurityProtocolType]::Tls12,
+    [Net.SecurityProtocolType]::Tls11,
+    [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
@@ -580,6 +596,10 @@ $body = @{
   version = $Env:bamboo_buildNumber
   logId = &quot;LOG_ID&quot;
 }
+[Net.ServicePointManager]::SecurityProtocol = `
+    [Net.SecurityProtocolType]::Tls12,
+    [Net.SecurityProtocolType]::Tls11,
+    [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
 </code></pre>
 
