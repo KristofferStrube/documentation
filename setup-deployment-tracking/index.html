@@ -322,6 +322,7 @@
 <div class="toc">
 <ul>
 <li><a href="#set-up-deployment-tracking">Set Up Deployment Tracking</a><ul>
+<li><a href="#generate-a-new-api-key">Generate a new API key</a></li>
 <li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a><ul>
 <li><a href="#manually-using-swagger-ui">Manually using Swagger UI</a></li>
 <li><a href="#using-powershell">Using PowerShell</a></li>
@@ -348,6 +349,10 @@
 </div>
 
 <p><br/></p>
+<h2 id="generate-a-new-api-key">Generate a new API key</h2>
+<p>While you can use the same API key for everything, we recommend you to create an API key specific for deployment tracking. To do so, go to the organization settings page by clicking the gears icon next to the organization name on either the dashboard or in the left menu. Select the <em>API Keys</em> tabs and click <em>Add API Key</em>. Fill in a name of choice and enable the <em>Deployments</em> &gt; <em>Write</em> permission only:</p>
+<p><img alt="Deployment tracking API key" src="../images/deployment-tracking-api-key.png" /></p>
+<p>Click the save button and copy the API key for later use.</p>
 <h2 id="tell-elmahio-when-you-release">Tell elmah.io when you release</h2>
 <p>When you create a release of your software either manually or with the help from a tool like Octopus, you need to tell elmah.io about it. The <a href="https://api.elmah.io/swagger/ui/index">elmah.io REST API v3</a>, provides an endpoint named <code>deployments</code>, which you can call when creating releases. After calling the endpoint, all new messages to your logs, will automatically be decorated with the most recent version number.</p>
 <h3 id="manually-using-swagger-ui">Manually using Swagger UI</h3>
