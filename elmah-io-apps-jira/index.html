@@ -326,6 +326,22 @@
 <p>To generate a new token specific for elmah.io, go to <a href="https://id.atlassian.com/manage/api-tokens">https://id.atlassian.com/manage/api-tokens</a>. Then click the <em>Create API token</em> button and input a label of your choice. Finally, click the <em>Create</em> button and an API token is generated for you. Make sure to copy this token, since you won't be able to access it once the dialog is closed.</p>
 <p>Go back to elmah.io and input your email in the <em>Username</em> field and the API token from the previous step in the <em>Password</em> field. If you don't like to use an existing user account for the integration, you can create a new Atlassian account for elmah.io and generate the API token from that account instead.</p>
 <p>Click <em>Save</em> and the app is added to your log. When new errors are logged, issues are automatically created in the configured Jira project.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>If errors aren't showing up in Jira, please check that the following are all true:</p>
+<ul>
+<li>When clicking the <em>Test</em> button on the Jira app settings screen, the button turns green.</li>
+<li>There's a message logged in the log where you set up the Jira integration.</li>
+<li>The message is marked as new (yellow start next to the title on the search result).</li>
+<li>The message is either of severity <code>Error</code> or <code>Fatal</code>.</li>
+</ul>
+<p>To trigger an error manually, go to <a href="https://api.elmah.io/swagger/ui/index">https://api.elmah.io/swagger/ui/index</a> and input an elmah.io API key with the <em>Messages</em> - <em>Write</em> permission enabled. Expand <em>Messages</em> and the <em>POST</em> node with the URL <code>/v3/messages/{logId}</code>. Input your log ID and the following JSON:</p>
+<pre><code class="json">{
+  &quot;title&quot;: &quot;This is a test&quot;,
+  &quot;severity&quot;: &quot;Error&quot;
+}
+</code></pre>
+
+<p>Finally, click the <em>Try it out!</em> button and verify that the API returns a status code of <em>201</em>. The new error should show up in Jira. If testing this multiple times, you will need to make small adjustments to the title field inside the JSON, for additional errors to be marked as new.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
