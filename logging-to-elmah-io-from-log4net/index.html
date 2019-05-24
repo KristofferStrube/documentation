@@ -386,6 +386,31 @@ elmahIoAppender.Client.Messages.OnMessage += (sender, a) =&gt;
 </code></pre>
 
 <p>This rather ugly piece of code would go into an initalization block, depending on the project type. The code starts by getting the configured elmah.io appender (typically set up in <code>web.config</code> or <code>log4net.config</code>). With the appender, you can access the underlying elmah.io client and subscribe to the <code>OnMessage</code> event. This let you trigger a small piece of code, just before sending log messages to elmah.io. In this case, we set the <code>User</code> property to the currently logged in user. Remember to call the <code>ActiveOptions</code> method, to make sure that the <code>Client</code> property is initialized.</p>
+<h2 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h2>
+<p>You may prefer storing the API key and log ID in the <code>appSettings</code> element over having the values embedded into the <code>appender</code> element. This can be the case for easy config transformation, overwriting values on Azure, or similar. log4net provides a feature named pattern strings to address just that:</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;configuration&gt;
+  &lt;configSections&gt;
+    &lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler, log4net&quot; /&gt;
+  &lt;/configSections&gt;
+  &lt;appSettings&gt;
+    &lt;add key=&quot;logId&quot; value=&quot;LOG_ID&quot;/&gt;
+    &lt;add key=&quot;apiKey&quot; value=&quot;API_KEY&quot;/&gt;
+  &lt;/appSettings&gt;
+  &lt;log4net&gt;
+    &lt;root&gt;
+      &lt;level value=&quot;ALL&quot; /&gt;
+      &lt;appender-ref ref=&quot;ElmahIoAppender&quot; /&gt;
+    &lt;/root&gt;
+    &lt;appender name=&quot;ElmahIoAppender&quot; type=&quot;elmah.io.log4net.ElmahIoAppender, elmah.io.log4net&quot;&gt;
+      &lt;logId type=&quot;log4net.Util.PatternString&quot; value=&quot;%appSetting{logId}&quot; /&gt;
+      &lt;apiKey type=&quot;log4net.Util.PatternString&quot; value=&quot;%appSetting{apiKey}&quot; /&gt;
+    &lt;/appender&gt;
+  &lt;/log4net&gt;
+&lt;/configuration&gt;
+</code></pre>
+
+<p>The <code>logId</code> and <code>apiKey</code> elements underneath the elmah.io appender have been extended to include <code>type="log4net.Util.PatternString"</code>. This allows for complex patterns in the <code>value</code> attribute. In this example, I reference an app setting from its name, by adding a value of <code>%appSetting{logId}</code> where <code>logId</code> is a reference to the app setting key specified above.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
