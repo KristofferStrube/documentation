@@ -389,6 +389,14 @@ log.Info(infoMessage);
 <blockquote>
 <p>The <code>appSettings</code> layout formatter only works when targeting .NET Full Framework and requires <code>Elmah.Io.NLog</code> version 3.3.x or above and <code>NLog</code> version 4.6.x or above.</p>
 </blockquote>
+<h2 id="setting-application-name">Setting application name</h2>
+<p>The application field on elmah.io can be set globally through NLog config:</p>
+<pre><code class="xml">&lt;targets&gt;
+  &lt;target name=&quot;elmahio&quot; xsi:type=&quot;elmahio:elmah.io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; application=&quot;APP_NAME&quot; /&gt;
+&lt;/targets&gt;
+</code></pre>
+
+<p>Replace <code>APP_NAME</code> with the application you want logged to elmah.io</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
