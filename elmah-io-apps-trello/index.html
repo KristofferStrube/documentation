@@ -323,7 +323,7 @@
           <div class="main-content-body">
 
             <h1 id="install-trello-app-for-elmahio">Install Trello App for elmah.io</h1>
-<p>For elmah.io to communicate with the Trello API, we will need an API key and token. The API key is available here: <a href="https://trello.com/app-key">https://trello.com/app-key</a>.</p>
+<p>For elmah.io to communicate with the Trello API, we will need an API key and token. The API key is available here: <a href="https://trello.com/app-key" target="_blank" rel="noopener noreferrer">https://trello.com/app-key</a>.</p>
 <p>To get the token, visit the following URL in your browser: <code>https://trello.com/1/authorize?expiration=never&amp;scope=read,write,account&amp;response_type=token&amp;name=Server%20Token&amp;key=API_KEY</code>. Remember to replace <code>API_KEY</code> with your Trello API key located in the previous step. When clicking the <em>Allow</em> button, Trello will generate a new token for you and show it in the browser window.</p>
 <p>elmah.io will create cards on a board list of your choice. Unfortunately, Trello didn't provide a way to obtain list IDs. The easiest way is to open Developer Tools in your browser and click an existing card inside the list you want elmah.io to create new cards in. Locate the request for the card details in the <em>Network</em> tab and click the <em>Preview</em> tab. The list id is in the card details:</p>
 <p><img alt="Trello list ID" src="../images/apps/trello/trello-list-id.png" /></p>
