@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Maintaining issues isn't exactly the highlight of anyone's day. With the elmah.io app for Jira we automatically create all new errors from your applications in Jira.">
+    <meta name="description" content="Learn how to create Trello cards when new errors are logged in your elmah.io logs. By integrating Trello with elmah.io, you can handle all tasks in a single tool.">
     <meta name="author" content="Thomas Ardal">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Integrate elmah.io with Atlassian Jira | elmah.io">
-    <meta name="twitter:description" content="Maintaining issues isn't exactly the highlight of anyone's day. With the elmah.io app for Jira we automatically create all new errors from your applications in Jira.">
+    <meta name="twitter:title" content="Integrate elmah.io with Trello | elmah.io">
+    <meta name="twitter:description" content="Learn how to create Trello cards when new errors are logged in your elmah.io logs. By integrating Trello with elmah.io, you can handle all tasks in a single tool.">
     
-    <meta property="og:title" content="Integrate elmah.io with Atlassian Jira | elmah.io">
-    <meta property="og:description" content="Maintaining issues isn't exactly the highlight of anyone's day. With the elmah.io app for Jira we automatically create all new errors from your applications in Jira.">
+    <meta property="og:title" content="Integrate elmah.io with Trello | elmah.io">
+    <meta property="og:description" content="Learn how to create Trello cards when new errors are logged in your elmah.io logs. By integrating Trello with elmah.io, you can handle all tasks in a single tool.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-jira/">
+    <meta property="og:url" content="https://docs.elmah.io/elmah-io-apps-trello/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Integrate elmah.io with Atlassian Jira | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-jira/">
+    <title>Integrate elmah.io with Trello | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/elmah-io-apps-trello/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -227,7 +227,7 @@
                   
                   <li ><a href="../elmah-io-apps-bitbucket/">Bitbucket</a></li>
                   
-                  <li class="active"><a href="./">Jira</a></li>
+                  <li ><a href="../elmah-io-apps-jira/">Jira</a></li>
                   
                   <li ><a href="../elmah-io-apps-teams/">Microsoft Teams</a></li>
                   
@@ -247,7 +247,7 @@
                   
                   <li ><a href="../elmah-io-apps-azure-boards/">Azure Boards</a></li>
                   
-                  <li ><a href="../elmah-io-apps-trello/">Trello</a></li>
+                  <li class="active"><a href="./">Trello</a></li>
                   
                   <li ><a href="../integrate-elmah-io-with-zapier/">Zapier</a></li>
                   
@@ -322,19 +322,19 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="install-jira-app-for-elmahio">Install Jira App for elmah.io</h1>
-<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Jira app and click the <em>Install</em> button:</p>
-<p><img alt="Install Jira App" src="../images/apps/jira/install_settings.png" /></p>
-<p>Input your site name, which is the first part of the URL you use to log into Jira. For the URL <code>https://elmahio.atlassian.net/</code>, the <code>site</code> parameter would be <code>elmahio</code>. In the Project field, input the key of the project. Note that a project has both a display name and a key. The property we are looking for here is the uppercase identifier of the project.</p>
-<p>To create issues on Jira, you will need to input the username and password of a user with permission to create issues in the project specified above. You can use your user credentials, but we recommend using a combination of your username and an API token.</p>
-<p>To generate a new token specific for elmah.io, go to <a href="https://id.atlassian.com/manage/api-tokens">https://id.atlassian.com/manage/api-tokens</a>. Then click the <em>Create API token</em> button and input a label of your choice. Finally, click the <em>Create</em> button and an API token is generated for you. Make sure to copy this token, since you won't be able to access it once the dialog is closed.</p>
-<p>Go back to elmah.io and input your email in the <em>Username</em> field and the API token from the previous step in the <em>Password</em> field. If you don't like to use an existing user account for the integration, you can create a new Atlassian account for elmah.io and generate the API token from that account instead.</p>
-<p>Click <em>Save</em> and the app is added to your log. When new errors are logged, issues are automatically created in the configured Jira project.</p>
+            <h1 id="install-trello-app-for-elmahio">Install Trello App for elmah.io</h1>
+<p>For elmah.io to communicate with the Trello API, we will need an API key and token. The API key is available here: <a href="https://trello.com/app-key">https://trello.com/app-key</a>.</p>
+<p>To get the token, visit the following URL in your browser: <code>https://trello.com/1/authorize?expiration=never&amp;scope=read,write,account&amp;response_type=token&amp;name=Server%20Token&amp;key=API_KEY</code>. Remember to replace <code>API_KEY</code> with your Trello API key located in the previous step. When clicking the <em>Allow</em> button, Trello will generate a new token for you and show it in the browser window.</p>
+<p>elmah.io will create cards on a board list of your choice. Unfortunately, Trello didn't provide a way to obtain list IDs. The easiest way is to open Developer Tools in your browser and click an existing card inside the list you want elmah.io to create new cards in. Locate the request for the card details in the <em>Network</em> tab and click the <em>Preview</em> tab. The list id is in the card details:</p>
+<p><img alt="Trello list ID" src="../images/apps/trello/trello-list-id.png" /></p>
+<p>Log into elmah.io and go to the log settings. Click the Apps tab. Locate the Trello app and click the <em>Install</em> button:</p>
+<p><img alt="Install the Trello app" src="../images/apps/trello/install_settings.png" /></p>
+<p>Input the API key, token, and list ID, all located in the previous steps. Click the <em>Test</em> button to test that everything works and finally, click <em>Save</em>. New errors now trigger elmah.io to create a card with the details of the error in Trello.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<p>If errors aren't showing up in Jira, please check that the following are all true:</p>
+<p>If errors aren't showing up in Trello, please check that the following are all true:</p>
 <ul>
-<li>When clicking the <em>Test</em> button on the Jira app settings screen, the button turns green.</li>
-<li>There's a message logged in the log where you set up the Jira integration.</li>
+<li>When clicking the <em>Test</em> button on the Trello app settings screen, the button turns green.</li>
+<li>There's a message logged in the log where you set up the Trello integration.</li>
 <li>The message is marked as new (yellow start next to the title on the search result).</li>
 <li>The message is either of severity <code>Error</code> or <code>Fatal</code>.</li>
 </ul>
@@ -345,7 +345,7 @@
 }
 </code></pre>
 
-<p>Finally, click the <em>Try it out!</em> button and verify that the API returns a status code of <em>201</em>. The new error should show up in Jira. If testing this multiple times, you will need to make small adjustments to the title field inside the JSON, for additional errors to be marked as new.</p>
+<p>Finally, click the <em>Try it out!</em> button and verify that the API returns a status code of <em>201</em>. The new error should show up in Trello. If testing this multiple times, you will need to make small adjustments to the title field inside the JSON, for additional errors to be marked as new.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
