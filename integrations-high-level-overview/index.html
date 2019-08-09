@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <meta name="description" content="elmah.io offers a wide range og logging- and web-frameworks. Get the full overview here.">
     <meta name="author" content="Thomas Ardal">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Remove sensitive form data | elmah.io">
+    <meta name="twitter:title" content="Integrations high-level overview | elmah.io">
+    <meta name="twitter:description" content="elmah.io offers a wide range og logging- and web-frameworks. Get the full overview here.">
     
-    
-    <meta property="og:title" content="Remove sensitive form data | elmah.io">
-    
+    <meta property="og:title" content="Integrations high-level overview | elmah.io">
+    <meta property="og:description" content="elmah.io offers a wide range og logging- and web-frameworks. Get the full overview here.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/remove-sensitive-form-data/">
+    <meta property="og:url" content="https://docs.elmah.io/integrations-high-level-overview/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Remove sensitive form data | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/remove-sensitive-form-data/">
+    <title>Integrations high-level overview | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/integrations-high-level-overview/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -87,12 +87,12 @@
                   
                   <li ><a href="../authentication/">Authentication</a></li>
                   
-                  <li ><a href="../integrations-high-level-overview/">Integrations high level overview</a></li>
+                  <li class="active"><a href="./">Integrations high level overview</a></li>
                   
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">ASP.NET / MVC / Web API</a>
                 <ul>
                   
@@ -112,7 +112,7 @@
                   
                   <li ><a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a></li>
                   
-                  <li class="active"><a href="./">Remove sensitive form data</a></li>
+                  <li ><a href="../remove-sensitive-form-data/">Remove sensitive form data</a></li>
                   
                   <li ><a href="../configure-elmah-io-manually/">Configure elmah.io manually</a></li>
                   
@@ -324,20 +324,126 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="remove-sensitive-form-data">Remove sensitive form data</h1>
-<p>You may have something like usernames and passwords in form posts on your website. Since elmah.io automatically logs the content of a failing form POST, sensitive data potentially ends up in your log. No one else but you and your company should really get to look inside your log, but remember that everyone connected to the Internet, is a potential hacking victim.</p>
-<p>In this example, we hide the value of a form value named <code>SomeSecretFormField</code>. Add the following code in the <code>Application_Start</code> method in the <code>global.asax.cs</code> file:</p>
-<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
-var logger = Elmah.Io.ErrorLog.Client;
-logger.OnMessage += (sender, args) =&gt;
-{
-    var form = args.Message.Form.FirstOrDefault(f =&gt; f.Key == &quot;SomeSecretFormField&quot;);
-    if (form != null)
-    {
-        form.Value = &quot;***hidden***&quot;;
-    }
-};
-</code></pre>
+            <h1 id="integrations-high-level-overview">Integrations high-level overview</h1>
+<p>elmah.io offers integration with an extensive list of logging- and web-frameworks. Get the full overview here. The table below shows all of the frameworks with official support. The <em>Async</em> column contains a checkmark if the integration is logging asynchronously. The <em>Bulk</em> column contains a checkmark if the integration is logging to elmah.io in bulk. In addition, elmah.io can be installed in a range of different products and services not mentioned (using the integrations below). Look through the menu to the left to see all of the possible integrations.</p>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Stable</th>
+<th>Build</th>
+<th>Samples</th>
+<th>Async</th>
+<th>Bulk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/logging-to-elmah-io-from-elmah/">ASP.NET</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j82k842uc26w2drg?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-aspnet-mvc/">ASP.NET MVC</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.Mvc"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Mvc.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j82k842uc26w2drg?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>️✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-web-api/">ASP.NET Web API</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.WebApi"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.WebApi.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j82k842uc26w2drg?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-aspnet-core/">ASP.NET Core</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.AspNetCore"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.AspNetCore.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-aspnetcore"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j57ekc2k9eon3u9u?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/Elmah.Io.AspNetCore/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-4-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-microsoft-extensions-logging/">Microsoft Extensions.Logging</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.Extensions.Logging"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Extensions.Logging.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-extensions-logging"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/eiw9tpstm67t02v6?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/Elmah.Io.Extensions.Logging/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-5-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-serilog/">Serilog</a></td>
+<td><a href="https://www.nuget.org/packages/Serilog.Sinks.ElmahIo"><img alt="NuGet" src="https://img.shields.io/nuget/v/Serilog.Sinks.ElmahIo.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/serilog/serilog-sinks-elmahio/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j4rsru1m0lhkfwc4/branch/master?svg=true" /></a></td>
+<td><a href="https://github.com/serilog/serilog-sinks-elmahio/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td>✔️</td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-nlog/">NLog</a></td>
+<td><a href="https://www.nuget.org/packages/elmah.io.nlog"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.nlog.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-nlog"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/gdgwwlu1j8yh7esl?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io.nlog/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td>✔️</td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-log4net/">log4net</a></td>
+<td><a href="https://www.nuget.org/packages/elmah.io.log4net"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.log4net.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-log4net"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/xdujoaelpbyg8lov?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io.log4net/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-logary/">Logary</a></td>
+<td><a href="https://www.nuget.org/packages/Logary.Targets.Elmah.Io/"><img alt="NuGet" src="https://img.shields.io/nuget/v/Logary.Targets.Elmah.Io.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/haf/logary"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/uf2n4l6a0tp7jq4p?svg=true" /></a></td>
+<td><a href="https://github.com/logary/logary/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-umbraco/">Umbraco</a></td>
+<td><a href="https://www.nuget.org/packages/elmah.io.umbraco/"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.umbraco.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-umbraco"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/hn4jr5q06ba7vp7c?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/elmah.io.umbraco/tree/master/samples/"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-a-running-website-on-azure/">Azure Websites</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-azure-functions/">Azure Functions</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-functions"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/wijhscta71muvd5b?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-5-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/logging-to-elmah-io-from-blazor/">Blazor</a></td>
+<td><a href="https://www.nuget.org/packages/Elmah.Io.Blazor"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Blazor.svg" /></a></td>
+<td><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-blazor"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/70hjy8k0twlgjqqg?svg=true" /></a></td>
+<td><a href="https://github.com/elmahio/Elmah.Io.Blazor/tree/master/sample"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></td>
+<td>✔️</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
