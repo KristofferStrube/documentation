@@ -376,7 +376,7 @@ namespace MyFunction
                 .AddEnvironmentVariables()
                 .Build();
 
-            builder.Services.Configure&lt;ElmahIoOptions&gt;(o =&gt;
+            builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
             {
                 o.ApiKey = config[&quot;apiKey&quot;];
                 o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -388,7 +388,7 @@ namespace MyFunction
 }
 </code></pre>
 
-<p>Notice how API key and log ID are configured through the <code>ElmahIoOptions</code> object. In the last line of the <code>Configure</code>-method, the <code>ElmahIoExceptionFilter</code>-filter is configured. This filter will automatically catch any exception caused by your filter and log it to elmah.io.</p>
+<p>Notice how API key and log ID are configured through the <code>ElmahIoFunctionOptions</code> object. In the last line of the <code>Configure</code>-method, the <code>ElmahIoExceptionFilter</code>-filter is configured. This filter will automatically catch any exception caused by your filter and log it to elmah.io.</p>
 <p>In your settings, add the <code>apiKey</code>and <code>logId</code> variables:</p>
 <pre><code class="json">{
   ...
@@ -403,7 +403,7 @@ namespace MyFunction
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID. When running on Azure or similar, you can overwrite <code>apiKey</code> and <code>logId</code> with application settings or environment variables as already thoroughly documented on Microsoft's documentation.</p>
 <h2 id="application-name">Application name</h2>
 <p>To set the application name on all errors, set the <code>Application</code> property during initialization:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoOptions&gt;(o =&gt;
+<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -414,8 +414,8 @@ namespace MyFunction
 <h2 id="message-hooks">Message hooks</h2>
 <p><code>Elmah.Io.Functions</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
 <h3 id="decorating-log-messages">Decorating log messages</h3>
-<p>To include additional information on log messages, you can use the <code>OnMessage</code> event when initializing <code>ElmahIoOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoOptions&gt;(o =&gt;
+<p>To include additional information on log messages, you can use the <code>OnMessage</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
+<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -428,8 +428,8 @@ namespace MyFunction
 
 <p>The example above includes a version number on all errors.</p>
 <h3 id="handle-errors">Handle errors</h3>
-<p>To handle any errors happening while processing a log message, you can use the <code>OnError</code> event when initializing <code>ElmahIoOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoOptions&gt;(o =&gt;
+<p>To handle any errors happening while processing a log message, you can use the <code>OnError</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
+<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -442,8 +442,8 @@ namespace MyFunction
 
 <p>The example above logs any errors during communication with elmah.io to a local log.</p>
 <h3 id="error-filtering">Error filtering</h3>
-<p>To ignore specific errors based on their content, you can use the <code>OnFilter</code> event when initializing <code>ElmahIoOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoOptions&gt;(o =&gt;
+<p>To ignore specific errors based on their content, you can use the <code>OnFilter</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
+<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
