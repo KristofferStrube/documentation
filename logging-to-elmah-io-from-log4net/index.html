@@ -328,6 +328,16 @@
 <a href="https://www.nuget.org/packages/elmah.io.log4net"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.log4net.svg" /></a>
 <a href="https://github.com/elmahio/elmah.io.log4net/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-log4net">Logging to elmah.io from Log4net</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-to-elmahio-from-log4net">Logging to elmah.io from Log4net</a><ul>
+<li><a href="#context-properties">Context Properties</a></li>
+<li><a href="#override-properties">Override Properties</a></li>
+<li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>In this tutorial we’ll add logging to elmah.io from an ASP.NET MVC project through log4net. The process is identical with other project types. Create a new MVC project and install the elmah.io appender:</p>
 <pre><code class="powershell">Install-Package elmah.io.log4net
 </code></pre>
@@ -392,6 +402,19 @@ elmahIoAppender.Client.Messages.OnMessage += (sender, a) =&gt;
 </code></pre>
 
 <p>This rather ugly piece of code would go into an initalization block, depending on the project type. The code starts by getting the configured elmah.io appender (typically set up in <code>web.config</code> or <code>log4net.config</code>). With the appender, you can access the underlying elmah.io client and subscribe to the <code>OnMessage</code> event. This let you trigger a small piece of code, just before sending log messages to elmah.io. In this case, we set the <code>User</code> property to the currently logged in user. Remember to call the <code>ActiveOptions</code> method, to make sure that the <code>Client</code> property is initialized.</p>
+<p>Elmah.Io.Log4Net provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field without overriding the <code>OnMessage</code> event as illustrated above:</p>
+<pre><code class="csharp">var properties = new PropertiesDictionary();
+properties[&quot;user&quot;] = &quot;Arnold Schwarzenegger&quot;;
+log.Logger.Log(new LoggingEvent(new LoggingEventData
+{
+    Level = Level.Error,
+    TimeStampUtc = DateTime.UtcNow,
+    Properties = properties,
+    Message = &quot;Hasta la vista, baby&quot;,
+}));
+</code></pre>
+
+<p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add a key/value pair to the Data tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 <h2 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h2>
 <p>You may prefer storing the API key and log ID in the <code>appSettings</code> element over having the values embedded into the <code>appender</code> element. This can be the case for easy config transformation, overwriting values on Azure, or similar. log4net provides a feature named pattern strings to address just that:</p>
 <pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
