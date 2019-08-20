@@ -392,7 +392,7 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 
 <p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add two key/value pairs (Quote and User) to the Data tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 <h2 id="message-hooks">Message hooks</h2>
-<p><code>Serilog.Sinks.ElmahIo</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io Serilog sinks must be configured through C# (see example above).</p>
+<p><code>Serilog.Sinks.ElmahIo</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
 <blockquote>
 <p>Message hooks require <code>Serilog.Sinks.ElmahIo</code> version <code>3.3.0</code> or newer.</p>
 </blockquote>
@@ -410,9 +410,9 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
         .CreateLogger();
 </code></pre>
 
-<p>The example above includes a version number on all errors.</p>
+<p>The example above includes a version number on all errors. Since the elmah.io sink also picks up encrichers specified with Serilog, this example could be implemented by enriching all log messages with a field named <code>version</code>.</p>
 <h3 id="handle-errors">Handle errors</h3>
-<p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io target:</p>
+<p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io sink:</p>
 <pre><code class="csharp">Log.Logger =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
@@ -427,7 +427,7 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 
 <p>The example implements a callback if logging to elmah.io fails. How you choose to implement this is entirely up to your application and tech stack.</p>
 <h3 id="error-filtering">Error filtering</h3>
-<p>To ignore specific errors based on their content, you can use the OnFilter event when initializing the elmah.io target:</p>
+<p>To ignore specific messages based on their content, you can use the OnFilter event when initializing the elmah.io sink:</p>
 <pre><code class="csharp">Log.Logger =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
@@ -440,7 +440,7 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
         .CreateLogger();
 </code></pre>
 
-<p>The example above ignores any log messages with the word <code>trace</code> in the title.</p>
+<p>The example above ignores any log message with the word <code>trace</code> in the title.</p>
 <h2 id="aspnet-core">ASP.NET Core</h2>
 <p>Serilog provides a package for ASP.NET Core, that routes log messages from inside core through Serilog. We recommend to use this package together with the elmah.io sink, in order to capture warnings and errors happening inside ASP.NET Core.</p>
 <p>To use this, install the following packages:</p>
