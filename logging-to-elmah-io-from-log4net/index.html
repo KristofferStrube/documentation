@@ -391,7 +391,7 @@ log.Info(&quot;This is a message with custom properties&quot;);
 <p>When looking up the log message in elmah.io, we see the context properties in the Data tab. Besides the two custom variables that we set through <code>GlobalContext</code> and <code>ThreadContext</code>, we see a couple of build-in properties in log4net, both prefixed with <code>log4net:</code>.</p>
 <h2 id="override-properties">Override Properties</h2>
 <p>In case you want to set one or more core properties on each elmah.io message logged, you will need to add a bit of log4net magic. Examples could be, setting the <code>User</code> property on all log messages or setting a version number in the <code>Version</code> property. In the following code, we set the currently logged in username on all log messages:</p>
-<pre><code class="csharp">Hierarchy hier = log4netassembly.LogManager.GetRepository() as Hierarchy;
+<pre><code class="csharp">Hierarchy hier = log4net.LogManager.GetRepository() as Hierarchy;
 var elmahIoAppender = (ElmahIoAppender)(hier?.GetAppenders())
     .FirstOrDefault(appender =&gt; appender.Name
         .Equals(&quot;ElmahIoAppender&quot;, StringComparison.InvariantCultureIgnoreCase));

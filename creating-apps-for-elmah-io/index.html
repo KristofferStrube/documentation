@@ -411,10 +411,10 @@ Your package was pushed.
 <p>That's it folks. The app is now public and available on elmah.io.</p>
 <h2 id="testing-the-package">Testing the Package</h2>
 <p>To test that everything is working, we'll start by creating a new bin on RequestBin. Go to <a href="https://requestbin.fullcontact.com">RequestBin</a> and click the <em>Create a RequestBin</em> button:</p>
-<p><img alt="Bin Created" src="../images/create_requestbin.png" /></p>
+<p><img alt="Bin Created" src="/images/create_requestbin.png" /></p>
 <p>In this case, the bin ID is <code>1chhlvo1</code>.</p>
 <p>Log into elmah.io and go to the Apps tab on the log settings. The RequestBin app is available from the list of apps in the bottom. Click the <em>Install</em> button:</p>
-<p><img alt="RequestBin Settings" src="../images/requestbin_settings.png" /></p>
+<p><img alt="RequestBin Settings" src="/images/requestbin_settings.png" /></p>
 <p>Observe how the <code>bin</code> variable from <code>manifest.json</code> shows up in the log settings with the <code>description</code> and <code>example</code> as we specified.</p>
 <p>Input the bin ID and click the <em>Save</em> button.</p>
 <p>To test that everything is working, you can use elmah.io's API to publish a new message to your log, which should match the query specified in <code>manifest.json</code>:</p>
@@ -423,7 +423,7 @@ Your package was pushed.
 
 <p>(replace <code>MyLogId</code> with your log ID)</p>
 <p>Refresh the bin at RequestBin and observe the HTTP request performed by the app:</p>
-<p><img alt="HTTP request in RequestBin" src="../images/requestbin_message.png" /></p>
+<p><img alt="HTTP request in RequestBin" src="/images/requestbin_message.png" /></p>
 <p>Isn't that just the most awesome thing you have seen all day? The JSON format specified in <code>manifest.json</code> now ends up on RequestBin using a homebrewed elmah.io app.</p>
 <p>To see more examples of elmah.io apps, check out <a href="https://github.com/elmahio/elmah.io.apps.slack">elmah.io.apps.slack</a>, <a href="https://github.com/elmahio/elmah.io.apps.hipchat">elmah.io.apps.hipchat</a> and <a href="https://github.com/elmahio/elmah.io.apps.github">elmah.io.apps.github</a> all available on GitHub. We also provide a <a href="https://github.com/elmahio/elmah.io.apps.playground">Playground app</a> to showcase the different types of variables. For even more information, get in contact with us. We are always happy to help, even if you're just playing around with app development for the fun of it.</p>
 
