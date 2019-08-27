@@ -328,7 +328,7 @@
 
             <p><a href="https://ci.appveyor.com/project/serilog/serilog-sinks-elmahio/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j4rsru1m0lhkfwc4/branch/master?svg=true" /></a>
 <a href="https://www.nuget.org/packages/Serilog.Sinks.ElmahIo"><img alt="NuGet" src="https://img.shields.io/nuget/v/Serilog.Sinks.ElmahIo.svg" /></a>
-<a href="https://github.com/serilog/serilog-sinks-elmahio/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
+<a href="https://github.com/serilog/serilog-sinks-elmahio/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</h1>
 <div class="toc">
 <ul>
@@ -447,25 +447,42 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 <p>Serilog provides a package for ASP.NET Core, that routes log messages from inside core through Serilog. We recommend to use this package together with the elmah.io sink, in order to capture warnings and errors happening inside ASP.NET Core.</p>
 <p>To use this, install the following packages:</p>
 <pre><code class="powershell">Install-Package Serilog.AspNetCore -DependencyVersion Highest
-Install-Package Elmah.Io.Client
 Install-Package Serilog.Sinks.ElmahIo
 </code></pre>
 
-<p>(We install the <code>Elmah.Io.Client</code> manually, to make sure we run on the most recent version)</p>
 <p>Configure Serilog as usual:</p>
-<pre><code class="csharp">Log.Logger = new LoggerConfiguration()
-    ...
-    .WriteTo.ElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;), LogEventLevel.Warning)
-    .CreateLogger();
+<pre><code class="csharp">public static int Main(string[] args)
+{
+    Log.Logger = new LoggerConfiguration()
+        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
+        {
+            MinimumLogEventLevel = Events.LogEventLevel.Warning
+        })
+        .CreateLogger();
+
+    try
+    {
+        CreateWebHostBuilder(args).Build().Run();
+        return 0;
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, &quot;Host terminated unexpectedly&quot;);
+        return 1;
+    }
+    finally
+    {
+        Log.CloseAndFlush();
+    }
+}
 </code></pre>
 
-<p>Finally, call the <code>UseSerilog</code>-method:</p>
+<p>Finally, call the <code>UseSerilog</code>-method in <code>BuildWebHost</code>:</p>
 <pre><code class="csharp">public static IWebHost BuildWebHost(string[] args) =&gt;
     WebHost
         .CreateDefaultBuilder(args)
         .UseStartup&lt;Startup&gt;()
-        .UseSerilog()
-        .Build();
+        .UseSerilog();
 </code></pre>
 
 <p>Now, all warnings, errors and fatals happening inside ASP.NET Core are logged to elmah.io.</p>
