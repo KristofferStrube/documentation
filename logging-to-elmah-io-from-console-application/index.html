@@ -327,12 +327,29 @@
           <div class="main-content-body">
 
             <h1 id="logging-to-elmahio-from-console">Logging to elmah.io from Console</h1>
-<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a> and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple. Since we currently provide two different versions of our API, the examples are split by version.</p>
-<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package (in either version 2.x or 3.x):</p>
+<div class="toc">
+<ul>
+<li><a href="#logging-to-elmahio-from-console">Logging to elmah.io from Console</a><ul>
+<li><a href="#events">Events</a><ul>
+<li><a href="#onmessage">OnMessage</a></li>
+<li><a href="#onmessagefail">OnMessageFail</a></li>
+</ul>
+</li>
+<li><a href="#bulk-upload">Bulk upload</a></li>
+<li><a href="#options">Options</a><ul>
+<li><a href="#proxy">Proxy</a></li>
+<li><a href="#opfuscate-form-values">Opfuscate form values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>, and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple.</p>
+<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Client
 </code></pre>
 
-<h2 id="version-3x">Version 3.x</h2>
 <p>Create a new <code>ElmahioAPI</code>:</p>
 <pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
 </code></pre>
@@ -349,19 +366,73 @@ logger.Messages.Verbose(logId, &quot;A verbose message&quot;);
 </code></pre>
 
 <p>Replace <code>LOG_ID</code> with your log ID from elmah.io (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<h2 id="version-2x">Version 2.x</h2>
-<p>Create a new <code>Logger</code>and assign it to a variable of type <code>ILogger</code>:</p>
-<pre><code class="csharp">Elmah.Io.Client.ILogger logger = new Elmah.Io.Client.Logger(new Guid(&quot;LOG_ID&quot;));
+<p>To have 100% control of how the message is logged to elmah.io, you can use the <code>CreateAndNotify</code>-method:</p>
+<pre><code class="csharp">logger.Messages.CreateAndNotify(logId, new CreateMessage
+{
+    Title = &quot;Hello World&quot;,
+    Application = &quot;Elmah.Io.Client sample&quot;,
+    Detail = &quot;This is a long description of the error. Maybe even a stacktrace&quot;,
+    Severity = Severity.Error.ToString(),
+    Data = new List&lt;Item&gt;
+    {
+        new Item {Key = &quot;Username&quot;, Value = &quot;Man in black&quot;}
+    },
+    Form = new List&lt;Item&gt;
+    {
+        new Item {Key = &quot;Password&quot;, Value = &quot;SecretPassword&quot;},
+        new Item {Key = &quot;pwd&quot;, Value = &quot;Other secret value&quot;},
+        new Item {Key = &quot;visible form item&quot;, Value = &quot;With a value&quot;}
+    }
+});
 </code></pre>
 
-<p>Replace <code>LOG_ID</code> with your log ID from elmah.io (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
-<pre><code class="csharp">logger.Verbose(&quot;Verbose message&quot;);
-logger.Debug(&quot;Debug message&quot;);
-logger.Information(&quot;Information message&quot;);
-logger.Warning(&quot;Warning message&quot;);
-logger.Error(&quot;Error message&quot;);
-logger.Fatal(&quot;Fatal message&quot;);
+<p>Like the integrations for Serilog, NLog and, Microsoft.Extensions.Logging, the elmah.io client supports structured logging:</p>
+<pre><code class="csharp">logger.Messages.CreateAndNotify(logId, new CreateMessage
+{
+    Title = &quot;Thomas says Hello&quot;,
+    TitleTemplate = &quot;{User} says Hello&quot;,
+});
+</code></pre>
+
+<h2 id="events">Events</h2>
+<p>The elmah.io client supports to different events: <code>OnMessage</code> and <code>OnMessageFail</code>.</p>
+<h3 id="onmessage">OnMessage</h3>
+<p>To get a callback every time a new message is being logged to elmah.io, you can implement the <code>OnMessage</code> event. This is a great chance to decorate all log messages with a specific property or similar.</p>
+<pre><code class="csharp">logger.Messages.OnMessage += (sender, eventArgs) =&gt;
+{
+    eventArgs.Message.Version = &quot;1.0.0&quot;;
+};
+</code></pre>
+
+<h3 id="onmessagefail">OnMessageFail</h3>
+<p>Logging to elmah.io can fail if the network connection is down, if elmah.io experience downtime, or something third. To make sure you log an error elsewhere if this happen, you can implement the <code>OnMessageFail</code> event:</p>
+<pre><code class="csharp">logger.Messages.OnMessageFail += (sender, eventArgs) =&gt;
+{
+    System.Console.Error.WriteLine(&quot;Error when logging to elmah.io&quot;);
+};
+</code></pre>
+
+<h2 id="bulk-upload">Bulk upload</h2>
+<p>If logging many messages to elmah.io, bulk upload can be a way to optimize performance. The elmah.io client supports bulk upload using the <code>CreateBulkAndNotify</code>-method:</p>
+<pre><code class="csharp">logger.Messages.CreateBulkAndNotify(logId, new[]
+{
+    new CreateMessage { Title = &quot;This is a bulk message&quot; },
+    new CreateMessage { Title = &quot;This is another bulk message&quot; },
+}.ToList());
+</code></pre>
+
+<h2 id="options">Options</h2>
+<p>The elmah.io client contains a set of default options that you can override.</p>
+<h3 id="proxy">Proxy</h3>
+<p>To log through a HTTP proxy, set the <code>WebProxy</code> property:</p>
+<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+logger.Options.WebProxy = new WebProxy(&quot;localhost&quot;, 8888);
+</code></pre>
+
+<h3 id="opfuscate-form-values">Opfuscate form values</h3>
+<p>When logging POSTs with form values, you don't want users password and similar logged to elmah.io. The elmah.io client automatically filter form keys named <code>password</code> and <code>pwd</code>. Using the <code>FormKeysToObfuscate</code> you can tell the client to opfuscate additional form entries:</p>
+<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+logger.Options.FormKeysToObfuscate.Add(&quot;secret_key&quot;);
 </code></pre>
 
             <br/>
