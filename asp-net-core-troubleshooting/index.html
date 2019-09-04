@@ -338,7 +338,7 @@
 <li>Make sure that you didn't enable any Ignore filters or set up any Rules with an ignore action on the log in question.</li>
 <li>Make sure that you don't have any code catching all exceptions happening in your system and ignoring them (could be a logging filter, a piece of middleware, or similar).</li>
 </ul>
-<h2 id="common-exceptions-and-how-to-fix-them">Common exceptions and how to fix them</h2>
+<h2 id="common-problems-and-how-to-fix-them">Common problems and how to fix them</h2>
 <p>Here you will a list of common exceptions and how to solve them.</p>
 <h3 id="invalidoperationexception">InvalidOperationException</h3>
 <p><strong>Exception</strong></p>
@@ -404,6 +404,15 @@
     services.AddElmahIo();
     ....
 }
+</code></pre>
+
+<h3 id="an-error-occurred-while-starting-the-application">An error occurred while starting the application</h3>
+<p>If you see the error <code>An error occurred while starting the application</code> and the exception isn't logged to elmah.io, they error probably happens before hitting the elmah.io middleware. To help find out what is going on, add the following lines to your <code>Program.cs</code> file:</p>
+<pre><code class="csharp">public static IWebHostBuilder CreateWebHostBuilder(string[] args) =&gt;
+    WebHost.CreateDefaultBuilder(args)
+        .UseSetting(WebHostDefaults.DetailedErrorsKey, &quot;true&quot;)
+        .CaptureStartupErrors(true)
+        .UseStartup&lt;Startup&gt;();
 </code></pre>
 
             <br/>
