@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="How to configure API key permissions | elmah.io">
+    <meta name="twitter:title" content="Logging from AWS Beanstalk | elmah.io">
     
     
-    <meta property="og:title" content="How to configure API key permissions | elmah.io">
+    <meta property="og:title" content="Logging from AWS Beanstalk | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/how-to-configure-api-key-permissions/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-aws-beanstalk/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>How to configure API key permissions | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/how-to-configure-api-key-permissions/">
+    <title>Logging from AWS Beanstalk | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-aws-beanstalk/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -186,7 +186,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Logging from something else</a>
                 <ul>
                   
@@ -204,7 +204,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-azure-functions/">Logging from Azure Functions</a></li>
                   
-                  <li ><a href="../logging-to-elmah-io-from-aws-beanstalk/">Logging from AWS Beanstalk</a></li>
+                  <li class="active"><a href="./">Logging from AWS Beanstalk</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-aws-lambdas/">Logging from AWS Lambdas</a></li>
                   
@@ -280,7 +280,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Everything Else</a>
                 <ul>
                   
@@ -292,7 +292,7 @@
                   
                   <li ><a href="../where-is-my-invoice-receipt/">Where is my invoice / receipt</a></li>
                   
-                  <li class="active"><a href="./">How to configure API key permissions</a></li>
+                  <li ><a href="../how-to-configure-api-key-permissions/">How to configure API key permissions</a></li>
                   
                   <li ><a href="../creating-rules-to-perform-actions-on-messages/">Creating Rules to Perform Actions on Messages</a></li>
                   
@@ -328,17 +328,40 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="how-to-configure-api-key-permissions">How to configure API key permissions</h1>
-<p>Security on the elmah.io API is handled through the use of API keys. All requests to the API must be accompanied by an API key. When creating your organization, a default API key was automatically created. API keys can be revoked and you can create multiple API keys for different purposes and projects. Much like a user can be awarded different levels of access on elmah.io, API keys also have a set of permissions. The default created API key for your organization, only have permission to write log messages to elmah.io.</p>
+            <h1 id="logging-from-aws-beanstalk">Logging from AWS Beanstalk</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-from-aws-beanstalk">Logging from AWS Beanstalk</a><ul>
+<li><a href="#aspnet-mvc-web-api">ASP.NET / MVC / Web API</a></li>
+<li><a href="#aspnet-core">ASP.NET Core</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Logging to elmah.io from .NET applications deployed on AWS Beanstalk is as easy as with other cloud hosting services. Since Beanstalk runs normal ASP.NET, MVC, Web API, and Core applications, setting up elmah.io almost follows the guides already available in the elmah.io documentation. There are a few things to notice when needing to configure elmah.io, which will be explained in this document.</p>
+<h2 id="aspnet-mvc-web-api">ASP.NET / MVC / Web API</h2>
+<p>To install elmah.io in <a href="https://docs.elmah.io/logging-to-elmah-io-from-elmah/">ASP.NET</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-mvc/">MVC</a>, and/or <a href="https://docs.elmah.io/logging-to-elmah-io-from-web-api/">Web API</a>, please follow the guidelines for each framework. You can specify one set of API key and log ID in the <code>Web.config</code> file and another set in the <code>Web.release.config</code> file as explained here: <a href="https://docs.elmah.io/use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>.</p>
+<p>If you want to include your production API key and log ID on AWS only (to avoid having sensitive information in source control), you can do this using <em>Environment properties</em> on AWS. Go to your environment on the AWS console and click the <em>Configuration</em> tab. In the bottom, you will see a section named <em>Environment properties</em>. Input your API key and log ID there:</p>
+<p><img alt="AWS Environment Properties" src="../images/aws-environment-properties.png" /></p>
+<p>AWS inserts the properties as application settings in the <code>Web.config</code> file. To make sure that elmah.io uses API key and log ID from <code>appSettings</code>, change the <code>&lt;elmah&gt;</code> element to reference the keys specified on AWS:</p>
+<pre><code class="xml">&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKeyKey=&quot;elmahio-apikey&quot; logIdKey=&quot;elmahio-logid&quot; /&gt;
+</code></pre>
+
+<p>The <code>apiKeyKey</code> and <code>logIdKey</code> attributes reference the app settings keys.</p>
+<p>Finally, if you have an API key and/or log ID specified as part of the <code>appSettings&gt;</code> element in <code>Web.config</code>, you will need to remove those when running in production. The reason for this is that AWS only insert missing keys. To do so, modify your <code>Web.release.config</code> file:</p>
+<pre><code class="xml">&lt;appSettings&gt;
+  &lt;add key=&quot;elmahio-logid&quot; xdt:Transform=&quot;Remove&quot; xdt:Locator=&quot;Match(key)&quot; /&gt;
+  &lt;add key=&quot;elmahio-apikey&quot; xdt:Transform=&quot;Remove&quot; xdt:Locator=&quot;Match(key)&quot; /&gt;
+&lt;/appSettings&gt;
+</code></pre>
+
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<p>To install elmah.io in ASP.NET Core, follow this guide: <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/">Logging to elmah.io from ASP.NET Core</a>.</p>
+<p>Unfortunately, Beanstalk configuration doesn't play well with the configuration system in .NET Core. From the Beanstalk documentation:</p>
 <blockquote>
-<p>API key permissions were added in August 2018, why keys created before that have all permissions enabled. We recommend those of you with old API keys to configure the needed permissions.</p>
+<p>Elastic Beanstalk doesn't support passing environment variables to .NET Core applications and multiple-application IIS deployments that use a deployment manifest.</p>
 </blockquote>
-<p>To configure permissions for a new or existing API key, either click the <code>Edit</code> or <code>Add API Key</code> button on the API Keys tab of your organization settings. This will show the API key editor view:</p>
-<p><img alt="Edit API key" src="../images/edit_api_key.png" /></p>
-<p>Like mentioned previously, new keys have the <code>messages_write</code> permission enabled only. This permission will cover logging from your application to elmah.io. If your application needs to browse messages from elmah.io, create new logs/applications, etc. you will need to enable the corresponding permission. Notice that read permissions don't need to be enabled, in order for you to browse logs and log messages on the elmah.io UI. API keys are used by the range of client integrations only.</p>
-<blockquote>
-<p>Your API key shouldn't be shared outside your organization. In some situations, you will need to share your API key (like when logging from JavaScript). In these cases, it's essential that your API key only have the <code>messages_write</code> permission enabled. With all permissions enabled, everyone will be able to browse your logs.</p>
-</blockquote>
+<p>For now, you will need to hardcode your API key and log ID in the <code>Startup.cs</code> file or add it to your <code>appsettings.json</code> file. Both approaches are explained in the documentation for installing elmah.io in ASP.NET Core.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
