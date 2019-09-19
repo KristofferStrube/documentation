@@ -339,6 +339,7 @@
 <li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
 <li><a href="#setting-application-name">Setting application name</a></li>
 <li><a href="#configure-the-elmahio-target-from-code">Configure the elmah.io target from code</a></li>
+<li><a href="#logging-custom-properties">Logging custom properties</a></li>
 <li><a href="#message-hooks">Message hooks</a><ul>
 <li><a href="#decorating-log-messages">Decorating log messages</a></li>
 <li><a href="#handle-errors">Handle errors</a></li>
@@ -435,8 +436,31 @@ LogManager.Configuration = config;
 </code></pre>
 
 <p>The example will log all log levels to elmah.io. For more information about how to configure individual log levels, check out the <a href="https://github.com/NLog/NLog/wiki/Configure-from-code">NLog documentation on GitHub</a>.</p>
+<h2 id="logging-custom-properties">Logging custom properties</h2>
+<p>NLog supports logging custom properties in multiple ways. If you want to include a property (like a version number) to all log messages, you might want to look into the <a href="#decorating-log-messages"><code>OnMessage</code></a> feature on <code>Elmah.Io.NLog</code>.</p>
+<p>To include a property on a log message, you can use the <code>LogEventInfo</code> class provided by NLog:</p>
+<pre><code class="csharp">var logEvent = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;myLogEvent&quot;);
+logEvent.Properties[&quot;user&quot;] = &quot;Me&quot;;
+logger.Log(logEvent);
+</code></pre>
+
+<p>In this example, a <code>user</code> property is added to the <em>Data</em> tab inside elmah.io. NLog also provides a fluent API (available in the <code>NLog.Fluent</code> namespace) that some might find more readable:</p>
+<pre><code class="csharp">logger.Info()
+      .Message(&quot;myLogEvent&quot;)
+      .Property(&quot;user&quot;, &quot;me&quot;)
+      .Write();
+</code></pre>
+
+<p>If you want to use the normal logging methods like <code>Info</code> and <code>Error</code>, you can do so in junction with the <code>MappedDiagnosticsLogicalContext</code> class, also provided by NLog:</p>
+<pre><code class="csharp">using (MappedDiagnosticsLogicalContext.SetScoped(&quot;user&quot;, &quot;me&quot;))
+{
+   logger.Info(&quot;myLogEvent&quot;);
+}
+</code></pre>
+
+<p>This will create the exact same result as the examples above.</p>
 <h2 id="message-hooks">Message hooks</h2>
-<p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io NLog target must be configured through C# (see example above).</p>
+<p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io NLog target must be <a href="#configure-the-elmahio-target-from-code">configured through C#</a>.</p>
 <blockquote>
 <p>Message hooks require <code>Elmah.Io.NLog</code> version <code>3.4.53</code> or newer.</p>
 </blockquote>
@@ -451,20 +475,6 @@ elmahIoTarget.OnMessage = msg =&gt;
 </code></pre>
 
 <p>The example above includes a version number on all errors.</p>
-<p>If you want to decorate a single log message with one ore more contextual variables, the <code>OnMessage</code> hook is typically not the best solution. You should use either <code>Properties</code> directly on <code>LogEventInfo</code>:</p>
-<pre><code class="csharp">var logEvent = LogEventInfo() { Level = LogLevel.Info };
-logEvent.Properties[&quot;myProperty&quot;] = &quot;myValue&quot;;
-logger.Log(logEvent);
-</code></pre>
-
-<p>or the <code>MappedDiagnosticsLogicalContext</code> class provided by NLog:</p>
-<pre><code class="csharp">using (NLog.MappedDiagnosticsLogicalContext.SetScoped(&quot;myProperty&quot;, Guid.NewGuid()))
-{
-   logger.Info(&quot;myLogEvent&quot;);
-}
-</code></pre>
-
-<p>elmah.io will automatically pick up those properties and include them on the <em>Data</em> tab.</p>
 <h3 id="handle-errors">Handle errors</h3>
 <p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io target:</p>
 <pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
