@@ -335,7 +335,6 @@
 <div class="toc">
 <ul>
 <li><a href="#logging-to-elmahio-from-nlog">Logging to elmah.io from NLog</a><ul>
-<li><a href="#custom-properties">Custom Properties</a></li>
 <li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
 <li><a href="#setting-application-name">Setting application name</a></li>
 <li><a href="#configure-the-elmahio-target-from-code">Configure the elmah.io target from code</a></li>
@@ -379,25 +378,6 @@
 log.Error(new Exception(), &quot;This is an error message&quot;);
 </code></pre>
 
-<h2 id="custom-properties">Custom Properties</h2>
-<p>NLog supports custom properties like most other logging frameworks. With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="https://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
-<p>To log custom properties with NLog and elmah.io, you need to use an overload of each logging-method that takes a <code>LogEventInfo</code> object as parameter:</p>
-<pre><code class="csharp">var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
-infoMessage.Properties.Add(&quot;Some Property Key&quot;, &quot;Some Property Value&quot;);
-log.Info(infoMessage);
-</code></pre>
-
-<p>This saves the information message in elmah.io with a custom property with key <code>Some Property Key</code>and value <code>Some Property Value</code>.</p>
-<p>As of NLog 4.5, structured logging is supported as well. To log a property as part of the log message, use the new syntax as shown here:</p>
-<pre><code class="csharp">log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
-</code></pre>
-
-<p>In the example, NLog will log the message <code>Property named "Donald"</code>, but the key (<code>FirstName</code>) and value (<code>Donald</code>), will also be available in the <em>Data</em> tab inside elmah.io.</p>
-<p>Elmah.Io.NLog provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the <code>User</code> field using structured logging only:</p>
-<pre><code class="csharp">log.Info(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
-</code></pre>
-
-<p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add two key/value pairs (<code>Quote</code> and <code>User</code>) to the <em>Data</em> tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 <h2 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h2>
 <p>If you are already using elmah.io, you may have your API key and log ID in the <code>appSettings</code> element already. To use these settings from withing the NLog target configuration you can use an NLog layout formatter:</p>
 <pre><code class="xml">&lt;targets&gt;
@@ -438,27 +418,39 @@ LogManager.Configuration = config;
 <p>The example will log all log levels to elmah.io. For more information about how to configure individual log levels, check out the <a href="https://github.com/NLog/NLog/wiki/Configure-from-code">NLog documentation on GitHub</a>.</p>
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>NLog supports logging custom properties in multiple ways. If you want to include a property (like a version number) to all log messages, you might want to look into the <a href="#decorating-log-messages"><code>OnMessage</code></a> feature on <code>Elmah.Io.NLog</code>.</p>
-<p>To include a property on a log message, you can use the <code>LogEventInfo</code> class provided by NLog:</p>
-<pre><code class="csharp">var logEvent = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;myLogEvent&quot;);
-logEvent.Properties[&quot;user&quot;] = &quot;Me&quot;;
-logger.Log(logEvent);
+<p>With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="https://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
+<p>One way to log custom properties with NLog and elmah.io, is to use the overload of each logging-method that takes a <code>LogEventInfo</code> object as parameter:</p>
+<pre><code class="csharp">var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
+infoMessage.Properties.Add(&quot;Some Property Key&quot;, &quot;Some Property Value&quot;);
+log.Info(infoMessage);
 </code></pre>
 
-<p>In this example, a <code>user</code> property is added to the <em>Data</em> tab inside elmah.io. NLog also provides a fluent API (available in the <code>NLog.Fluent</code> namespace) that some might find more readable:</p>
+<p>This saves the information message in elmah.io with a custom property with key <code>Some Property Key</code>and value <code>Some Property Value</code>.</p>
+<p>As of NLog 4.5, structured logging is supported as well. To log a property as part of the log message, use the new syntax as shown here:</p>
+<pre><code class="csharp">log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
+</code></pre>
+
+<p>In the example, NLog will log the message <code>Property named "Donald"</code>, but the key (<code>FirstName</code>) and value (<code>Donald</code>), will also be available in the <em>Data</em> tab inside elmah.io.</p>
+<p><code>Elmah.Io.NLog</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the <code>User</code> field using structured logging only:</p>
+<pre><code class="csharp">log.Info(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;T-800&quot;);
+</code></pre>
+
+<p>This will fill in the value <code>T-800</code> in the <code>User</code> field, as well as add two key/value pairs (<code>Quote</code> and <code>User</code>) to the <em>Data</em> tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
+<p>NLog also provides a fluent API (available in the <code>NLog.Fluent</code> namespace) that some might find more readable:</p>
 <pre><code class="csharp">logger.Info()
-      .Message(&quot;myLogEvent&quot;)
-      .Property(&quot;user&quot;, &quot;me&quot;)
+      .Message(&quot;I'll be back&quot;)
+      .Property(&quot;User&quot;, &quot;T-800&quot;)
       .Write();
 </code></pre>
 
 <p>If you want to use the normal logging methods like <code>Info</code> and <code>Error</code>, you can do so in junction with the <code>MappedDiagnosticsLogicalContext</code> class, also provided by NLog:</p>
-<pre><code class="csharp">using (MappedDiagnosticsLogicalContext.SetScoped(&quot;user&quot;, &quot;me&quot;))
+<pre><code class="csharp">using (MappedDiagnosticsLogicalContext.SetScoped(&quot;User&quot;, &quot;T-800&quot;))
 {
-   logger.Info(&quot;myLogEvent&quot;);
+   logger.Info(&quot;I'll be back&quot;);
 }
 </code></pre>
 
-<p>This will create the exact same result as the examples above.</p>
+<p>This will create the exact same result as the example above.</p>
 <h2 id="message-hooks">Message hooks</h2>
 <p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io NLog target must be <a href="#configure-the-elmahio-target-from-code">configured through C#</a>.</p>
 <blockquote>
