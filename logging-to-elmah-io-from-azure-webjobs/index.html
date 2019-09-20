@@ -333,8 +333,11 @@
 <a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-azure-webjobs">Logging to elmah.io from Azure WebJobs</h1>
 <p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure WebJobs</a>, requires only a few lines of code. We've created a client specifically for Azure WebJobs.</p>
+<blockquote>
+<p>Support for Azure WebJobs have been stopped on version <code>3.1.23</code> of the <code>Elmah.Io.Functions</code> package. The newer versions only work with Azure Functions.</p>
+</blockquote>
 <p>Install the <a href="https://www.nuget.org/packages/elmah.io.functions/">Elmah.Io.Functions</a> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions
+<pre><code class="powershell">Install-Package Elmah.Io.Functions -Version 3.1.23
 </code></pre>
 
 <p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
