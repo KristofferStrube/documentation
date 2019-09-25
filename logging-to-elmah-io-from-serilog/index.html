@@ -373,6 +373,9 @@ catch (Exception e) {
 </code></pre>
 
 <p>The Error method tells Serilog to log the error in the configured sinks, which in our case logs to elmah.io. Simple and beautiful.</p>
+<blockquote>
+<p>Always call <code>Log.CloseAndFlush();</code> before your program terminates.</p>
+</blockquote>
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>Serilog support logging custom properties in three ways: As part of the log message, through enrichers and using <code>LogContext</code>. All three types of properties are implemented in the elmah.io sink as part of the Data dictionary to elmah.io.</p>
 <p>The following example shows how to log all three types of properties:</p>
