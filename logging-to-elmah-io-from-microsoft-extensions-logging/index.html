@@ -355,7 +355,11 @@
 
 <p>Locate your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID. The two values will be referenced as <code>API_KEY</code> and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) in the following.</p>
 <h2 id="logging-from-aspnet-core">Logging from ASP.NET Core</h2>
-<p>In the <code>Program.cs</code> file, call the <code>ConfigureLogging</code>-method and configure elmah.io like shown here:</p>
+<p>In the <code>Program.cs</code> file, add a new <code>using</code> statement:</p>
+<pre><code class="csharp">using Elmah.Io.Extensions.Logging;
+</code></pre>
+
+<p>Then call the <code>ConfigureLogging</code>-method and configure elmah.io like shown here:</p>
 <pre><code class="csharp">WebHost.CreateDefaultBuilder(args)
     .UseStartup&lt;Startup&gt;()
     .ConfigureLogging((ctx, logging) =&gt;
