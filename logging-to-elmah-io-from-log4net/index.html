@@ -335,15 +335,18 @@
 <div class="toc">
 <ul>
 <li><a href="#logging-to-elmahio-from-log4net">Logging to elmah.io from Log4net</a><ul>
-<li><a href="#context-properties">Context Properties</a></li>
-<li><a href="#override-properties">Override Properties</a></li>
+<li><a href="#logging-custom-properties">Logging custom properties</a></li>
+<li><a href="#message-hooks">Message hooks</a><ul>
+<li><a href="#decorating-log-messages">Decorating log messages</a></li>
+</ul>
+</li>
 <li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
 <li><a href="#aspnet-core">ASP.NET Core</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>In this tutorial we’ll add logging to elmah.io from an ASP.NET MVC project through log4net. The process is identical with other project types. Create a new MVC project and install the elmah.io appender:</p>
+<p>In this tutorial we'll add logging to elmah.io from a .NET application with log4net. Install the elmah.io appender:</p>
 <pre><code class="powershell">Install-Package elmah.io.log4net
 </code></pre>
 
@@ -351,11 +354,11 @@
 <pre><code class="csharp">[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 </code></pre>
 
-<p>Add the following config section to your web.config file:</p>
+<p>Add the following config section to your <code>web/app.config</code> file:</p>
 <pre><code class="xml">&lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler, log4net&quot; /&gt;
 </code></pre>
 
-<p>Finally, add the log4net configuration element to web.config:</p>
+<p>Finally, add the log4net configuration element to <code>web/app.config</code>:</p>
 <pre><code class="xml">&lt;log4net&gt;
   &lt;appender name=&quot;ElmahIoAppender&quot; type=&quot;elmah.io.log4net.ElmahIoAppender, elmah.io.log4net&quot;&gt;
     &lt;logId value=&quot;LOG_ID&quot; /&gt;
@@ -381,7 +384,7 @@ catch (ApplicationException ex)
 }
 </code></pre>
 
-<h2 id="context-properties">Context Properties</h2>
+<h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>log4net offers a feature called context properties. With context properties, you can log additional key/value pairs with every log message. The elmah.io appender for log4net, supports context properties as well. Context properties are handled like <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> in the elmah.io UI.</p>
 <p>Let's utilize two different hooks in log4net, to add context properties to elmah.io:</p>
 <pre><code class="csharp">log4net.GlobalContext.Properties[&quot;ApplicationIdentifier&quot;] = &quot;MyCoolApp&quot;;
@@ -392,24 +395,9 @@ log.Info(&quot;This is a message with custom properties&quot;);
 
 <p>Basically, we set two custom properties on contextual classes provided by log4net. To read more about the choices in log4net, check out the <a href="https://logging.apache.org/log4net/release/manual/contexts.html">log4net manual</a>.</p>
 <p>When looking up the log message in elmah.io, we see the context properties in the Data tab. Besides the two custom variables that we set through <code>GlobalContext</code> and <code>ThreadContext</code>, we see a couple of build-in properties in log4net, both prefixed with <code>log4net:</code>.</p>
-<h2 id="override-properties">Override Properties</h2>
-<p>In case you want to set one or more core properties on each elmah.io message logged, you will need to add a bit of log4net magic. Examples could be, setting the <code>User</code> property on all log messages or setting a version number in the <code>Version</code> property. In the following code, we set the currently logged in username on all log messages:</p>
-<pre><code class="csharp">Hierarchy hier = log4net.LogManager.GetRepository() as Hierarchy;
-var elmahIoAppender = (ElmahIoAppender)(hier?.GetAppenders())
-    .FirstOrDefault(appender =&gt; appender.Name
-        .Equals(&quot;ElmahIoAppender&quot;, StringComparison.InvariantCultureIgnoreCase));
-
-elmahIoAppender.ActivateOptions();
-elmahIoAppender.Client.Messages.OnMessage += (sender, a) =&gt;
-{
-    a.Message.User = Thread.CurrentPrincipal?.Identity?.Name;
-};
-</code></pre>
-
-<p>This rather ugly piece of code would go into an initalization block, depending on the project type. The code starts by getting the configured elmah.io appender (typically set up in <code>web.config</code> or <code>log4net.config</code>). With the appender, you can access the underlying elmah.io client and subscribe to the <code>OnMessage</code> event. This let you trigger a small piece of code, just before sending log messages to elmah.io. In this case, we set the <code>User</code> property to the currently logged in user. Remember to call the <code>ActiveOptions</code> method, to make sure that the <code>Client</code> property is initialized.</p>
-<p>Elmah.Io.Log4Net provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field without overriding the <code>OnMessage</code> event as illustrated above:</p>
+<p>In addition, <code>Elmah.Io.Log4Net</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field:</p>
 <pre><code class="csharp">var properties = new PropertiesDictionary();
-properties[&quot;user&quot;] = &quot;Arnold Schwarzenegger&quot;;
+properties[&quot;User&quot;] = &quot;Arnold Schwarzenegger&quot;;
 log.Logger.Log(new LoggingEvent(new LoggingEventData
 {
     Level = Level.Error,
@@ -420,6 +408,22 @@ log.Logger.Log(new LoggingEvent(new LoggingEventData
 </code></pre>
 
 <p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add a key/value pair to the Data tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
+<h2 id="message-hooks">Message hooks</h2>
+<h3 id="decorating-log-messages">Decorating log messages</h3>
+<p>In case you want to set one or more core properties on each elmah.io message logged, using message hooks may be a better solution. In that case you will need to add a bit of log4net magic. An example could be setting the <code>Version</code> property on all log messages. In the following code, we set a hard-coded version number on all log messages, but the value could come from assembly info, a text file, or similar:</p>
+<pre><code class="csharp">Hierarchy hier = log4net.LogManager.GetRepository() as Hierarchy;
+var elmahIoAppender = (ElmahIoAppender)(hier?.GetAppenders())
+    .FirstOrDefault(appender =&gt; appender.Name
+        .Equals(&quot;ElmahIoAppender&quot;, StringComparison.InvariantCultureIgnoreCase));
+
+elmahIoAppender.ActivateOptions();
+elmahIoAppender.Client.Messages.OnMessage += (sender, a) =&gt;
+{
+    a.Message.Version = &quot;1.0.0&quot;;
+};
+</code></pre>
+
+<p>This rather ugly piece of code would go into an initalization block, depending on the project type. The code starts by getting the configured elmah.io appender (typically set up in <code>web/app.config</code> or <code>log4net.config</code>). With the appender, you can access the underlying elmah.io client and subscribe to the <code>OnMessage</code> event. This let you trigger a small piece of code, just before sending log messages to elmah.io. In this case, we set the <code>Version</code> property to <code>1.0.0</code>. Remember to call the <code>ActiveOptions</code> method, to make sure that the <code>Client</code> property is initialized.</p>
 <h2 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h2>
 <p>You may prefer storing the API key and log ID in the <code>appSettings</code> element over having the values embedded into the <code>appender</code> element. This can be the case for easy config transformation, overwriting values on Azure, or similar. log4net provides a feature named pattern strings to address just that:</p>
 <pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
@@ -492,7 +496,7 @@ log.Logger.Log(new LoggingEvent(new LoggingEventData
 
 <p>All internal logging from ASP.NET Core, as well as manual logging you create through the <code>ILogger</code> interface, now goes directly into elmah.io.</p>
 <p>A common request is to include all of the HTTP contextual information you usually get logged when using a package like <code>Elmah.Io.AspNetCore</code>. We have developed a specialized NuGet package to include cookies, server variables, etc. when logging through log4net from ASP.NET Core. To set it up, install the <code>Elmah.Io.AspNetCore.Log4Net</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Log4Net -IncludePrerelease
+<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Log4Net
 </code></pre>
 
 <p>Finally, make sure to call the <code>UseElmahIoLog4Net</code> method in the <code>Configure</code> method in the <code>Startup.cs</code> file:</p>
