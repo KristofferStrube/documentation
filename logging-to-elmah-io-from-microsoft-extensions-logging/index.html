@@ -344,6 +344,7 @@
 </ul>
 </li>
 <li><a href="#logging-from-a-console-application">Logging from a console application</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -544,6 +545,21 @@ logger.LogInformation(&quot;This is an information message&quot;);
 <p>Finally, create a new logger and start logging exceptions:</p>
 <pre><code class="csharp">var logger = factory.CreateLogger(&quot;MyLog&quot;);
 logger.LogError(1, ex, &quot;Unexpected error&quot;);
+</code></pre>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong><code>x</code> message(s) dropped because of queue size limit</strong></p>
+<p>If you see this message in your log, it means that you are logging a large number of messages to elmah.io through Microsoft.Extensions.Logging within a short period of time. Either turn down the volume using filters:</p>
+<pre><code class="csharp">logging.AddElmahIo(options =&gt; { ... });
+logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
+</code></pre>
+
+<p>or increase the queue size of <code>Elmah.Io.Extensions.Logging</code>:</p>
+<pre><code class="csharp">logging.AddElmahIo(options =&gt;
+{
+    ...
+    options.BackgroundQueueSize = 5000;
+});
 </code></pre>
 
             <br/>
