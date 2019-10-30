@@ -537,6 +537,10 @@ catch (DivideByZeroException e)
 }
 </code></pre>
 
+<blockquote>
+<p>If using <code>Elmah.Io.AspNetCore.HealthChecks</code> together with <em>Health Checks UI</em> make sure to call <code>AddHealthChecksUI</code> <strong>after</strong> calling <code>AddElmahIoPublisher</code>.</p>
+</blockquote>
+
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
             <p class="text-center">
