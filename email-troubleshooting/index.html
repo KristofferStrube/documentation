@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="ASP.NET Core troubleshooting | elmah.io">
+    <meta name="twitter:title" content="Email troubleshooting | elmah.io">
     
     
-    <meta property="og:title" content="ASP.NET Core troubleshooting | elmah.io">
+    <meta property="og:title" content="Email troubleshooting | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/asp-net-core-troubleshooting/">
+    <meta property="og:url" content="https://docs.elmah.io/email-troubleshooting/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>ASP.NET Core troubleshooting | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/asp-net-core-troubleshooting/">
+    <title>Email troubleshooting | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/email-troubleshooting/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -135,7 +135,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">ASP.NET Core</a>
                 <ul>
                   
@@ -147,7 +147,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-blazor/">Logging from Blazor</a></li>
                   
-                  <li class="active"><a href="./">ASP.NET Core troubleshooting</a></li>
+                  <li ><a href="../asp-net-core-troubleshooting/">ASP.NET Core troubleshooting</a></li>
                   
                 </ul>
               </li>
@@ -280,7 +280,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Everything Else</a>
                 <ul>
                   
@@ -316,7 +316,7 @@
                   
                   <li ><a href="../using-the-rest-api/">Using the REST API</a></li>
                   
-                  <li ><a href="../email-troubleshooting/">Email troubleshooting</a></li>
+                  <li class="active"><a href="./">Email troubleshooting</a></li>
                   
                   <li ><a href="../elmah-and-elmah-io-differences/">ELMAH and elmah.io differences</a></li>
                   
@@ -330,94 +330,33 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="aspnet-core-troubleshooting">ASP.NET Core Troubleshooting</h1>
-<p>So, your ASP.NET Core application doesn't log errors to elmah.io? We are here with a few things to try out.</p>
+            <h1 id="email-troubleshooting">Email troubleshooting</h1>
+<div class="toc">
 <ul>
-<li>Make sure to reference the most recent version of the <a href="https://www.nuget.org/packages/elmah.io.aspnetcore/" target="_blank" rel="noopener noreferrer">Elmah.Io.AspNetCore</a> NuGet package.</li>
-<li>Make sure that the <a href="https://www.nuget.org/packages/Elmah.Io.Client/" target="_blank" rel="noopener noreferrer">Elmah.Io.Client</a> NuGet package is installed and that the major version matches that of <code>Elmah.Io.AspNetCore</code>.</li>
-<li>Make sure that you are calling both the <code>AddElmahIo</code>- and <code>UseElmahIo</code>-methods in the <code>Startup.cs</code> file, as described on <a href="/logging-to-elmah-io-from-aspnet-core/">Logging to elmah.io from ASP.NET Core</a>.</li>
-<li>Make sure that you call the <code>UseElmahIo</code>-method after invoking other <code>Use*</code> methods that in any way inspect exceptions (like <code>UseDeveloperExceptionPage</code> and <code>UseExceptionHandler</code>).</li>
-<li>Make sure that you call the <code>UseElmahIo</code>-method before invoking <code>UseMvc</code>.</li>
-<li>Make sure that your server has an outgoing internet connection and that it can communicate with <code>api.elmah.io</code> on port <code>443</code>. The integration for ASP.NET Core support setting up an HTTP proxy if your server doesn't allow outgoing traffic. Check out <a href="/logging-to-elmah-io-from-aspnet-core/#logging-through-a-proxy">Logging through a proxy</a> for details.</li>
-<li>Make sure that you didn't enable any Ignore filters or set up any Rules with an ignore action on the log in question.</li>
-<li>Make sure that you don't have any code catching all exceptions happening in your system and ignoring them (could be a logging filter, a piece of middleware, or similar).</li>
+<li><a href="#email-troubleshooting">Email troubleshooting</a><ul>
+<li><a href="#emails-on-new-errors-only">Emails on new errors only</a></li>
+<li><a href="#email-bounced">Email bounced</a></li>
+<li><a href="#invalid-email">Invalid email</a></li>
+<li><a href="#check-your-promotional-andor-spam-folder">Check your promotional and/or spam folder</a></li>
 </ul>
-<h2 id="common-problems-and-how-to-fix-them">Common problems and how to fix them</h2>
-<p>Here you will a list of common exceptions and how to solve them.</p>
-<h3 id="invalidoperationexception">InvalidOperationException</h3>
-<p><strong>Exception</strong></p>
-<pre><code>[InvalidOperationException: Unable to resolve service for type 'Elmah.Io.AspNetCore.IBackgroundTaskQueue' while attempting to activate 'Elmah.Io.AspNetCore.ElmahIoMiddleware'.]
-   Microsoft.Extensions.Internal.ActivatorUtilities+ConstructorMatcher.CreateInstance(IServiceProvider provider)
-   Microsoft.AspNetCore.Builder.UseMiddlewareExtensions+&lt;&gt;c__DisplayClass4_0.&lt;UseMiddleware&gt;b__0(RequestDelegate next)
-   Microsoft.AspNetCore.Builder.Internal.ApplicationBuilder.Build()
-   Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+</li>
+</ul>
+</div>
+<p>So, you aren't receiving emails from elmah.io? Here is a collection of things to know/try out.</p>
+<h2 id="emails-on-new-errors-only">Emails on new errors only</h2>
+<p>The most common reason for not receiving emails when errors are logged is that elmah.io only sends the New Error email when an error that we haven't seen before is logged. New errors are marked with a yellow star next to the log message in the UI and can be searched through either search filters or full-text search:</p>
+<pre><code>isNew:true
 </code></pre>
 
-<p><strong>Solution</strong></p>
-<p>You forgot to call the <code>AddElmahIo</code>-method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    ...
-    services.AddElmahIo(o =&gt;
-    {
-        ...
-    });
-    ....
-}
-</code></pre>
-
-<h3 id="argumentexception">ArgumentException</h3>
-<p><strong>Exception</strong></p>
-<pre><code>[ArgumentException: Input an API key Parameter name: apiKey]
-   Elmah.Io.AspNetCore.Extensions.StringExtensions.AssertApiKey(string apiKey)
-   Elmah.Io.AspNetCore.ElmahIoMiddleware..ctor(RequestDelegate next, IBackgroundTaskQueue queue, IOptions&lt;ElmahIoOptions&gt; options)
-   Microsoft.Extensions.Internal.ActivatorUtilities+ConstructorMatcher.CreateInstance(IServiceProvider provider)
-   Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
-   Microsoft.AspNetCore.Builder.UseMiddlewareExtensions+&lt;&gt;c__DisplayClass4_0.&lt;UseMiddleware&gt;b__0(RequestDelegate next)
-   Microsoft.AspNetCore.Builder.Internal.ApplicationBuilder.Build()
-   Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
-</code></pre>
-
-<p><strong>Solution</strong></p>
-<p>You forgot to call the <code>AddElmahIo</code>-method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    ...
-    services.AddElmahIo(o =&gt;
-    {
-        ...
-    });
-    ....
-}
-</code></pre>
-
-<p>or you called <code>AddElmahIo</code> without options and didn't provide these options elsewhere:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    ...
-    services.AddElmahIo();
-    ....
-}
-</code></pre>
-
-<p>Even though you configure elmah.io through <code>appsettings.json</code> you still need to call <code>AddElmahIo</code>. In this case, you can register <code>ElmahIoOptions</code> manually and use the empty <code>AddElmahIo</code> overload:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
-{
-    ...
-    services.Configure&lt;ElmahIoOptions&gt;(Configuration.GetSection(&quot;ElmahIo&quot;));
-    services.AddElmahIo();
-    ....
-}
-</code></pre>
-
-<h3 id="an-error-occurred-while-starting-the-application">An error occurred while starting the application</h3>
-<p>If you see the error <code>An error occurred while starting the application</code> and the exception isn't logged to elmah.io, they error probably happens before hitting the elmah.io middleware. To help find out what is going on, add the following lines to your <code>Program.cs</code> file:</p>
-<pre><code class="csharp">public static IWebHostBuilder CreateWebHostBuilder(string[] args) =&gt;
-    WebHost.CreateDefaultBuilder(args)
-        .UseSetting(WebHostDefaults.DetailedErrorsKey, &quot;true&quot;)
-        .CaptureStartupErrors(true)
-        .UseStartup&lt;Startup&gt;();
-</code></pre>
+<p>The new detection algorithm is implemented by looking at a range of fields like the title, type, and severity. Only severities <code>Error</code> and <code>Fatal</code> marked as <code>isNew</code> trigger an email.</p>
+<h2 id="email-bounced">Email bounced</h2>
+<p>We use AWS to send out all transactional emails from elmah.io. We get a notification from AWS when an email bounces and we stop sending to that email address, even if any new emails wouldn't cause a bounce. Beneath your profile, you will be able to see if your email caused a bounce:</p>
+<p><img alt="Bounced email" src="../images/bounced-email.png" /></p>
+<p>As the error message says, get in contact for us to try and reach the email address again.</p>
+<h2 id="invalid-email">Invalid email</h2>
+<p>Ok, this may seem obvious. But this happens more often than you would think. Typos are a common cause of invalid emails. Specifying a mailing list or group address doesn't always play nice with elmah.io either. For instance, Office 365 distribution groups block external emails as default. The easiest way to check your inputted email address is to send a new message to that address from an external email provider.</p>
+<h2 id="check-your-promotional-andor-spam-folder">Check your promotional and/or spam folder</h2>
+<p>We do a lot to keep our email reputation high. But some email clients may treat similar-looking emails as promotional or spam. Remember to check those folders and mark messages as important if spotting them in the wrong folder.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
