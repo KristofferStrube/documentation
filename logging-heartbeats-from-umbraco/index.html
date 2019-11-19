@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from ASP.NET MVC | elmah.io">
+    <meta name="twitter:title" content="Logging heartbeats from Umbraco | elmah.io">
     
     
-    <meta property="og:title" content="Logging from ASP.NET MVC | elmah.io">
+    <meta property="og:title" content="Logging heartbeats from Umbraco | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-mvc/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-heartbeats-from-umbraco/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from ASP.NET MVC | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-mvc/">
+    <title>Logging heartbeats from Umbraco | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-heartbeats-from-umbraco/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -92,13 +92,13 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">ASP.NET / MVC / Web API</a>
                 <ul>
                   
                   <li ><a href="../logging-to-elmah-io-from-elmah/">Logging from WebForms</a></li>
                   
-                  <li class="active"><a href="./">Logging from ASP.NET MVC</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-aspnet-mvc/">Logging from ASP.NET MVC</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-web-api/">Logging from Web API</a></li>
                   
@@ -271,7 +271,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Heartbeats</a>
                 <ul>
                   
@@ -285,7 +285,7 @@
                   
                   <li ><a href="../logging-heartbeats-from-curl/">Logging heartbeats from cURL</a></li>
                   
-                  <li ><a href="../logging-heartbeats-from-umbraco/">Logging heartbeats from Umbraco</a></li>
+                  <li class="active"><a href="./">Logging heartbeats from Umbraco</a></li>
                   
                 </ul>
               </li>
@@ -349,18 +349,11 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j82k842uc26w2drg?svg=true" /></a>
-<a href="https://www.nuget.org/packages/Elmah.Io.Mvc"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Mvc.svg" /></a>
-<a href="https://github.com/elmahio/elmah.io/tree/master/samples/Elmah.Io.Mvc"><img alt="Samples" src="https://img.shields.io/badge/samples-1-brightgreen.svg" /></a></p>
-<h1 id="logging-to-elmahio-from-aspnet-mvc">Logging to elmah.io from ASP.NET MVC</h1>
-<p>Even though ELMAH works out of the box with ASP.NET MVC, ELMAH and MVC provides some features which interfere with one another. As usual, the great community around ELMAH have done something to fix this, by using the <a href="https://www.nuget.org/packages/Elmah.MVC/">Elmah.Mvc</a> NuGet package. We've built a package for ASP.NET MVC exclusively, which installs all the necessary packages.</p>
-<p>To start logging exceptions from ASP.NET MVC, install the NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Mvc
-</code></pre>
-
-<p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). That's it. Every unhandled exception in ASP.NET MVC, is logged to elmah.io.</p>
-<p>As part of the installation, we also installed <code>Elmah.MVC</code>, which adds some interesting logic around routing and authentication. Take a look in the <code>web.config</code> for application settings with the <code>elmah.mvc.</code> prefix. For documentation about these settings, check out the <a href="https://github.com/alexbeletsky/elmah-mvc">Elmah.MVC project</a> on GitHub.</p>
-<p>Since <code>Elmah.MVC</code> configures its own URL for accessing the ELMAH UI (just <code>/elmah</code> and not <code>/elmah.axd</code>), you can remove the <code>location</code> element in <code>web.config</code>, added by the <code>Elmah.Io.Mvc</code> NuGet package installer.</p>
+            <h1 id="logging-heartbeats-from-umbraco">Logging heartbeats from Umbraco</h1>
+<blockquote>
+<p>The Heartbeats feature is currently in closed beta and highly experimental.</p>
+</blockquote>
+<p>TBC</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

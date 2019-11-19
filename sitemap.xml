@@ -366,6 +366,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://docs.elmah.io/logging-heartbeats-from-umbraco/</loc>
+     <lastmod>2019-11-19</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://docs.elmah.io/setup-deployment-tracking/</loc>
      <lastmod>2019-11-19</lastmod>
      <changefreq>daily</changefreq>
