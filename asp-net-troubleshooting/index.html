@@ -360,9 +360,10 @@
 <li>Make sure that you didn't enable any Ignore filters or set up any Rules with an ignore action on the log in question.</li>
 <li>Make sure that you don't have any code catching all exceptions happening in your system and ignoring them (could be a logging filter or similar).</li>
 <li>If you are using custom errors, make sure to configure it correctly. For more details, check out the following posts: <a href="https://blog.elmah.io/web-config-customerrors-element-with-aspnet-explained/">Web.config customErrors element with ASP.NET explained</a> and <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging" target="_blank" rel="noopener noreferrer">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>.</li>
+<li></li>
 </ul>
-<h2 id="common-exceptions-and-how-to-fix-them">Common exceptions and how to fix them</h2>
-<p>Here you will a list of common exceptions and how to solve them.</p>
+<h2 id="common-errors-and-how-to-fix-them">Common errors and how to fix them</h2>
+<p>Here you will a list of common errors/exceptions and how to solve them.</p>
 <h3 id="typeloadexception">TypeLoadException</h3>
 <p><strong>Exception</strong></p>
 <pre><code>[TypeLoadException: Inheritance security rules violated by type: 'System.Net.Http.WebRequestHandler'. Derived types must either match the security accessibility of the base type or be less accessible.]
@@ -377,6 +378,21 @@
 
 <p><strong>Solution</strong></p>
 <p>This is most likely caused by a problem with the <code>System.Net.Http</code> NuGet package. Make sure to upgrade to the newest version (<code>4.3.4</code> as of writing this). The default template for creating a new web application, installs version <code>4.3.0</code> which is seriously flawed.</p>
+<h3 id="exceptions-arent-logged-to-elmahio-when-adding-the-handleerror-attribute">Exceptions aren't logged to elmah.io when adding the <code>HandleError</code> attribute</h3>
+<p>Much like custom errors, the <code>HandleError</code> attribute can swallow exceptions from your website. This means that ASP.NET MVC catches any exceptions and show the <code>Error.cshtml</code> view. To log exceptions with this setup, you will need to extend your <code>Error.cshtml</code> file:</p>
+<pre><code class="csharp">@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    if (Model.Exception != null)
+    {
+        Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(new Elmah.Error(Model.Exception, HttpContext.Current));
+    }
+}
+
+&lt;div&gt;
+    Your error page content goes here 
+&lt;/div&gt; 
+</code></pre>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
