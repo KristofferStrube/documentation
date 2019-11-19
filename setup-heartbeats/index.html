@@ -356,35 +356,18 @@
 <p>elmah.io Heartbeats complements the Error Logging and Uptime Monitoring features already available on elmah.io. Where Uptime Monitoring is based on us pinging your public HTTP endpoints, Heartbeats is the other way around. When configured, your services, scheduled tasks, and websites ping the elmah.io in a specified interval. We call these ping Heartbeats, hence the name of the feature. Whether you should use Uptime Monitoring or Heartbeats to monitor your code, depends on a range of variables. Uptime Monitoring is great at making sure that your public endpoints can be reached from multiple locations. Scheduled tasks and services typically don't have public endpoints and are expected to run at a specified interval. With Heartbeats, setting up monitoring on this kind of services is extremely easy, since elmah.io will automatically detect when an unhealthy heartbeat is received or if no heartbeat is received.</p>
 <p>To better understand Heartbeats, let's create a simple example. For detailed instructions on how to set up Heartbeats in different languages and frameworks, select one of the specific articles in the left menu.</p>
 <p>In this example, we will extend a C# console application, executed as a Windows Scheduled task, with a heartbeat. The scheduled task is run every 30 minutes.</p>
-<ul>
-<li>Open a log on elmah.io and navigate to the <em>Heartbeats</em> tab.</li>
-</ul>
+<p>Open a log on elmah.io and navigate to the <em>Heartbeats</em> tab:</p>
 <p><img alt="No heartbeats" src="../images/no-heartbeats.png" /></p>
-<ul>
-<li>Click the <em>Add Heartbeat</em> button and fill in a name. For <em>Interval</em> we are selecting 30 minutes since the task is scheduled to run every 30 minutes. For <em>Grace</em>, we select 5 minutes to give the task a chance to complete. Selecting 30 and 5 minutes means that elmah.io will log an error if more than 35 minutes pass since we last heard from the task.</li>
-</ul>
+<p>Click the <em>Add Heartbeat</em> button and fill in a name. For <em>Interval</em> we are selecting 30 minutes since the task is scheduled to run every 30 minutes. For <em>Grace</em>, we select 5 minutes to give the task a chance to complete. Selecting 30 and 5 minutes means that elmah.io will log an error if more than 35 minutes pass since we last heard from the task:</p>
 <p><img alt="Create heartbeat" src="../images/create-heartbeat.png" /></p>
-<ul>
-<li>In order to create heartbeats from our task, we will need an API key, a log ID and a heartbeat ID. Let's start with the API key. Go to the organization settings page and click the <em>API Keys</em> tab. Add a new API key and check the <em>Heartbeats - Write</em> permission only:</li>
-</ul>
+<p>In order to create heartbeats from our task, we will need an API key, a log ID and a heartbeat ID. Let's start with the API key. Go to the organization settings page and click the <em>API Keys</em> tab. Add a new API key and check the <em>Heartbeats - Write</em> permission only:</p>
 <p><img alt="Create Heartbeats API key" src="../images/create-heartbeats-api-key.png" /></p>
-<ul>
-<li>
-<p>Copy and store the API key somewhere.</p>
-</li>
-<li>
-<p>Navigate back to your log and click the <em>Instructions</em> link on the newly created Heartbeat. This will reveal the log ID and heartbeat ID. Copy and store both values since we will need them in a minute.</p>
-</li>
-<li>
+<p>Copy and store the API key somewhere. Navigate back to your log and click the <em>Instructions</em> link on the newly created Heartbeat. This will reveal the log ID and heartbeat ID. Copy and store both values since we will need them in a minute.</p>
 <p>Time to do the integration. Like mentioned before, there are multiple ways of invoking the API. For this example, we'll use C#. Install the <code>Elmah.Io.Client</code> NuGet package:</p>
-</li>
-</ul>
 <pre><code class="ps">Install-Package Elmah.Io.Client -IncludePrerelease
 </code></pre>
 
-<ul>
-<li>Extend your C# with the following code:</li>
-</ul>
+<p>Extend your C# with the following code:</p>
 <pre><code class="csharp">using Elmah.Io.Client;
 using Elmah.Io.Client.Models;
 
@@ -414,10 +397,12 @@ public class Program
 }
 </code></pre>
 
-<p>(Replace <code>API_KEY</code>, <code>HEARTBEAT_ID</code>, and <code>LOG_ID</code> with the values stored in the previous steps)</p>
-<ul>
-<li>When the code runs without throwing an exception, your task now creates a <code>Healthy</code> heartbeat. If an exception occurs, the code creates an <code>Unhealthy</code> heartbeat and uses the exception text as the reason.</li>
-</ul>
+<p>Replace <code>API_KEY</code>, <code>HEARTBEAT_ID</code>, and <code>LOG_ID</code> with the values stored in the previous steps.</p>
+<p>When the code runs without throwing an exception, your task now creates a <code>Healthy</code> heartbeat. If an exception occurs, the code creates an <code>Unhealthy</code> heartbeat and uses the exception text as the reason.</p>
+<h2 id="result-and-reason">Result and Reason</h2>
+<p>The body of the create hearbeat request (or the <code>CreateHeartbeat</code> class when using <code>Elmah.Io.Client</code>) contains two properties as we saw in the example: <code>Result</code> and <code>Reason</code>.</p>
+<p><code>Result</code> is the status of the heartbeat and can take one of the following three values: <code>Healthy</code>, <code>Degraded</code>, or <code>Unhealthy</code>. Depending on the heartbeat status, a log message can be created in the configured log. Log messages are only created on state changes. This means that if logging two <code>Unhealthy</code> requests, only the first request triggers a new error. If logging a <code>Healthy</code> heartbeat after logging an <code>Unhealthy</code> heartbeat, an information message will be logged. Transitioning to <code>Degraded</code> logs a warning.</p>
+<p><code>Reason</code> can be used to specify why a heartbeat check is either <code>Degraded</code> or <code>Unhealthy</code>. If your service throws an exception, the full exception including its stack trace is a good candidate for the <code>Reason</code> property. When using integrations like the one with ASP.NET Core Health Checks, the health check report is used as the reason of the failing heartbeat.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
