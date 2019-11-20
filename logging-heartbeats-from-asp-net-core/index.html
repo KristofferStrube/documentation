@@ -350,6 +350,19 @@
           <div class="main-content-body">
 
             <h1 id="logging-heartbeats-from-aspnet-core">Logging heartbeats from ASP.NET Core</h1>
+<div class="toc">
+<ul>
+<li><a href="#logging-heartbeats-from-aspnet-core">Logging heartbeats from ASP.NET Core</a><ul>
+<li><a href="#additional-options">Additional options</a><ul>
+<li><a href="#application-name">Application name</a></li>
+<li><a href="#calbacks">Calbacks</a></li>
+<li><a href="#period">Period</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <blockquote>
 <p>The Heartbeats feature is currently in closed beta and highly experimental.</p>
 </blockquote>
@@ -370,6 +383,66 @@
 </code></pre>
 
 <p>Replace the variables with the correct values as explained in <a href="/setup-heartbeats/">Set up Heartbeats</a>. Remember to use an API key that includes the <em>Heartbeats - Write</em> permission.</p>
+<h2 id="additional-options">Additional options</h2>
+<h3 id="application-name">Application name</h3>
+<p>Much like the error logging integration with ASP.NET Core, you can set an application name on log messages produced by Heartbeats. To do so, set the <code>Application</code> property when adding the publisher:</p>
+<pre><code class="csharp">services
+    .AddHealthChecks()
+    .AddElmahIoPublisher(options =&gt;
+    {
+        ...
+        options.Application = &quot;My app&quot;;
+    });
+</code></pre>
+
+<p>If <code>Application</code> is not set, log messages will receive a default value of <code>Heartbeats</code> to make the messages distinguable from other messages.</p>
+<h3 id="calbacks">Calbacks</h3>
+<p>The elmah.io publisher offer callbacks already known from <code>Elmah.Io.AspNetCore</code>.</p>
+<p><strong>OnHeartbeat</strong></p>
+<p>The <code>OnHeartbeat</code> callback can be used to set a version number on all log messages produced by a heartbeat and/or trigger your own code every time a heartbeat is logged to elmah.io:</p>
+<pre><code class="csharp">services
+    .AddHealthChecks()
+    .AddElmahIoPublisher(options =&gt;
+    {
+        ...
+        options.OnHeartbeat = hb =&gt;
+        {
+            hb.Version = &quot;1.0.0&quot;;
+        };
+    });
+</code></pre>
+
+<p><strong>OnFilter</strong></p>
+<p>The <code>OnFilter</code> callback can used to ignore one or more heartbeats:</p>
+<pre><code class="csharp">services
+    .AddHealthChecks()
+    .AddElmahIoPublisher(options =&gt;
+    {
+        ...
+        options.OnFilter = hb =&gt;
+        {
+            return hb.Result == &quot;Degraded&quot;;
+        };
+    });
+</code></pre>
+
+<p>The example ignores any <code>Degraded</code> heartbeats.</p>
+<p><strong>OnError</strong></p>
+<p>The <code>OnError</code> callback can be used to listen for errors communicating with the elmah.io API:</p>
+<pre><code class="csharp">services
+    .AddHealthChecks()
+    .AddElmahIoPublisher(options =&gt;
+    {
+        ...
+        options.OnError = (hb, ex) =&gt;
+        {
+            // Do something
+        };
+    });
+</code></pre>
+
+<p>The elmah.io publisher already logs any internal errors through Microsoft.Extensions.Logging, why you don't need to do that in the <code>OnError</code> handler. If you are using another logging framework and don't have that hooked up on Microsoft.Extensions.Logging, the <code>OnError</code> is a good place to add some additional logging.</p>
+<h3 id="period">Period</h3>
 <p>As default, ASP.NET Core runs health checks every 30 seconds when setting up a publisher. To change this interval, add the following code:</p>
 <pre><code class="csharp">services.Configure&lt;HealthCheckPublisherOptions&gt;(options =&gt;
 {
