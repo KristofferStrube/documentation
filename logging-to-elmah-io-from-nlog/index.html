@@ -368,6 +368,7 @@
 <li><a href="#error-filtering">Error filtering</a></li>
 </ul>
 </li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -512,6 +513,17 @@ elmahIoTarget.OnFilter = msg =&gt;
 </code></pre>
 
 <p>The example above ignores any log messages with the word <code>trace</code> in the title.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Here are some things to try out if logging from NLog to elmah.io doesn't work:</p>
+<ul>
+<li>Make sure that you have the newest <code>Elmah.Io.NLog</code> and <code>Elmah.Io.Client</code> packages installed.</li>
+<li>Make sure to include all of the configuration from the example above. That includes both the <code>&lt;extensions&gt;</code>, <code>&lt;targets&gt;</code>, and <code>&lt;rules&gt;</code> element.</li>
+<li>Make sure that the API key is valid and allow the <em>Messages</em> | <em>Write</em> <a href="https://docs.elmah.io/how-to-configure-api-key-permissions/">permission</a>.</li>
+<li>Make sure to include a valid log ID.</li>
+<li>Make sure that you have sufficient log messages in your subscription and that you didn't disable logging to the log or include any ignore filters/rules.</li>
+<li>Always make sure to call <code>LogManager.Shutdown()</code> before existing the application to make sure that all log messages are flushed.</li>
+<li>Extend the <code>nlog</code> element with <code>internalLogLevel="Warn" internalLogFile="c:\temp\nlog-internal.log</code> and inspect that log file for any internal NLog errors.</li>
+</ul>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
