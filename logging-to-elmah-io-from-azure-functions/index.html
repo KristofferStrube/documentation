@@ -365,20 +365,13 @@
 <li><a href="#error-filtering">Error filtering</a></li>
 </ul>
 </li>
-<li><a href="#adding-debug-information-to-error-messages">Adding debug information to error messages</a></li>
+<li><a href="#logging-through-ilogger">Logging through ILogger</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. We've created a client specifically for Azure Functions.
-v1
-<ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="nav-item"><a class="nav-link active" href="#v2" aria-controls="home" role="tab" data-toggle="tab">Azure Functions v2</a></li>
-    <li role="presentation" class="nav-item"><a class="nav-link" href="#v1" aria-controls="home" role="tab" data-toggle="tab">Azure Functions v1</a></li>
-</ul></p>
-<p><div class="tab-content">
-<div role="tabpanel" class="tab-pane active" id="v2">
-Install the newest <code>Elmah.Io.Functions</code> prerelease package in your Azure Functions project:</p>
+<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. We've created a client specifically for Azure Functions.</p>
+<p>Install the newest <code>Elmah.Io.Functions</code> prerelease package in your Azure Functions project:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Functions -IncludePrerelease
 </code></pre>
 
@@ -482,72 +475,50 @@ namespace MyFunction
 </code></pre>
 
 <p>The example above ignores any errors generated during an HTTP <code>GET</code> request.</p>
-<p></div>
-<div role="tabpanel" class="tab-pane" id="v1"></p>
-<blockquote>
-<p>For Functions v1, make sure to install the <code>Microsoft.Azure.WebJobs</code> in minimum version <code>2.2.0</code></p>
-</blockquote>
-<p>Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions project:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions
+<h2 id="logging-through-ilogger">Logging through ILogger</h2>
+<p>Azure Functions can log through Microsoft.Extensions.Logging (MEL) too. By adding the filter, as shown above, all uncaught exceptions are automatically logged. But when configuring your Function app to log through MEL, custom messages can be logged through the <code>ILogger</code> interface. Furthermore, you will get detailed log messages from within the Function host. To set this up, install the <code>Elmah.Io.Extensions.Logging</code> NuGet package:</p>
+<pre><code class="ps">Install-Package Elmah.Io.Extensions.Logging -IncludePrerelease
 </code></pre>
 
-<p>Log all uncaught exceptions using the <code>ElmahIoExceptionFilter</code> attribute:</p>
-<pre><code class="csharp">[ElmahIoExceptionFilter(&quot;API_KEY&quot;, &quot;LOG_ID&quot;)]
-public static class Function1
+<p>Then extend your <code>Startup.cs</code> file like this:</p>
+<pre><code class="csharp">builder.Services.AddLogging(logging =&gt;
 {
-    [FunctionName(&quot;Function1&quot;)]
-    public static void Run([TimerTrigger(&quot;0 */1 * * * *&quot;)]TimerInfo myTimer, TraceWriter log)
+    logging.AddElmahIo(o =&gt;
     {
-        throw new Exception(&quot;Some exception&quot;);
+        o.ApiKey = config[&quot;apiKey&quot;];
+        o.LogId = new Guid(config[&quot;logId&quot;]);
+    });
+    logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
+});
+</code></pre>
+
+<p>In the example, only warning messages and above are logged to elmah.io. You can remove the filter or set another log level if you want to log more.</p>
+<p>Either pass an <code>ILogger</code> to your function method:</p>
+<pre><code class="csharp">public class MyFunction
+{
+    public static void Run([TimerTrigger(&quot;...&quot;)]TimerInfo myTimer, ILogger log)
+    {
+        log.LogWarning(&quot;This is a warning&quot;);
     }
 }
 </code></pre>
 
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID.</p>
-<blockquote>
-<p>If your function method is declared as async, remember to change the return type to <code>Task</code>. Without it, the function host never invoke <code>ElmahIoExceptionFilter</code>.</p>
-</blockquote>
-<p>The filter also supports config variables:</p>
-<pre><code class="csharp">[ElmahIoExceptionFilter(&quot;%apiKey%&quot;, &quot;%logId%&quot;)]
-</code></pre>
-
-<p>The variables above, would require you to add your API key and log ID to your <code>settings.json</code>:</p>
-<pre><code class="json">{
-  &quot;Values&quot;: {
-    &quot;apiKey&quot;: &quot;API_KEY&quot;,
-    &quot;logId&quot;: &quot;LOG_ID&quot;
-  }
-}
-</code></pre>
-
-<h2 id="adding-debug-information-to-error-messages">Adding debug information to error messages</h2>
-<p>When debugging error messages logged from functions, it may be a good help to add information about the context the failing function is executed in. Contextual information isn't available for exception filters, but you can add it by implementing the following class:</p>
-<pre><code class="csharp">public class DebuggingFilter : FunctionInvocationFilterAttribute
+<p>Or inject an <code>ILoggerFactory</code> and create a logger as part of the constructor:</p>
+<pre><code class="csharp">public class MyFunction
 {
-    public override Task OnExecutingAsync(FunctionExecutingContext executingContext, CancellationToken cancellationToken)
+    private readonly ILogger log;
+
+    public Function1(ILoggerFactory loggerFactory)
     {
-        executingContext.Properties.Add(&quot;message&quot;, executingContext.Arguments.First().Value.ToString());
-        executingContext.Properties.Add(&quot;connection&quot;, ConfigurationManager.AppSettings[&quot;connection&quot;]);
-        return base.OnExecutingAsync(executingContext, cancellationToken);
+        this.log = loggerFactory.CreateLogger(&quot;MyFunction&quot;);
+    }
+
+    public void Run([TimerTrigger(&quot;...&quot;)]TimerInfo myTimer)
+    {
+        log.LogWarning(&quot;This is a warning&quot;);
     }
 }
 </code></pre>
-
-<p>In the example, I add two properties (<code>message</code> and <code>connectiction</code>). This is an example only and you will need to add named values matching your setup. Properties added to <code>FunctionExecutingContext</code> are automatically picked up and logged to elmah.io.</p>
-<p>Finally, add <code>DebuggingFilter</code> to your function:</p>
-<pre><code class="csharp">public static class MyFunction
-{
-    [DebuggingFilter]
-    [FunctionName(&quot;MyFunction&quot;)]
-    public static async Task Run(string mySbMsg)
-    {
-        ...
-    }
-}
-</code></pre>
-
-<p></div>
-</div></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
