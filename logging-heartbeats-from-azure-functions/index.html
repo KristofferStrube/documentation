@@ -581,6 +581,16 @@ namespace My.FunctionApp
     }
 </code></pre>
 
+<p>or add the following to <code>local.settings.json</code>:</p>
+<pre><code class="json">{
+  ...
+  &quot;Values&quot;: {
+    &quot;AzureWebJobs.Heartbeat.Disabled&quot;: true,
+    ...
+  }
+}
+</code></pre>
+
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
             <p class="text-center">
