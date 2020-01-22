@@ -356,6 +356,9 @@
             <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-trace"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/n90mht5w7nhrysg3?svg=true" /></a>
 <a href="https://www.nuget.org/packages/Elmah.Io.Trace"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Trace.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-systemdiagnostics">Logging to elmah.io from System.Diagnostics</h1>
+<blockquote>
+<p>Logging through <code>System.Diagnostics</code> has been deprecated. Please use the <code>Elmah.Io.Client</code> package to log trace messages to elmah.io.</p>
+</blockquote>
 <p>.NET comes with its own tracing/logging feature located in the <a href="https://msdn.microsoft.com/en-us/library/gg145030(v=vs.110).aspx">System.Diagnostics namespaces</a>. A core part of <code>System.Diagnostics</code> is the <code>Trace</code> class, but that namespace contains utilities for performance counters, working with the event log and a lot of other features. In this article, we will focus on logging to elmah.io from <code>System.Diagnostics.Trace</code>.</p>
 <p>To start logging, install the <a href="https://www.nuget.org/packages/Elmah.Io.Trace/">Elmah.Io.Trace</a> package:</p>
 <pre><code class="powershell">Install-Package Elmah.Io.Trace
