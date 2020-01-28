@@ -573,7 +573,7 @@ var logger = new LoggerConfiguration()
 </code></pre>
 
 <p>And configure it in C# code:</p>
-<pre><code class="csharp">Logger logger = new LoggerConfiguration()
+<pre><code class="csharp">var logger = new LoggerConfiguration()
     .Enrich.WithExceptionDetails()
     .WriteTo.ElmahIo(...)    
     .CreateLogger();
