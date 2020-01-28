@@ -371,6 +371,7 @@
 </li>
 <li><a href="#aspnet-core">ASP.NET Core</a></li>
 <li><a href="#config-using-appsettingsjson">Config using appsettings.json</a></li>
+<li><a href="#extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -565,6 +566,20 @@ var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)
     .CreateLogger();
 </code></pre>
+
+<h2 id="extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</h2>
+<p>The more information you have on an error, the easier it is to find out what went wrong. Muhammad Rehan Saeed made a nice enrichment package for Serilog named <code>Serilog.Exceptions</code>. The package uses reflection on a logged exception to log additional information depending on the concrete exception type. You can install the package through NuGet:</p>
+<pre><code class="ps">Install-Package Serilog.Exceptions
+</code></pre>
+
+<p>And configure it in C# code:</p>
+<pre><code class="csharp">Logger logger = new LoggerConfiguration()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.ElmahIo(...)    
+    .CreateLogger();
+</code></pre>
+
+<p>The elmah.io sink will automatically pick up the additional information and show them in the extended message details overlay. To navigate to this view, click an error on the search view. Then click the <kbd><span class="fa fa-bars"></span></kbd> button in the upper right corner to open extended message details. The information logged by <code>Serilog.Exceptions</code> are available beneath the <em>Data</em> tab.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
