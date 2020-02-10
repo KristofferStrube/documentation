@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="ELMAH and custom errors | elmah.io">
+    <meta name="twitter:title" content="Roslyn analyzers for elmah.io and ASP.NET Core | elmah.io">
     
     
-    <meta property="og:title" content="ELMAH and custom errors | elmah.io">
+    <meta property="og:title" content="Roslyn analyzers for elmah.io and ASP.NET Core | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/elmah-and-custom-errors/">
+    <meta property="og:url" content="https://docs.elmah.io/roslyn-analyzers-for-elmah-io-and-aspnet-core/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>ELMAH and custom errors | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/elmah-and-custom-errors/">
+    <title>Roslyn analyzers for elmah.io and ASP.NET Core | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/roslyn-analyzers-for-elmah-io-and-aspnet-core/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -92,7 +92,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">ASP.NET / MVC / Web API</a>
                 <ul>
                   
@@ -124,7 +124,7 @@
                   
                   <li ><a href="../specify-api-key-and-log-id-through-appsettings/">Specify API key and log ID through appSettings</a></li>
                   
-                  <li class="active"><a href="./">ELMAH and custom errors</a></li>
+                  <li ><a href="../elmah-and-custom-errors/">ELMAH and custom errors</a></li>
                   
                   <li ><a href="../logging-from-a-custom-http-module/">Logging from a custom HTTP module</a></li>
                   
@@ -135,7 +135,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">ASP.NET Core</a>
                 <ul>
                   
@@ -149,7 +149,7 @@
                   
                   <li ><a href="../using-different-logs-per-environment-in-aspnet-core/">Using different logs per environment in ASP.NET Core</a></li>
                   
-                  <li ><a href="../roslyn-analyzers-for-elmah-io-and-aspnet-core/">Roslyn analyzers for elmah.io and ASP.NET Core</a></li>
+                  <li class="active"><a href="./">Roslyn analyzers for elmah.io and ASP.NET Core</a></li>
                   
                   <li ><a href="../asp-net-core-troubleshooting/">ASP.NET Core troubleshooting</a></li>
                   
@@ -357,28 +357,60 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="elmah-and-custom-errors">ELMAH and custom errors</h1>
-<p>ELMAH and ASP.NET (MVC) custom errors isn't exactly known to be best friends. Question after question have been posted on forums like Stack Overflow, from people having problems with ELMAH, when custom errors are configured. In fact, these problems make perfect sense, since both ELMAH and custom errors are designed to catch errors and do something about them.</p>
-<p>Before looking at some code, we really recommend you to read <a href="https://blog.elmah.io/web-config-customerrors-element-with-aspnet-explained/">Web.config customErrors element with ASP.NET explained</a> and <a href="https://dusted.codes/demystifying-aspnet-mvc-5-error-pages-and-error-logging">Demystifying ASP.NET MVC 5 Error Pages and Error Logging</a>. Together, the posts are a great introduction to different ways of implementing custom error pages in ASP.NET MVC.</p>
-<p>Back to ELMAH. In most implementations of custom error pages, ASP.NET actually swallows any uncaught exceptions, putting ELMAH out of play. To overcome this issue, you can utilize MVC's <code>IExceptionFilter</code> to log all exceptions, whether or not it is handled by a custom error page:</p>
-<pre><code class="csharp">public class ElmahExceptionLogger : IExceptionFilter
+            <h1 id="roslyn-analyzers-for-elmahio-and-aspnet-core">Roslyn analyzers for elmah.io and ASP.NET Core</h1>
+<div class="toc">
+<ul>
+<li><a href="#roslyn-analyzers-for-elmahio-and-aspnet-core">Roslyn analyzers for elmah.io and ASP.NET Core</a><ul>
+<li><a href="#installation-and-usage">Installation and usage</a></li>
+<li><a href="#eio1000-configureservices-must-call-addelmahio">EIO1000 ConfigureServices must call AddElmahIo</a></li>
+<li><a href="#eio1001-configure-must-call-useelmahio">EIO1001 Configure must call UseElmahIo</a></li>
+<li><a href="#eio1002-useelmahio-must-be-called-beforeafter-1">EIO1002 UseElmahIo must be called before/after {1}</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>To help to install elmah.io in ASP.NET Core (by using the <code>Elmah.Io.AspNetCore</code> NuGet package) we have developed a range of Roslyn analyzers. Analyzers run inside Visual Studio and make it possible to validate your <code>Startup.cs</code> file during development.</p>
+<h2 id="installation-and-usage">Installation and usage</h2>
+<p>To install the analyzers, navigate to <em>Extensions</em> | <em>Manage extensions</em> | <em>Online</em> and search for <code>Elmah.Io.AspNetCore.Analyzers</code>. Then click the <em>Download</em> button and restart Visual Studio. As an alternative, you can <a href="https://marketplace.visualstudio.com/items?itemName=elmahio.elmahioaspnetcoreanalyzers">download the extension</a> directly from the Visual Studio Marketplace.</p>
+<p>Once installed, analyzers will help you add or move elmah.io-related set up code:</p>
+<p><img alt="Roslyn analyzers" src="../images/roslyn-analyzers.png" /></p>
+<p>All issues are listed as warnings in the <em>Error list</em> as well. The following is an explanation of possible warnings.</p>
+<h2 id="eio1000-configureservices-must-call-addelmahio">EIO1000 ConfigureServices must call AddElmahIo</h2>
+<p><code>AddElmahIo</code> needs to be added as part of the <code>ConfigureServices</code> method:</p>
+<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
 {
-    public void OnException (ExceptionContext context)
-    {
-        if (context.ExceptionHandled)
-        {
-            ErrorSignal.FromCurrentContext().Raise(context.Exception);
-        }
-    }
- }
+    services.AddElmahIo(...); //👈
+}
 </code></pre>
 
-<p>The <code>OnException</code> method on <code>ElmahExceptionLogger</code> is executed every time an error is happening, by registering it in <code>Application_Start</code>:</p>
-<pre><code class="csharp">protected void Application_Start()
+<h2 id="eio1001-configure-must-call-useelmahio">EIO1001 Configure must call UseElmahIo</h2>
+<p><code>UseElmahIo</code> needs to be added as part of the <code>Configure</code> method:</p>
+<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    ...
-    GlobalConfiguration.Configuration.Filters.Add(new ElmahExceptionLogger());
-    ...
+    app.UseElmahIo(); //👈
+}
+</code></pre>
+
+<h2 id="eio1002-useelmahio-must-be-called-beforeafter-1">EIO1002 UseElmahIo must be called before/after {1}</h2>
+<p><code>UseElmahIo</code> needs to be called after any calls to <code>UseDeveloperExceptionPage</code>, <code>UseExceptionHandler</code>, <code>UseAuthorization</code>, and <code>UseAuthentication</code> but before any calls to <code>UseEndpoints</code> and <code>UseMvc</code>:</p>
+<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        app.UseExceptionHandler(...);
+    }
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseElmahIo(); //👈
+
+    app.UseEndpoints();
+    app.UseMvc(...);
 }
 </code></pre>
 
