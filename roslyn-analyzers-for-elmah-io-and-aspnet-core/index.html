@@ -364,7 +364,7 @@
 <li><a href="#installation-and-usage">Installation and usage</a></li>
 <li><a href="#eio1000-configureservices-must-call-addelmahio">EIO1000 ConfigureServices must call AddElmahIo</a></li>
 <li><a href="#eio1001-configure-must-call-useelmahio">EIO1001 Configure must call UseElmahIo</a></li>
-<li><a href="#eio1002-useelmahio-must-be-called-beforeafter-1">EIO1002 UseElmahIo must be called before/after {1}</a></li>
+<li><a href="#eio1002-useelmahio-must-be-called-beforeafter-use">EIO1002 UseElmahIo must be called before/after Use*</a></li>
 </ul>
 </li>
 </ul>
@@ -391,7 +391,7 @@
 }
 </code></pre>
 
-<h2 id="eio1002-useelmahio-must-be-called-beforeafter-1">EIO1002 UseElmahIo must be called before/after {1}</h2>
+<h2 id="eio1002-useelmahio-must-be-called-beforeafter-use">EIO1002 UseElmahIo must be called before/after Use*</h2>
 <p><code>UseElmahIo</code> needs to be called after any calls to <code>UseDeveloperExceptionPage</code>, <code>UseExceptionHandler</code>, <code>UseAuthorization</code>, and <code>UseAuthentication</code> but before any calls to <code>UseEndpoints</code> and <code>UseMvc</code>:</p>
 <pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
