@@ -416,7 +416,7 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="cdn"></p>
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
-<pre><code class="html">&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.1.1/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+<pre><code class="html">&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.1.3/dist/elmahio.min.js?apiKey=YOUR-API-KEY&amp;logId=YOUR-LOG-ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 </code></pre>
 
 <p></div>
@@ -460,7 +460,7 @@
     ...
     {
       &quot;provider&quot;: &quot;filesystem&quot;,
-      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.1.1/dist/elmahio.min.js&quot;,
+      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.1.3/dist/elmahio.min.js&quot;,
       &quot;destination&quot;: &quot;wwwroot/lib/elmahio&quot;
     }
   ]
@@ -468,7 +468,7 @@
 </code></pre>
 
 <p>or using the LibMan CLI:</p>
-<pre><code class="powershell">libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.1.1/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
+<pre><code class="cmd">libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.1.3/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
 </code></pre>
 
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
