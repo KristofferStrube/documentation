@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from AWS Lambdas | elmah.io">
+    <meta name="twitter:title" content="Logging from a running website on IIS | elmah.io">
     
     
-    <meta property="og:title" content="Logging from AWS Lambdas | elmah.io">
+    <meta property="og:title" content="Logging from a running website on IIS | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-aws-lambdas/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-a-running-website-on-iis/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from AWS Lambdas | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-aws-lambdas/">
+    <title>Logging from a running website on IIS | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-a-running-website-on-iis/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -92,7 +92,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">ASP.NET / MVC / Web API</a>
                 <ul>
                   
@@ -104,7 +104,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-javascript/">Logging from JavaScript</a></li>
                   
-                  <li ><a href="../logging-to-elmah-io-from-a-running-website-on-iis/">Logging from a running website on IIS</a></li>
+                  <li class="active"><a href="./">Logging from a running website on IIS</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-a-running-website-on-azure/">Logging from a running website on Azure</a></li>
                   
@@ -192,7 +192,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Logging from something else</a>
                 <ul>
                   
@@ -212,7 +212,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-aws-beanstalk/">Logging from AWS Beanstalk</a></li>
                   
-                  <li class="active"><a href="./">Logging from AWS Lambdas</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-aws-lambdas/">Logging from AWS Lambdas</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-entity-framework-core/">Logging from Entity Framework Core</a></li>
                   
@@ -359,34 +359,22 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-from-aws-lambdas">Logging from AWS Lambdas</h1>
-<p>Since AWS now supports .NET Core, logging to elmah.io from a lambda is easy.</p>
-<h2 id="logging-to-elmahio-from-aws-serverless-application">Logging to elmah.io from AWS Serverless Application</h2>
-<p>AWS Serverless Applications are running on ASP.NET Core. The configuration therefore matches our documentation for ASP.NET Core. Check out <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/">Logging from ASP.NET Core</a> for details on how to log all uncaught exceptions from an AWS Serverless Application.</p>
-<p>The .NET SDK for AWS comes with native support for logging to CloudWatch. We recommend to use Microsoft.Extensions.Logging for logging everything to CloudWatch and warnings and errors to elmah.io. The configuration follows that of <a href="https://docs.elmah.io/logging-to-elmah-io-from-microsoft-extensions-logging/">Logging from Microsoft.Extensions.Logging</a>.</p>
-<p>AWS Serverless Applications doesn't have a <code>Program.cs</code> file. To configure logging, you will need to modify either <code>LambdaEntryPoint.cs</code>, <code>LocalEntryPoint.cs</code> or both:</p>
-<pre><code class="csharp">public class LambdaEntryPoint : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
-{
-    protected override void Init(IWebHostBuilder builder)
-    {
-        builder
-            .UseStartup&lt;Startup&gt;()
-            .ConfigureLogging((ctx, logging) =&gt;
-            {
-                logging.AddElmahIo(options =&gt;
-                {
-                    options.ApiKey = &quot;API_KEY&quot;;
-                    options.LogId = new Guid(&quot;LOG_ID&quot;);
-                });
-                logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
-            });
-    }
-}
+            <h1 id="logging-to-elmahio-from-a-running-website-on-iis">Logging to elmah.io from a running website on IIS</h1>
+<p>To enable error logging to elmah.io, you usually install one of our client integrations through PowerShell or Visual Studio and deploy a new version of your website to a web server. Sometimes you need to monitor an already running website or don't want logging logic as part of your repository. elmah.io can be added to a running website by following this guide.</p>
+<p>Run the following command somewhere on your computer:</p>
+<pre><code class="ps">nuget install elmah.io
 </code></pre>
 
-<p>The same configuration would go into <code>LocalEntryPoint.cs</code>, if you want to log from localhost as well.</p>
-<h2 id="logging-from-aws-lambda-project">Logging from AWS Lambda Project</h2>
-<p>AWS Lambda Project comes with native support for CloudWatch too. In our experience, it's not possible to configure multiple destinations on <code>LambdaLogger</code>, why you would want to use another framework when logging to elmah.io from an AWS Lambda Project. We recommend using a logging framework like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-microsoft-extensions-logging/">Microsoft.Extensions.Logging</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a> or <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>.</p>
+<p>From the folder where you ran the command, copy the following files to the <code>bin</code> folder of your running website:</p>
+<pre><code>elmah.corelibrary.x.y.z\lib\Elmah.dll
+elmah.io.x.y.z\lib\net45\Elmah.Io.dll
+Elmah.Io.Client.x.y.z\lib\&lt;.net version your website is using&gt;\Elmah.Io.Client.dll
+Microsoft.Rest.ClientRuntime.x.y.z\lib\net452\Microsoft.Rest.ClientRuntime.dll
+Newtonsoft.Json.x.y.z\lib\&lt;.net version your website is using&gt;\Newtonsoft.Json.dll
+</code></pre>
+
+<p>Configure elmah.io in <code>Web.config</code> as described here: <a href="/configure-elmah-io-manually/">Configure elmah.io manually</a> (you don't need to call the <code>Install-Package</code> command).</p>
+<p>If the website doesn't start logging errors to elmah.io, you may need to restart it.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
