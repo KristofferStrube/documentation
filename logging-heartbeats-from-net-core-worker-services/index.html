@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from Serilog | elmah.io">
+    <meta name="twitter:title" content="Logging heartbeats from .NET Core Worker Services | elmah.io">
     
     
-    <meta property="og:title" content="Logging from Serilog | elmah.io">
+    <meta property="og:title" content="Logging heartbeats from .NET Core Worker Services | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-heartbeats-from-net-core-worker-services/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from Serilog | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">
+    <title>Logging heartbeats from .NET Core Worker Services | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-heartbeats-from-net-core-worker-services/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -158,11 +158,11 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Logging Frameworks</a>
                 <ul>
                   
-                  <li class="active"><a href="./">Logging from Serilog</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-serilog/">Logging from Serilog</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-log4net/">Logging from log4net</a></li>
                   
@@ -277,7 +277,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Heartbeats</a>
                 <ul>
                   
@@ -295,7 +295,7 @@
                   
                   <li ><a href="../logging-heartbeats-from-hangfire/">Logging heartbeats from Hangfire</a></li>
                   
-                  <li ><a href="../logging-heartbeats-from-net-core-worker-services/">Logging heartbeats from .NET Core Worker Services</a></li>
+                  <li class="active"><a href="./">Logging heartbeats from .NET Core Worker Services</a></li>
                   
                 </ul>
               </li>
@@ -361,238 +361,74 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <p><a href="https://ci.appveyor.com/project/serilog/serilog-sinks-elmahio/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/j4rsru1m0lhkfwc4/branch/master?svg=true" /></a>
-<a href="https://www.nuget.org/packages/Serilog.Sinks.ElmahIo"><img alt="NuGet" src="https://img.shields.io/nuget/v/Serilog.Sinks.ElmahIo.svg" /></a>
-<a href="https://github.com/serilog/serilog-sinks-elmahio/tree/master/examples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
-<h1 id="logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</h1>
-<div class="toc">
-<ul>
-<li><a href="#logging-to-elmahio-from-serilog">Logging to elmah.io from Serilog</a><ul>
-<li><a href="#logging-custom-properties">Logging custom properties</a></li>
-<li><a href="#message-hooks">Message hooks</a><ul>
-<li><a href="#decorating-log-messages">Decorating log messages</a></li>
-<li><a href="#handle-errors">Handle errors</a></li>
-<li><a href="#error-filtering">Error filtering</a></li>
-</ul>
-</li>
-<li><a href="#aspnet-core">ASP.NET Core</a></li>
-<li><a href="#config-using-appsettingsjson">Config using appsettings.json</a></li>
-<li><a href="#extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Serilog is a great addition to the flowering .NET logging community, described as “A no-nonsense logging library for the NoSQL era” on their project page. Serilog works just like other logging frameworks such as log4net and NLog, but offers a great fluent API and the concept of sinks (a bit like appenders in log4net). Sinks are superior to appenders, because they threat errors as objects rather than strings, a perfect fit for elmah.io which itself is built on NoSQL. Serilog already comes with native support for elmah.io, which makes it easy to integrate with any application using Serilog.</p>
-<p>In this example we’ll use a ASP.NET MVC project as an example. Neither Serilog nor elmah.io are bound to log errors from web applications. Adding this type of logging to your windows and console applications is just as easy. Add the <code>Serilog.Sinks.ElmahIo</code> NuGet package to your project:</p>
-<pre><code class="powershell">Install-Package Serilog.Sinks.ElmahIo
-</code></pre>
-
-<p>To configure Serilog, add the following code to the Application_Start method in global.asax.cs:</p>
-<pre><code class="csharp">var log =
-    new LoggerConfiguration()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)))
-        .CreateLogger();
-Log.Logger = log;
-</code></pre>
-
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>First, we create a new LoggerConfiguration and tell it to write to elmah.io. The log object can be used to log errors and you should register this in your IoC container. In this case, we don’t use IoC, that is why the log object is set as the public static Logger property, which makes it accessible from everywhere.</p>
-<p>To log log exceptions to elmah.io through Serilog, is the <code>Log</code> class provided by Serilog:</p>
-<pre><code class="csharp">try {
-    // Do some stuff which may cause an exception
-}
-catch (Exception e) {
-    Log.Error(e, &quot;The actual error message&quot;);
-}
-</code></pre>
-
-<p>The Error method tells Serilog to log the error in the configured sinks, which in our case logs to elmah.io. Simple and beautiful.</p>
+            <h1 id="logging-heartbeats-from-net-core-worker-services">Logging heartbeats from .NET Core Worker Services</h1>
 <blockquote>
-<p>Always call <code>Log.CloseAndFlush();</code> before your program terminates.</p>
+<p>The Heartbeats feature is currently in beta and still experimental.</p>
 </blockquote>
-<h2 id="logging-custom-properties">Logging custom properties</h2>
-<p>Serilog support logging custom properties in three ways: As part of the log message, through enrichers and using <code>LogContext</code>. All three types of properties are implemented in the elmah.io sink as part of the Data dictionary to elmah.io.</p>
-<p>The following example shows how to log all three types of properties:</p>
-<pre><code class="csharp">var logger =
-    new LoggerConfiguration()
-        .Enrich.WithProperty(&quot;ApplicationIdentifier&quot;, &quot;MyCoolApp&quot;)
-        .Enrich.FromLogContext()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)))
-        .CreateLogger();
+<p>.NET Core offer Worker Services as a way to schedule recurring tasks either hosted inside an ASP.NET Core website or as a Windows Service. Monitoring that Worker Services run successfully, can be easily set up with elmah.io Heartbeats.</p>
+<p>To register heartbeats from a worker service, start by creating a new heartbeat on the elmah.io UI. For this example, we want to monitor that a Service Worker is running every 5 minutes, why we set <em>Interval</em> to 5 minutes and <em>Grace</em> to 1 minute. Next, install the <code>Elmah.Io.Client</code> NuGet package:</p>
+<pre><code class="ps">Install-Package Elmah.Io.Client
+</code></pre>
 
-using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.ManagedThreadId))
+<p>In the <code>Program.cs</code> or <code>Startup.cs</code> file (depending on where you register dependencies), register <code>IHeartbeats</code> from the elmah.io client:</p>
+<pre><code class="csharp">.ConfigureServices((hostContext, services) =&gt;
 {
-    logger.Error(&quot;This is a message with {Type} properties&quot;, &quot;custom&quot;);
-}
+    var elmahIoApi = ElmahioAPI.Create(hostContext.Configuration[&quot;ElmahIo:ApiKey&quot;]);
+    services.AddSingleton(elmahIoApi.Heartbeats);
+    // ...
+    services.AddHostedService&lt;Worker&gt;();
+});
 </code></pre>
 
-<p>Beneath the Data tab on the logged message details, the <code>ApplicationIdentifier</code>, <code>ThreadId</code> and <code>Type</code> properties can be found.</p>
-<p><code>Serilog.Sinks.ElmahIo</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field using structured logging only:</p>
-<pre><code class="csharp">logger.Information(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
-</code></pre>
-
-<p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add two key/value pairs (Quote and User) to the Data tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
-<h2 id="message-hooks">Message hooks</h2>
-<p><code>Serilog.Sinks.ElmahIo</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
-<blockquote>
-<p>Message hooks require <code>Serilog.Sinks.ElmahIo</code> version <code>3.3.0</code> or newer.</p>
-</blockquote>
-<h3 id="decorating-log-messages">Decorating log messages</h3>
-<p>To include additional information on log messages, you can use the OnMessage event when initializing the elmah.io target:</p>
-<pre><code class="csharp">Log.Logger =
-    new LoggerConfiguration()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
-        {
-            OnMessage = msg =&gt;
-            {
-                msg.Version = &quot;1.0.0&quot;;
-            }
-        })
-        .CreateLogger();
-</code></pre>
-
-<p>The example above includes a version number on all errors. Since the elmah.io sink also picks up encrichers specified with Serilog, this example could be implemented by enriching all log messages with a field named <code>version</code>.</p>
-<h3 id="handle-errors">Handle errors</h3>
-<p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io sink:</p>
-<pre><code class="csharp">Log.Logger =
-    new LoggerConfiguration()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
-        {
-            OnError = (msg, ex) =&gt;
-            {
-                Console.Error.WriteLine(ex.Message);
-            }
-        })
-        .CreateLogger();
-</code></pre>
-
-<p>The example implements a callback if logging to elmah.io fails. How you choose to implement this is entirely up to your application and tech stack.</p>
-<h3 id="error-filtering">Error filtering</h3>
-<p>To ignore specific messages based on their content, you can use the OnFilter event when initializing the elmah.io sink:</p>
-<pre><code class="csharp">Log.Logger =
-    new LoggerConfiguration()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
-        {
-            OnFilter = msg =&gt;
-            {
-                return msg.Title.Contains(&quot;trace&quot;);
-            }
-        })
-        .CreateLogger();
-</code></pre>
-
-<p>The example above ignores any log message with the word <code>trace</code> in the title.</p>
-<h2 id="aspnet-core">ASP.NET Core</h2>
-<p>Serilog provides a package for ASP.NET Core, that routes log messages from inside core through Serilog. We recommend to use this package together with the elmah.io sink, in order to capture warnings and errors happening inside ASP.NET Core.</p>
-<p>To use this, install the following packages:</p>
-<pre><code class="powershell">Install-Package Serilog.AspNetCore -DependencyVersion Highest
-Install-Package Serilog.Sinks.ElmahIo
-</code></pre>
-
-<p>Configure Serilog as usual:</p>
-<pre><code class="csharp">public static int Main(string[] args)
+<p>In the example, the configuration should be made available in the <code>appsettings.json</code> file as shown later in this article.</p>
+<p>In the service class (<code>Worker</code>) you can inject the <code>IHeartbeats</code> object, as well as additional configuration needed to create heartbeats:</p>
+<pre><code class="csharp">public class Worker : BackgroundService
 {
-    Log.Logger = new LoggerConfiguration()
-        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
-        {
-            MinimumLogEventLevel = Events.LogEventLevel.Warning
-        })
-        .CreateLogger();
+    private readonly IHeartbeats heartbeats;
+    private readonly Guid logId;
+    private readonly string heartbeatId;
 
-    try
+    public Worker(IHeartbeats heartbeats, IConfiguration configuration)
     {
-        CreateWebHostBuilder(args).Build().Run();
-        return 0;
-    }
-    catch (Exception ex)
-    {
-        Log.Fatal(ex, &quot;Host terminated unexpectedly&quot;);
-        return 1;
-    }
-    finally
-    {
-        Log.CloseAndFlush();
+        this.heartbeats = heartbeats;
+        this.logId = new Guid(configuration[&quot;ElmahIo:LogId&quot;]);
+        this.heartbeatId = configuration[&quot;ElmahIo:HeartbeatId&quot;];
     }
 }
 </code></pre>
 
-<p>Finally, call the <code>UseSerilog</code>-method in <code>BuildWebHost</code>:</p>
-<pre><code class="csharp">public static IWebHost BuildWebHost(string[] args) =&gt;
-    WebHost
-        .CreateDefaultBuilder(args)
-        .UseStartup&lt;Startup&gt;()
-        .UseSerilog();
-</code></pre>
-
-<p>Now, all warnings, errors and fatals happening inside ASP.NET Core are logged to elmah.io.</p>
-<p>A common request is to include all of the HTTP contextual information you usually get logged when using a package like <code>Elmah.Io.AspNetCore</code>. We have developed a specialized NuGet package to include cookies, server variables, etc. when logging through Serilog from ASP.NET Core. To set it up, install the <code>Elmah.Io.AspNetCore.Serilog</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Serilog
-</code></pre>
-
-<p>Then, call the <code>UseElmahIoSerilog</code> method in the <code>Configure</code> method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+<p>Inside the <code>ExecuteAsync</code> method, wrap the worker code in try-catch and call the <code>HealthyAsync</code> method when the worker successfully run and the <code>UnhealthyAsync</code> method when an exception occurs:</p>
+<pre><code class="csharp">protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 {
-    ... // Exception handling middleware
-    app.UseElmahIoSerilog();
-    ... // UseMvc etc.
+    while (!stoppingToken.IsCancellationRequested)
+    {
+        try
+        {
+            // Do work
+
+            await heartbeats.HealthyAsync(logId, heartbeatId);
+        }
+        catch (Exception e)
+        {
+            await heartbeats.UnhealthyAsync(logId, heartbeatId, e.ToString());
+        }
+
+        await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+    }
 }
 </code></pre>
 
-<p>The middleware uses Serilog's <code>LogContext</code> feature to enrich each log message with additional properties. To turn on the log context, extend your Serilog config:</p>
-<pre><code class="csharp">Log.Logger = new LoggerConfiguration()
-    .WriteTo.ElmahIo(...)
-    .Enrich.FromLogContext() // &lt;-- add this line
-    .CreateLogger();
-</code></pre>
-
-<h2 id="config-using-appsettingsjson">Config using appsettings.json</h2>
-<p>While Serilog provides a great fluent C# API, some prefer to configure Serilog using an <code>appsettings.json</code> file. To configure the elmah.io sink this way, you will need to install the <code>Serilog.Settings.Configuration</code> NuGet package. Then configure elmah.io in your <code>appsettings.json</code> file:</p>
+<p>In the <code>appsettings.json</code> file, add the elmah.io configuration:</p>
 <pre><code class="json">{
-    ...
-    &quot;Serilog&quot;:{
-        &quot;Using&quot;:[
-            &quot;Serilog.Sinks.ElmahIo&quot;
-        ],
-        &quot;MinimumLevel&quot;: &quot;Warning&quot;,
-        &quot;WriteTo&quot;:[
-            {
-                &quot;Name&quot;: &quot;ElmahIo&quot;,
-                &quot;Args&quot;:{
-                    &quot;apiKey&quot;: &quot;API_KEY&quot;,
-                    &quot;logId&quot;: &quot;LOG_ID&quot;
-                }
-            }
-        ]
-    }
+  &quot;ElmahIo&quot;: {
+    &quot;ApiKey&quot;: &quot;API_KEY&quot;,
+    &quot;LogId&quot;: &quot;LOG_ID&quot;,
+    &quot;HeartbeatId&quot;: &quot;HEARTBEAT_ID&quot;
+  }
 }
 </code></pre>
 
-<blockquote>
-<p>Make sure to specify the <code>apiKey</code> and <code>logId</code> arguments with the first character in lowercase.</p>
-</blockquote>
-<p>Finally, tell Serilog to read the configuration from the <code>appsettings.json</code> file:</p>
-<pre><code class="csharp">var configuration = new ConfigurationBuilder()
-    .AddJsonFile(&quot;appsettings.json&quot;)
-    .Build();
-
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
-</code></pre>
-
-<h2 id="extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</h2>
-<p>The more information you have on an error, the easier it is to find out what went wrong. Muhammad Rehan Saeed made a nice enrichment package for Serilog named <code>Serilog.Exceptions</code>. The package uses reflection on a logged exception to log additional information depending on the concrete exception type. You can install the package through NuGet:</p>
-<pre><code class="ps">Install-Package Serilog.Exceptions
-</code></pre>
-
-<p>And configure it in C# code:</p>
-<pre><code class="csharp">var logger = new LoggerConfiguration()
-    .Enrich.WithExceptionDetails()
-    .WriteTo.ElmahIo(...)    
-    .CreateLogger();
-</code></pre>
-
-<p>The elmah.io sink will automatically pick up the additional information and show them in the extended message details overlay. To navigate to this view, click an error on the search view. Then click the <kbd><span class="fa fa-bars"></span></kbd> button in the upper right corner to open extended message details. The information logged by <code>Serilog.Exceptions</code> are available beneath the <em>Data</em> tab.</p>
+<p>Replace the values with values found in the elmah.io UI. Remember to enable the <em>Heartbeats</em> | <em>Write</em> permission on the used API key.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
