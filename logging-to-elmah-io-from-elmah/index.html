@@ -372,21 +372,21 @@
 </div>
 
 <p><br/></p>
-<p>Create a new ASP.NET MVC project in Visual Studio (you can choose another web project type if you’d like):</p>
-<p><img alt="Create ASP.NET MVC Website" src="../images/create_aspnetmvc_website.png" /></p>
+<p>Create a new <em>ASP.NET Web Application</em> in Visual Studio :</p>
+<p><img alt="Create ASP.NET Web Application" src="../images/create_aspnetmvc_website.png" /></p>
 <p>Select a project template of your choice:</p>
 <p><img alt="Select Project Template" src="../images/select_project_template.png" /></p>
-<p>Navigate to elmah.io and login using username/password or your favorite social provider. When logged in, elmah.io redirects you to the dashboard. Click on <em>Create new log</em> and name your log:</p>
+<p>Navigate to elmah.io and login using username/password or your favorite social provider. When logged in, elmah.io redirects you to the dashboard. If you just signed up, you will be guided through the process of creating an organization and a log.</p>
 <p><img alt="Create New Log" src="../images/create_new_log.png" /></p>
-<p>When created, elmah.io shows you the install instructions. Don’t pay too much attention to the install steps, because the rest of this tutorial will guide you through the installation. Keep the page open in order to copy your API key and log ID at a later step:</p>
+<p>When the log has been created, elmah.io shows you the install instructions. If you are currently on the dashboard, click the gears icon on the lower right corner of the log box. Don't pay too much attention to the install steps, because the rest of this tutorial will guide you through the installation. Keep the page open in order to copy your API key and log ID at a later step:</p>
 <p><img alt="Copy your log id" src="../images/copy_log_id_dialog.png" /></p>
 <p>Navigate back to your web project, right click <em>References</em> and select <em>Manage NuGet Packages</em>:</p>
 <p><img alt="Open Manage NuGet Packages" src="../images/open_manage_nuget_packages.png" /></p>
 <p>In the NuGet dialog, search for elmah.io:</p>
 <p><img alt="Search for elmah.io" src="../images/search_for_elmah_io.png" /></p>
-<p>Click Install and input your API key and log ID in the dialog appearing during installation of the NuGet package:</p>
+<p>Select the <code>elmah.io</code> package and click <em>Install</em>. Input your API key and log ID in the dialog appearing during installation of the NuGet package:</p>
 <p><img alt="Insert your log id" src="../images/input_log_id.png" /></p>
-<p>You’re ready to rock and roll. Hit F5 and input a URL you know doesn’t exist (like http://localhost:64987/notfound). You should see the standard 404 message displayed in the browser. To verify that the installation of elmah.io is successful, navigate back to the elmah.io dashboard and select the Search tab of your newly created log:</p>
+<p>You’re ready to rock and roll. Hit <kbd>F5</kbd> and input a URL you know doesn’t exist (like http://localhost:64987/notfound). You should see the standard 404 message displayed in the browser. To verify that the installation of elmah.io is successful, navigate back to the elmah.io dashboard and select the Search tab of your newly created log:</p>
 <p><img alt="Error Details" src="../images/error_details.png" /></p>
 <p>See the notfound error? Congrats! Every error on your application is now logged to elmah.io.</p>
 
