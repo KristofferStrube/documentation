@@ -381,8 +381,7 @@
 </div>
 <p>Under the hood, everything related to communicating with elmah.io happens through our REST API. In this article, we will present the possibilities using the API in a use case driven approach. For a details reference of the various endpoints, visit the <a href="https://api.elmah.io/swagger/ui/index">API V3 documentation</a> or the <a href="https://elmah.io/api/v2">API V2 documentation</a>.</p>
 <h2 id="security">Security</h2>
-<p>Security in V3 of our API is implemented using API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). When creating a new organization, a default API key is automatically created:</p>
-<p><img alt="API Keys" src="../images/api-keys.png" /></p>
+<p>Security in V3 of our API is implemented using API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). When creating a new organization, a default API key is automatically created.</p>
 <p>You can create new keys and revoke an existing key, if you suspect that the key has been compromised. The API key acts as a secret and should not be available to people outside your team/organization.</p>
 <p>All requests to the elmah.io API needs the API key as either a HTTP header or query string parameter named <code>api_key</code> like this:</p>
 <pre><code class="bash">GET https://api.elmah.io/v3/messages/LOG_ID?api_key=MY_API_KEY

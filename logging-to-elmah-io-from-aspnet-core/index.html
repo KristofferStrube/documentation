@@ -553,6 +553,9 @@ catch (DivideByZeroException e)
 </code></pre>
 
 <p>In this example, the elmah.io client routes all traffic through <code>http://localhost:8000</code>.</p>
+<blockquote>
+<p>ASP.NET Core 2.1 seems to have some problems when setting up authenticated proxies.</p>
+</blockquote>
 <h2 id="logging-health-check-results">Logging health check results</h2>
 <blockquote>
 <p>The current elmah.io health check publisher will be discontinued. In the future, ASP.NET Core Health Checks will be integrated with elmah.io Heartbeats. Check out <a href="/logging-heartbeats-from-asp-net-core/">Logging heartbeats from ASP.NET Core</a> for details.</p>

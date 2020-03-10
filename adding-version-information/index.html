@@ -416,9 +416,24 @@ log4net.Error(&quot;This is an error message&quot;);
 </code></pre>
 
 <h3 id="using-nlog">Using NLog</h3>
-<p>In progress.</p>
+<p>The elmah.io NLog target can use the <code>OnMessage</code> action:</p>
+<pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
+// ...
+elmahIoTarget.OnMessage = msg =&gt;
+{
+    msg.Version = &quot;1.2.3&quot;;
+};
+</code></pre>
+
 <h3 id="using-serilog">Using Serilog</h3>
-<p>In progress.</p>
+<p>Serilog can decorate all log messages using enrichers:</p>
+<pre><code class="csharp">var logger =
+    new LoggerConfiguration()
+        .Enrich.WithProperty(&quot;version&quot;, &quot;1.2.3&quot;)
+        .Enrich.FromLogContext()
+        .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)))
+        .CreateLogger();
+</code></pre>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

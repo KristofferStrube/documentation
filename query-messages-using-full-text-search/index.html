@@ -389,10 +389,14 @@
 <h2 id="lucene-query-syntax">Lucene Query Syntax</h2>
 <p>Elasticsearch is implemented on top of Lucene; a high-performance search engine, written entirely in Java. While Elasticsearch supports a lot of nice abstractions on top of Lucene, sometime you just want close to the metal. This is when we need to introduce you to Lucene Query Syntax. The query syntax is a query language similar to the <em>WHERE</em> part of a SQL statement. Unlike SQL, the query syntax supports both filters (similar to SQL) and full-text queries.</p>
 <p>Basically all Lucene queries are made up of strings containing one or more terms and operators:</p>
-<pre><code>term AND term OR term
+<pre><code>term AND term OR (term AND NOT term)
 </code></pre>
 
-<p>While <em>AND</em> and <em>OR</em> pretty much speaks for itself, terms needs a bit of explanation. A term can be a single term or a phrase. We've already seen two single terms in the full-text search example. The query in the example corresponds to this Lucene query:</p>
+<p>Instead of <code>AND</code>, <code>OR</code>, and <code>NOT</code> you can use operators known from C#:</p>
+<pre><code class="csharp">term &amp;&amp; term || (term &amp;&amp; !term)
+</code></pre>
+
+<p>While <code>AND</code>, <code>OR</code>, and <code>NOT</code> speaks for itself, terms needs a bit of explanation. A term can be a single term or a phrase. We've already seen two single terms in the full-text search example. The query in the example corresponds to this Lucene query:</p>
 <pre><code>implement AND IController
 </code></pre>
 

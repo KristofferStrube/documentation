@@ -372,7 +372,7 @@
 <li><a href="#using-kudu">Using Kudu</a></li>
 <li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
 <li><a href="#using-azure-devops-releases">Using Azure DevOps Releases</a></li>
-<li><a href="#using-azure-devops-builds">Using Azure DevOps Builds</a></li>
+<li><a href="#using-azure-devops-pipelines">Using Azure DevOps Pipelines</a></li>
 <li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
 <li><a href="#using-bitbucket-pipelines">Using Bitbucket Pipelines</a></li>
 <li><a href="#using-atlassian-bamboo">Using Atlassian Bamboo</a></li>
@@ -519,7 +519,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>That's it! Azure DevOps will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
-<h3 id="using-azure-devops-builds">Using Azure DevOps Builds</h3>
+<h3 id="using-azure-devops-pipelines">Using Azure DevOps Pipelines</h3>
 <p>Notifying elmah.io about new deployments is possible as a build step in Azure DevOps, by adding a bit of PowerShell:</p>
 <ol>
 <li>
