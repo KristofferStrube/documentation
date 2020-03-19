@@ -306,6 +306,22 @@
                   
                   <li class="active"><a href="./">Set up Deployment Tracking</a></li>
                   
+                  <li ><a href="../create-deployments-from-powershell/">Create deployments from PowerShell</a></li>
+                  
+                  <li ><a href="../create-deployments-from-octopus-deploy/">Create deployments from Octopus Deploy</a></li>
+                  
+                  <li ><a href="../create-deployments-from-kudu/">Create deployments from Kudu</a></li>
+                  
+                  <li ><a href="../create-deployments-from-azure-devops-pipelines/">Create deployments from Azure DevOps Pipelines</a></li>
+                  
+                  <li ><a href="../create-deployments-from-azure-devops-releases/">Create deployments from Azure DevOps Releases</a></li>
+                  
+                  <li ><a href="../create-deployments-from-umbraco-cloud/">Create deployments from Umbraco Cloud</a></li>
+                  
+                  <li ><a href="../create-deployments-from-bitbucket-pipelines/">Create deployments from Bitbucket Pipelines</a></li>
+                  
+                  <li ><a href="../create-deployments-from-atlassian-bamboo/">Create deployments from Atlassian Bamboo</a></li>
+                  
                 </ul>
               </li>
               
@@ -366,18 +382,7 @@
 <ul>
 <li><a href="#set-up-deployment-tracking">Set Up Deployment Tracking</a><ul>
 <li><a href="#generate-a-new-api-key">Generate a new API key</a></li>
-<li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a><ul>
-<li><a href="#manually-using-swagger-ui">Manually using Swagger UI</a></li>
-<li><a href="#using-powershell">Using PowerShell</a></li>
-<li><a href="#using-kudu">Using Kudu</a></li>
-<li><a href="#using-octopus-deploy">Using Octopus Deploy</a></li>
-<li><a href="#using-azure-devops-releases">Using Azure DevOps Releases</a></li>
-<li><a href="#using-azure-devops-pipelines">Using Azure DevOps Pipelines</a></li>
-<li><a href="#using-umbraco-cloud">Using Umbraco Cloud</a></li>
-<li><a href="#using-bitbucket-pipelines">Using Bitbucket Pipelines</a></li>
-<li><a href="#using-atlassian-bamboo">Using Atlassian Bamboo</a></li>
-</ul>
-</li>
+<li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a></li>
 <li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
 <li><a href="#versioning-different-services">Versioning Different Services</a></li>
 </ul>
@@ -398,7 +403,6 @@
 <p>Click the save button and copy the API key for later use.</p>
 <h2 id="tell-elmahio-when-you-release">Tell elmah.io when you release</h2>
 <p>When you create a release of your software either manually or with the help from a tool like Octopus, you need to tell elmah.io about it. The <a href="https://api.elmah.io/swagger/ui/index">elmah.io REST API v3</a>, provides an endpoint named <code>deployments</code>, which you can call when creating releases. After calling the endpoint, all new messages to your logs, will automatically be decorated with the most recent version number.</p>
-<h3 id="manually-using-swagger-ui">Manually using Swagger UI</h3>
 <p>If you release your software manually, creating the new release manually is easy using Swagger UI. Swagger UI is a graphical client for calling a Swagger enabled endpoint (much like Postman). Navigate to <a href="https://api.elmah.io/swagger/ui/index">https://api.elmah.io/swagger/ui/index</a>, expand the <em>Deployments</em> node and click the POST request:</p>
 <p><img alt="Deployments POST" src="../images/deployments_post.png" /></p>
 <p>To create the release, input your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) in the top right corner and click the JSON beneath <em>Model Schema</em>. This copies the example JSON to the deployment parameter. A minimal deployment would look like the following, but adding more information makes the experience within elmah.io even better:</p>
@@ -409,245 +413,17 @@
 
 <p>The version string in the example conforms to SemVer, but the content can be anything. The date of the release is automatically added if not specified in the JSON body.</p>
 <p>Click the <em>Try it out!</em> button and the deployment is created.</p>
-<h3 id="using-powershell">Using PowerShell</h3>
-<p>If you release your software using a build or deployment server, creating the new release is easy using a bit of PowerShell. To request the <code>deployments</code> endpoint, write the following PowerShell script:</p>
-<pre><code class="powershell">$version = &quot;1.42.7&quot;
-$ProgressPreference = &quot;SilentlyContinue&quot;
-$url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
-$body = @{
-  version = $version
-}
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.SecurityProtocolType]::Tls12,
-    [Net.SecurityProtocolType]::Tls11,
-    [Net.SecurityProtocolType]::Tls
-Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
-<p>(replace <code>API_KEY</code> with your API key found on your organization settings page)</p>
-<p>In the example, a simple version string is sent to the API and elmah.io will automatically put a timestamp on that. Overriding user information and description, makes the experience within the elmah.io UI better. Pulling release notes and the name and email of the deployer, is usually available through environment variables or similar, depending on the technology used for creating the deployment.</p>
-<h3 id="using-kudu">Using Kudu</h3>
-<p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script by navigating your browser to <code>https://yoursite.scm.azurewebsites.net</code> where <code>yoursite</code> is the name of your Azure website. Click the Debug console and navigate to <code>site\deployments\tools\PostDeploymentActions</code> (create it if it doesn't exist).</p>
-<p>To create the new PowerShell file, write the following in the prompt:</p>
-<pre><code class="shell">touch CreateDeployment.ps1
-</code></pre>
-
-<p>With a post deployment script running inside Kudu, we have the possibility to extract some more information about the current deployment. A full deployment PowerShell script for Kudu, would look like this:</p>
-<pre><code class="powershell">$version = Get-Date -format u
-
-(Get-Content ..\wwwroot\web.config).replace('$version', $version) | Set-Content ..\wwwroot\web.config
-
-$ProgressPreference = &quot;SilentlyContinue&quot;
-
-$commit = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_MESSAGE&quot;);
-$commitId = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_ID&quot;);
-$httpHost = [System.Environment]::GetEnvironmentVariable(&quot;HTTP_HOST&quot;);
-$deployUrl = &quot;https://$httpHost/api/deployments/$commitId&quot;
-
-$username = &quot;MY_USERNAME&quot;
-$password = &quot;MY_PASSWORD&quot;
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f $username,$password)))
-
-$deployInfo = Invoke-RestMethod -Method Get -Uri $deployUrl -Headers @{Authorization=(&quot;Basic {0}&quot; -f $base64AuthInfo)}
-
-$url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
-$body = @{
-  version = $version
-  description = $commit
-  userName = $deployInfo.author
-  userEmail = $deployInfo.author_email
-}
-
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.SecurityProtocolType]::Tls12,
-    [Net.SecurityProtocolType]::Tls11,
-    [Net.SecurityProtocolType]::Tls
-Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
-<p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your organization settings page)</p>
-<p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional information about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
-<h3 id="using-octopus-deploy">Using Octopus Deploy</h3>
-<p>Notifying elmah.io of a new deployment from Octopus Deploy, is supported through a custom step template. To install and configure the template, follow the steps below:</p>
-<ol>
-<li>
-<p>Go to the  <a href="https://library.octopusdeploy.com/step-template/actiontemplate-elmah.io-register-deployment">elmah.io - Register Deployment</a> step template on the Octopus Deploy Library.
-<img alt="Octopus Deploy Library" src="../images/octopus_deploy_library.png" /></p>
-</li>
-<li>
-<p>Click the <em>Copy to clipboard</em> button.</p>
-</li>
-<li>
-<p>Click <em>Library</em> in the header on your Octopus Deploy instance and go to the <em>Step templates</em> tab.</p>
-</li>
-<li>
-<p>Click the <em>Import</em> link and paste the step template copied from the Library. Then click <em>Import</em>.
-<img alt="Add step template to Octopus" src="../images/add_step_template_to_octopus.png" /></p>
-</li>
-<li>
-<p>Go to the Process tab of your project on Octopus Deploy and click the <em>Add step</em> button. The elmah.io step template is available in the bottom of the list.
-<img alt="Add step template to process" src="../images/add_elmah_io_deployment_step.png" /></p>
-</li>
-<li>
-<p>When added to the process, select <em>Octopus Server</em> in <em>Run on</em> and input your API key found on your organization settings page. Optionally input a log ID, to <a href="#versioning-different-services">support multiple services</a>.
-<img alt="Save notification step" src="../images/save_notification_step.png" /></p>
-</li>
-</ol>
-<p>And we're done. On every new deployment, Octopus Deploy will notify elmah.io</p>
-<h3 id="using-azure-devops-releases">Using Azure DevOps Releases</h3>
-<p>If you are using Releases in Azure DevOps, you should use our extension to notify elmah.io about new deployments. To install and configure the extension, follow the simple steps below:</p>
-<ol>
-<li>
-<p>Go to the <a href="https://marketplace.visualstudio.com/items?itemName=elmahio.deploy-tasks">elmah.io Deployment Tasks extension</a> on the Visual Studio Marketplace and click <em>Install</em> (log in if not already).
-<img alt="elmah.io Azure DevOps extension" src="../images/vsts_extension.png" /></p>
-</li>
-<li>
-<p>Select the account to install the extension into and click <em>Confirm</em>:
-<img alt="elmah.io Azure DevOps account" src="../images/vsts_select_account.png" /></p>
-</li>
-<li>
-<p>Go to your Azure DevOps project and edit your Release definition.
-<img alt="Azure DevOps release definition" src="../images/vsts_release_definition.png" /></p>
-</li>
-<li>
-<p>Click <em>Add tasks</em> and locate the elmah.io Deployment Notification task. Click <em>Add</em>.
-<img alt="Add Azure DevOps task" src="../images/vsts_add_task.png" /></p>
-</li>
-<li>
-<p>Copy your API key from your organization settings page and paste it into the <em>API Key</em> field. In most cases, you want to input the ID of the log new deployments belong to. As default, we use the release name on Azure DevOps as the version number string on elmah.io. If you require a custom naming scheme, change the value in the <em>Version</em> field. All <a href="https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/release/variables?view=vsts&amp;tabs=batch">default and custom release variables</a> are available through PowerShell variables. Finally, click <em>Save</em>.
-<img alt="Azure DevOps task added" src="../images/vsts_task_added.png" /></p>
-</li>
-</ol>
-<p>That's it! Azure DevOps will now notify elmah.io every time the release definition is executed. Remember to input a specific log ID as well, if you want to support <a href="#decorate-your-messages-with-a-version-number">versioning different services</a>.</p>
-<h3 id="using-azure-devops-pipelines">Using Azure DevOps Pipelines</h3>
-<p>Notifying elmah.io about new deployments is possible as a build step in Azure DevOps, by adding a bit of PowerShell:</p>
-<ol>
-<li>
-<p>Edit the build definition currently building your project(s).</p>
-</li>
-<li>
-<p>Click the <em>Add task</em> button and locate the <em>PowerShell</em> task. Click <em>Add</em>.
-<img alt="Add PowerShell task" src="../images/add_powershell_task.png" /></p>
-</li>
-<li>
-<p>Fill in the details as shown in the screenshot.
-<img alt="Fill in PowerShell content" src="../images/fill_powershell_task.png" /></p>
-</li>
-</ol>
-<p>... and here's the code from the screenshot above:</p>
-<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
-
-$url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
-$body = @{
-  version = &quot;$env:BUILD_BUILDNUMBER&quot;
-  description = &quot;$env:BUILD_SOURCEVERSIONMESSAGE&quot;
-  userName = &quot;$env:BUILD_REQUESTEDFOR&quot;
-  userEmail = &quot;$env:BUILD_REQUESTEDFOREMAIL&quot;
-  logId = &quot;LOG_ID&quot;
-}
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.SecurityProtocolType]::Tls12,
-    [Net.SecurityProtocolType]::Tls11,
-    [Net.SecurityProtocolType]::Tls
-Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the id of the log representing the application deployed by this build configuration.</p>
-<h3 id="using-umbraco-cloud">Using Umbraco Cloud</h3>
-<p>Umbraco Cloud uses Azure to host Umbraco websites, why supporting deployment tracking pretty much corresponds the steps specified in <a href="#using-kudu">Using Kudu</a>. Navigate to <code>https://your-umbraco-site.scm.s1.umbraco.io</code> where <code>your-umbraco-site</code> is the name of your Umbraco site. Click the Debug console link and navigate to <code>site\deployments\tools\PostDeploymentActions\deploymenthooks</code> (create it if it doesn't exist). Notice the folder <code>deploymenthooks</code>, which is required in order for your scripts to run on Umbraco Cloud.</p>
-<p>Unlike Kudu, Umbraco Cloud only executes <code>cmd</code> and <code>bat</code> files. Create a new <code>cmd</code> file:</p>
-<pre><code class="shell">touch create-deployment.cmd
-</code></pre>
-
-<p>with the following content:</p>
-<pre><code class="shell">echo &quot;Creating elmah.io deployment&quot;
-
-cd %POST_DEPLOYMENT_ACTIONS_DIR%
-
-cd deploymenthooks
-
-powershell -command &quot;. .\create-deployment.ps1&quot;
-</code></pre>
-
-<p>The script executes a PowerShell script, which we will create next:</p>
-<pre><code class="shell">touch create-deployment.ps1
-</code></pre>
-
-<p>The content of the PowerShell script looks a lot like in <a href="#using-kudu">Using Kudu</a>, but with some minor tweaks to support Umbraco Cloud:</p>
-<pre><code class="powershell">$version = Get-Date -format u
-
-$ProgressPreference = &quot;SilentlyContinue&quot;
-
-$commitId = [System.Environment]::GetEnvironmentVariable(&quot;SCM_COMMIT_ID&quot;);
-$deployUrl = &quot;https://your-umbraco-site.scm.s1.umbraco.io/api/deployments/$commitId&quot;
-
-$username = &quot;MY_USERNAME&quot;
-$password = &quot;MY_PASSWORD&quot;
-$logId = &quot;LOG_ID&quot;
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f $username,$password)))
-
-$deployInfo = Invoke-RestMethod -Method Get -Uri $deployUrl -Headers @{Authorization=(&quot;Basic {0}&quot; -f $base64AuthInfo)}
-
-$url = 'https://api.elmah.io/v3/deployments?api_key=API_KEY'
-$body = @{
-  version = $version
-  description = $deployInfo.message
-  userName = $deployInfo.author
-  userEmail = $deployInfo.author_email
-  logId = $logId
-}
-
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.SecurityProtocolType]::Tls12,
-    [Net.SecurityProtocolType]::Tls11,
-    [Net.SecurityProtocolType]::Tls
-Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
-<p>Replace <code>your-umbraco-site</code> with the name of your site, <code>MY_USERNAME</code> with your Umbraco Cloud username, <code>MY_PASSWORD</code> with your Umbraco Cloud password, <code>LOG_ID</code> with the id if the elmah.io log that should contain the deployments (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) and finally <code>API_KEY</code> with your elmah.io API key, found and your organization settings page.</p>
-<p>There you go. When deploying changes to your Umbraco Cloud site, a new deployment is automatically created on elmah.io.</p>
-<h3 id="using-bitbucket-pipelines">Using Bitbucket Pipelines</h3>
-<p>Pipelines uses scripts, embedded in YAML-files, to configure the different steps required to build and deploy software. To notify elmah.io as part of a build/deployment, the first you will need to do, is to add your API key as a secure environment variable. To do so, go to <em>Settings</em> | <em>Pipelines</em> | <em>Environment variables</em> and add a new variable:</p>
-<p><img alt="Add environment variable" src="../images/pipelines_environment_variable.png" /></p>
-<p><a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a></p>
-<p>Then add a new script to your build YAML-file after building and deploying your software:</p>
-<pre><code class="yaml">pipelines:
-  default:
-    - step:
-        script:
-          ...
-          - curl -X POST -d &quot;{\&quot;version\&quot;:\&quot;$BITBUCKET_BUILD_NUMBER\&quot;}&quot; -H &quot;Content-Type:application/json&quot; https://api.elmah.io/v3/deployments?api_key=$ELMAHIO_APIKEY
-</code></pre>
-
-<p>The script uses <code>curl</code> to invoke the elmah.io Deployments endpoint with the API key (<code>$ELMAHIO_APIKEY</code>) and a version number (<code>$BITBUCKET_BUILD_NUMBER</code>). The posted JSON can be extended to support additional properties like changelog and the name of the person triggering the deployment. Check out the <a href="http://api.elmah.io/swagger/ui/index">API documentation</a> for details.</p>
-<h3 id="using-atlassian-bamboo">Using Atlassian Bamboo</h3>
-<p>Setting up elmah.io Deployment Tracking on Bamboo, is easy using a bit of PowerShell.</p>
-<ol>
-<li>
-<p>Add a new Script Task and select <em>Windows PowerShell</em> in <em>Interpreter</em>.</p>
-</li>
-<li>
-<p>Select <em>Inline</em> in <em>Script location</em> and add the following PowerShell to <em>Script body</em>:</p>
-</li>
-</ol>
-<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
-
-Write-Host $bamboo_buildNumber
-
-$url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
-$body = @{
-  version = $Env:bamboo_buildNumber
-  logId = &quot;LOG_ID&quot;
-}
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.SecurityProtocolType]::Tls12,
-    [Net.SecurityProtocolType]::Tls11,
-    [Net.SecurityProtocolType]::Tls
-Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
-<p><img alt="PowerShell task in Bamboo" src="../images/bamboo.png" /></p>
-<p>Replace <code>API_KEY</code> and <code>LOG_ID</code> and everything is configured. The script uses the build number of the current build as version number (<code>$Env:bamboo_buildNumber</code>). If you prefer another scheme, Bamboo offers a range of <a href="https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html" target="_blank" rel="noopener noreferrer">variables</a>.</p>
+<p>We support a range of different integrations to avoid you manually having to use Swagger UI every time you release. Click one of the products below for instructions:</p>
+<ul>
+<li><a href="/create-deployments-from-powershell/">PowerShell</a></li>
+<li><a href="/create-deployments-from-octopus-deploy/">Octopus Deploy</a></li>
+<li><a href="/create-deployments-from-kudu/">Kudu</a></li>
+<li><a href="/create-deployments-from-azure-devops-pipelines/">Azure DevOps Pipelines</a></li>
+<li><a href="/create-deployments-from-azure-devops-releases/">Azure DevOps Releases</a></li>
+<li><a href="/create-deployments-from-umbraco-cloud/">Umbraco Cloud</a></li>
+<li><a href="/create-deployments-from-bitbucket-pipelines/">Bitbucket Pipelines</a></li>
+<li><a href="/create-deployments-from-atlassian-bamboo/">Atlassian Bamboo</a></li>
+</ul>
 <h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
 <p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="https://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
 <h2 id="versioning-different-services">Versioning Different Services</h2>
