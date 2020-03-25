@@ -391,7 +391,10 @@
 <li><a href="#setting-application-name">Setting application name</a></li>
 </ul>
 </li>
-<li><a href="#configuration-in-net-core">Configuration in .NET Core</a></li>
+<li><a href="#configuration-in-net-core">Configuration in .NET Core</a><ul>
+<li><a href="#elmahio-configuration-outside-the-nlog-section">elmah.io configuration outside the NLog section</a></li>
+</ul>
+</li>
 <li><a href="#configuration-in-code">Configuration in code</a></li>
 <li><a href="#logging-custom-properties">Logging custom properties</a></li>
 <li><a href="#message-hooks">Message hooks</a><ul>
@@ -500,6 +503,38 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
 
 <p>Finally, tell NLog how to load the <code>NLog</code> configuration section:</p>
 <pre><code class="csharp">LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
+</code></pre>
+
+<h3 id="elmahio-configuration-outside-the-nlog-section">elmah.io configuration outside the NLog section</h3>
+<p>You might not want the elmah.io API key and log Id inside the <code>NLog</code> section or already have an <code>ElmahIo</code> section defined and want to reuse that. Splitting up configuration like that is supported through NLog layout renderers:</p>
+<pre><code class="json">{
+  &quot;NLog&quot;: {
+    ...
+    &quot;targets&quot;: {
+      &quot;elmahio&quot;: {
+        &quot;type&quot;: &quot;elmah.io&quot;,
+        &quot;apiKey&quot;: &quot;${configsetting:item=ElmahIo.ApiKey}&quot;,
+        &quot;logId&quot;: &quot;${configsetting:item=ElmahIo.LogId}&quot;
+      }
+    },
+    ...
+  },
+  &quot;ElmahIo&quot;: {
+    &quot;ApiKey&quot;: &quot;API_KEY&quot;,
+    &quot;LogId&quot;: &quot;LOG_ID&quot;
+  }
+}
+</code></pre>
+
+<p>Notice how the value of the <code>apiKey</code> and <code>logId</code> parameters have been replaced with <code>${configsetting:item=ElmahIo.*}</code>. In the bottom the <code>ElmahIo</code> section wrap the API key and log Id.</p>
+<p>To make this work, you will need an additional line of C# when setting up NLog logging:</p>
+<pre><code class="csharp">var config = new ConfigurationBuilder()
+    .AddJsonFile(&quot;appsettings.json&quot;, optional: true, reloadOnChange: true)
+    .Build();
+
+ConfigSettingLayoutRenderer.DefaultConfiguration = config; // 👈 add this line
+
+LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
 </code></pre>
 
 <h2 id="configuration-in-code">Configuration in code</h2>
