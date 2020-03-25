@@ -381,14 +381,18 @@
 
             <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-nlog"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/gdgwwlu1j8yh7esl?svg=true" /></a>
 <a href="https://www.nuget.org/packages/elmah.io.nlog"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.nlog.svg" /></a>
-<a href="https://github.com/elmahio/elmah.io.nlog/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
+<a href="https://github.com/elmahio/elmah.io.nlog/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-3-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-nlog">Logging to elmah.io from NLog</h1>
 <div class="toc">
 <ul>
 <li><a href="#logging-to-elmahio-from-nlog">Logging to elmah.io from NLog</a><ul>
+<li><a href="#configuration-in-net">Configuration in .NET</a><ul>
 <li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
 <li><a href="#setting-application-name">Setting application name</a></li>
-<li><a href="#configure-the-elmahio-target-from-code">Configure the elmah.io target from code</a></li>
+</ul>
+</li>
+<li><a href="#configuration-in-net-core">Configuration in .NET Core</a></li>
+<li><a href="#configuration-in-code">Configuration in code</a></li>
 <li><a href="#logging-custom-properties">Logging custom properties</a></li>
 <li><a href="#message-hooks">Message hooks</a><ul>
 <li><a href="#decorating-log-messages">Decorating log messages</a></li>
@@ -407,8 +411,9 @@
 </code></pre>
 
 <blockquote>
-<p>Please don't use NLog <code>4.6.0</code> since that version contains a bug that causes the elmah.io target to not load correctly. <code>4.5.11</code> or <code>4.6.1</code>.</p>
+<p>Please don't use NLog <code>4.6.0</code> since that version contains a bug that causes the elmah.io target to not load correctly. <code>4.5.11</code>, <code>4.6.1</code>, or newer.</p>
 </blockquote>
+<h2 id="configuration-in-net">Configuration in .NET</h2>
 <p>To configure the elmah.io target, add the following configuration to your app.config/web.config/nlog.config depending on what kind of project you’ve created:</p>
 <pre><code class="xml">&lt;extensions&gt;
   &lt;add assembly=&quot;Elmah.Io.NLog&quot;/&gt;
@@ -430,7 +435,7 @@
 log.Error(new Exception(), &quot;This is an error message&quot;);
 </code></pre>
 
-<h2 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h2>
+<h3 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h3>
 <p>If you are already using elmah.io, you may have your API key and log ID in the <code>appSettings</code> element already. To use these settings from withing the NLog target configuration you can use an NLog layout formatter:</p>
 <pre><code class="xml">&lt;targets&gt;
   &lt;target name=&quot;elmahio&quot; type=&quot;elmah.io&quot; apiKey=&quot;${appsetting:item=apiKey}&quot; logId=&quot;${appsetting:item=logId}&quot;/&gt;
@@ -447,7 +452,7 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
 <blockquote>
 <p>The <code>appSettings</code> layout formatter only works when targeting .NET Full Framework and requires <code>Elmah.Io.NLog</code> version 3.3.x or above and <code>NLog</code> version 4.6.x or above.</p>
 </blockquote>
-<h2 id="setting-application-name">Setting application name</h2>
+<h3 id="setting-application-name">Setting application name</h3>
 <p>The application field on elmah.io can be set globally through NLog config:</p>
 <pre><code class="xml">&lt;targets&gt;
   &lt;target name=&quot;elmahio&quot; xsi:type=&quot;elmahio:elmah.io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; application=&quot;APP_NAME&quot; /&gt;
@@ -455,7 +460,49 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
 </code></pre>
 
 <p>Replace <code>APP_NAME</code> with the application you want logged to elmah.io</p>
-<h2 id="configure-the-elmahio-target-from-code">Configure the elmah.io target from code</h2>
+<h2 id="configuration-in-net-core">Configuration in .NET Core</h2>
+<p>.NET Core switched from declaring XML configuration in <code>app/web/nlog.config</code> files to JSON configuration in an <code>appsettings.json</code> file. To configure elmah.io in JSON, install the <code>NLog.Extensions.Logging</code> NuGet package:</p>
+<pre><code class="ps">Install-Package NLog.Extensions.Logging
+</code></pre>
+
+<p>Extend the <code>appsettings.json</code> file with a new <code>NLog</code> section:</p>
+<pre><code class="json">{
+  &quot;NLog&quot;: {
+    &quot;throwConfigExceptions&quot;: true,
+    &quot;extensions&quot;: [
+      { &quot;assembly&quot;: &quot;Elmah.Io.NLog&quot; }
+    ],
+    &quot;targets&quot;: {
+      &quot;elmahio&quot;: {
+        &quot;type&quot;: &quot;elmah.io&quot;,
+        &quot;apiKey&quot;: &quot;API_KEY&quot;,
+        &quot;logId&quot;: &quot;LOG_ID&quot;
+      }
+    },
+    &quot;rules&quot;: [
+      {
+        &quot;logger&quot;: &quot;*&quot;,
+        &quot;minLevel&quot;: &quot;Info&quot;,
+        &quot;writeTo&quot;: &quot;elmahio&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+
+<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+<p>If you haven't already loaded the configuration in your application, make sure to do so:</p>
+<pre><code class="csharp">var config = new ConfigurationBuilder()
+    .AddJsonFile(&quot;appsettings.json&quot;, optional: true, reloadOnChange: true)
+    .Build();
+
+</code></pre>
+
+<p>Finally, tell NLog how to load the <code>NLog</code> configuration section:</p>
+<pre><code class="csharp">LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
+</code></pre>
+
+<h2 id="configuration-in-code">Configuration in code</h2>
 <p>The elmah.io target can be configured from C# code if you prefer or need to access the built-in events (see more later). The following adds logging to elmah.io:</p>
 <pre><code class="csharp">var config = new LoggingConfiguration();
 var elmahIoTarget = new ElmahIoTarget();
