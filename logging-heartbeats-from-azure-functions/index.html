@@ -397,7 +397,7 @@
 <h2 id="using-a-filter-in-elmahiofunctions">Using a filter in Elmah.Io.Functions</h2>
 <p>The easiest way of including a heartbeat is to include the <code>ElmahIoHeartbeatFilter</code> available in the <code>Elmah.Io.Functions</code> package. This will automatically publish a <code>Healthy</code> or <code>Unhealthy</code> heartbeat, depending on if your functions execute successfully. This option is great for timer triggered functions like nightly batch jobs.</p>
 <p>Start by installing the <code>Elmah.Io.Functions</code> package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Functions -IncludePrerelease
+<pre><code class="ps">Install-Package Elmah.Io.Functions
 </code></pre>
 
 <p><code>Elmah.Io.Functions</code> requires dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package, why you will need this package if not already added.</p>
@@ -439,7 +439,7 @@ namespace My.FunctionApp
 <h2 id="manually-using-elmahioclient">Manually using Elmah.Io.Client</h2>
 <p>The example above installs the heartbeat filter for all functions. If you have multiple functions inside your function app, or you want greater control of when and how to send heartbeats, you can use <code>Elmah.Io.Client</code> to create heartbeats.</p>
 <p>Start by installing the <code>Elmah.Io.Client</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Client -IncludePrerelease
+<pre><code class="ps">Install-Package Elmah.Io.Client
 </code></pre>
 
 <p>Extend the <code>Startup.cs</code> file with the following code:</p>
