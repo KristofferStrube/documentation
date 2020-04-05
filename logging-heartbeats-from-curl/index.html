@@ -385,13 +385,12 @@
 </blockquote>
 <p>Sometimes is just easier to use cURL when needing to call a REST API. Creating elmah.io heartbeats is easy using cURL and fits well into scripts, scheduled tasks, and similar.</p>
 <p>To create a new heartbeat, include the following cURL command in your script:</p>
-<pre><code class="bash">curl -X POST &quot;https://api.elmah.io/v3/heartbeats/LOG_ID/HEARTBEAT_ID?api_key=API_KEY&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: application/json-patch+json&quot; -d &quot;{ \&quot;result\&quot;: \&quot;Healthy\&quot;}&quot;
-</code></pre>
-
+<p> <pre><code class=bash>curl -X POST &quot;https://api.elmah.io/v3/heartbeats/LOG_ID/HEARTBEAT_ID?api_key=API_KEY&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: application/json-patch+json&quot; -d &quot;{ \&quot;result\&quot;: \&quot;Healthy\&quot;}&quot;
+</code></pre></p>
 <p>Remember to place <code>LOG_ID</code>, <code>HEARTBEAT_ID</code>, and <code>API_KEY</code> with the values found on the <em>Heartbeats</em> tab in elmah.io.</p>
 <p>To create an <code>Unhealthy</code> heartbeat, change the <code>result</code> in the body and include a <code>reason</code>:</p>
-<pre><code class="bash">curl -X POST &quot;https://api.elmah.io/v3/heartbeats/LOG_ID/HEARTBEAT_ID?api_key=API_KEY&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: application/json-patch+json&quot; -d &quot;{ \&quot;result\&quot;: \&quot;Unhealthy\&quot;, \&quot;reason\&quot;: \&quot;Something isn't working\&quot; }&quot;
-</code></pre>
+<p> <pre><code class=bash>curl -X POST &quot;https://api.elmah.io/v3/heartbeats/LOG_ID/HEARTBEAT_ID?api_key=API_KEY&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: application/json-patch+json&quot; -d &quot;{ \&quot;result\&quot;: \&quot;Unhealthy\&quot;, \&quot;reason\&quot;: \&quot;Something isn't working\&quot; }&quot;
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

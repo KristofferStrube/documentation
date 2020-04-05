@@ -399,18 +399,17 @@
 <p>Adding a version number to every message logged in elmah.io, is easy as 1-2-3. If you're using our API, there's a property named <code>version</code> where you can put the version of your application. Chances are that you are using one of the integrations like ELMAH, log4net or Serilog. In fact, there's multiple ways to send a version number to elmah.io.</p>
 <h3 id="globally-using-elmah">Globally using ELMAH</h3>
 <p>You probably want to attach the same version number on every message logged in elmah.io. The easiest way to achieve that, is to create a global event handler for the OnMessage event, which is triggered every time the elmah.io client logs a message to elmah.io:</p>
-<pre><code class="csharp">Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
+<p> <pre><code class=csharp>Elmah.ErrorLog.GetDefault(null); // Forces creation of logger client
 var logger = ErrorLog.Client;
 logger.OnMessage += (sender, args) =&gt;
 {
     args.Message.Version = &quot;1.2.3&quot;; // Requires elmah.io.core version &gt;= 2.0.26
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the example, the message send off to elmah.io is decorated with the version number <code>1.2.3</code> You will need to replace this with the value of an app setting, the assembly info or whatever strategy you've used to make the version number available to your code.</p>
 <h3 id="trycatch-using-elmah">Try/catch using ELMAH</h3>
 <p>If you're logging errors to elmah.io in catch blocks, logging the version number can be done using a similar approach to the above:</p>
-<pre><code class="csharp">try
+<p> <pre><code class=csharp>try
 {
     CallSomeBusinessLogic(inputValue);
 }
@@ -419,39 +418,35 @@ catch (Exception e)
     e.Data.Add(&quot;X-ELMAHIO-VERSION&quot;, &quot;1.2.3&quot;);
     ErrorSignal.FromCurrentContext().Raise(e);
 }
-</code></pre>
-
+</code></pre></p>
 <p>In this case, the code at this point doesn't know anything about elmah.io. Luckily, there's an alternative to the Version property, by putting a custom element in the Data dictionary on Exception. The exact name of the key must be <code>X-ELMAHIO-VERSION</code> for elmah.io to interpret this as the version number.</p>
 <h3 id="using-log4net">Using log4net</h3>
 <p>log4net supports the concept of customer properties in various ways. Since log4net properties are converted to custom properties in elmah.io, the easiest way to add a version number of every message logged through log4net, is by configuring a global property somewhere in your initialization code:</p>
-<pre><code class="csharp">log4net.GlobalContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
-</code></pre>
-
+<p> <pre><code class=csharp>log4net.GlobalContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
+</code></pre></p>
 <p>The property name is equal to the custom element we used in the last section.</p>
 <p>log4net supports custom properties in the context of a log call as well. To do that, put the <code>X-ELMAHIO-VERSION</code> property in the <code>ThreadContext</code> before logging to log4net:</p>
-<pre><code class="csharp">log4net.ThreadContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
+<p> <pre><code class=csharp>log4net.ThreadContext.Properties[&quot;X-ELMAHIO-VERSION&quot;] = &quot;1.2.3&quot;;
 log4net.Error(&quot;This is an error message&quot;);
-</code></pre>
-
+</code></pre></p>
 <h3 id="using-nlog">Using NLog</h3>
 <p>The elmah.io NLog target can use the <code>OnMessage</code> action:</p>
-<pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
+<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
 // ...
 elmahIoTarget.OnMessage = msg =&gt;
 {
     msg.Version = &quot;1.2.3&quot;;
 };
-</code></pre>
-
+</code></pre></p>
 <h3 id="using-serilog">Using Serilog</h3>
 <p>Serilog can decorate all log messages using enrichers:</p>
-<pre><code class="csharp">var logger =
+<p> <pre><code class=csharp>var logger =
     new LoggerConfiguration()
         .Enrich.WithProperty(&quot;version&quot;, &quot;1.2.3&quot;)
         .Enrich.FromLogContext()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)))
         .CreateLogger();
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

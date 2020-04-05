@@ -402,59 +402,53 @@
 <p>Security in V3 of our API is implemented using API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). When creating a new organization, a default API key is automatically created.</p>
 <p>You can create new keys and revoke an existing key, if you suspect that the key has been compromised. The API key acts as a secret and should not be available to people outside your team/organization.</p>
 <p>All requests to the elmah.io API needs the API key as either a HTTP header or query string parameter named <code>api_key</code> like this:</p>
-<pre><code class="bash">GET https://api.elmah.io/v3/messages/LOG_ID?api_key=MY_API_KEY
-</code></pre>
-
+<p> <pre><code class=bash>GET https://api.elmah.io/v3/messages/LOG_ID?api_key=MY_API_KEY
+</code></pre></p>
 <p>API V2 doesn't require (or support) API keys, why someone could extract information from your log using the log ID only. The log ID is used to tell elmah.io which log to put a new error into, when logged from your application (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). As long as V2 of our API is available, the log ID needs to be kept secret as well.</p>
 <h2 id="messages">Messages</h2>
 <h3 id="creating-messages">Creating messages</h3>
 <p>Before doing anything, we will need some messages to play with. The <code>Create Message</code> endpoint does just that. To create a simple message, POST to:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 POST https://api.elmah.io/v3/messages/LOG_ID
 
 # API V2
 POST https://elmah.io/api/v2/messages?logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>with a JSON body:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
     &quot;title&quot;: &quot;This is a test message&quot;
 }
-</code></pre>
-
+</code></pre></p>
 <p>(replace <code>LOG_ID</code> with your log ID):</p>
 <p>The <code>title</code> field is the only required field on a message, but fields for specifying severity, timestamp etc. are there. For more information, check out the <a href="https://api.elmah.io/swagger/ui/index">documentation</a>.</p>
 <p>If everything where successful, the API returns a HTTP status code of <code>201</code> and a location to where to fetch the new message. If the endpoint fails, the response will contain a description of what went wrong. Forgetting to set <code>Content-Length</code>, <code>Content-Type</code> and similar, will result in an invalid request.</p>
 <h3 id="getting-a-message">Getting a message</h3>
 <p>In the example above, the API returned the URL for getting the newly created message:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 GET https://api.elmah.io/v3/messages/LOG_ID/81C7C282C9FDAEA3
 
 # API V2
 GET https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>By making a GET request to this URL, we get back the message details:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;id&quot;: &quot;99CDEA3D6A631F09&quot;,
   &quot;title&quot;: &quot;This is a test message&quot;,
   &quot;dateTime&quot;: &quot;2016-07-03T14:25:46.087857Z&quot;,
   &quot;severity&quot;: &quot;Information&quot;
 }
-</code></pre>
-
+</code></pre></p>
 <p>As shown in the returned body, elmah.io automatically inserted some missing fields like a timestamp and a severity. If no severity is specified during creating, a message is threated as information.</p>
 <h3 id="searching-messages">Searching messages</h3>
 <p>For the demo, we have inserted a couple of additional messages, which leads us to the next endpoint: searching messages. The search endpoint shares the root path with the get message endpoint, but only take a log ID. The simplest possible configuration, queries the API for a list of the 15 most recent messages by calling:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 GET https://api.elmah.io/v3/messages/LOG_ID
 
 # API V2
 GET https://elmah.io/api/v2/messages?logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>The response body looks like this:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;messages&quot;: [
     {
       &quot;id&quot;: &quot;81C7C282C9FDAEA3&quot;,
@@ -468,23 +462,21 @@ GET https://elmah.io/api/v2/messages?logid=LOG_ID
       &quot;dateTime&quot;: &quot;2016-07-03T14:25:46.087857Z&quot;,
       &quot;severity&quot;: &quot;Information&quot;
     },
-    ...
+    // ...
   ],
   &quot;total&quot;: 42
 }
-</code></pre>
-
+</code></pre></p>
 <p>For simplicity, the response has been simplified by not showing all of the results. The important thing to notice here, is the list of <code>messages</code> and the <code>total</code> count. <code>messages</code> contain 15 messages, which is the default page size in the search endpoint. To increase the number of returned messages, set the <code>pagesize</code> parameter in the URL (max 100 messages per request). The <code>total</code> count tells you, if there are more messages matching your search. To select messages from the next page, use the <code>pageindex</code> parameter.</p>
 <p>Returning all messages may be fine, but being able to search by terms is even more fun. To search, use the <code>query</code>, <code>from</code> and <code>to</code> parameters as shown here:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 GET https://api.elmah.io/v3/messages/LOG_ID?query=another
 
 # API V2
 GET https://elmah.io/api/v2/messages?logid=LOG_ID?query=another
-</code></pre>
-
+</code></pre></p>
 <p>Searching for <code>another</code> will return the following response:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;messages&quot;: [
     {
       &quot;id&quot;: &quot;81C7C282C9FDAEA3&quot;,
@@ -495,45 +487,40 @@ GET https://elmah.io/api/v2/messages?logid=LOG_ID?query=another
   ],
   &quot;total&quot;: 1
 }
-</code></pre>
-
+</code></pre></p>
 <p>Now only <code>81C7C282C9FDAEA3</code> shows up, since that message contains the text <code>another</code> in the <code>title</code> field. Like specifying the <code>query</code> parameter, you can limit the number of messages using the <code>from</code>, <code>to</code> and <code>pagesize</code> parameters.</p>
 <h3 id="deleting-a-message">Deleting a message</h3>
 <p>When fixing the bug causing an error logged at elmah.io, you may want to delete the error. Deleting a single error is as easy as fetching it. Create a DELETE request to the errors unique URL:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 DELETE https://api.elmah.io/v3/messages/LOG_ID/81C7C282C9FDAEA3
 
 # API V2
 DELETE https://elmah.io/api/v2/messages?id=81C7C282C9FDAEA3&amp;logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>When successfully deleted, the delete endpoint returns a HTTP status code of <code>200</code>.</p>
 <h3 id="deleting-messages">Deleting messages</h3>
 <p>Deleting messages one by one can be tedious work. To delete multiple errors, you can utilize the Delete Messages endpoint by creating a DELETE request to:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 DELETE https://api.elmah.io/v3/messages/LOG_ID
 
 # API V2
 DELETE https://elmah.io/api/v2/messages?logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>The request <strong>must</strong> contain a body with at least a query:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
     &quot;query&quot;: &quot;test&quot;
 }
-</code></pre>
-
+</code></pre></p>
 <p>An option for deleting messages by date range is available as well. Check out the API documentation for details.</p>
 <h3 id="hiding-a-message">Hiding a message</h3>
 <p>Depending on your use case, you may want to hide a message, rather than deleting it. Hidden messages are not shown as default through neither the UI, nor the REST API. But you will be able to search for them by enabling the <code>Hidden</code> checkbox on the UI.</p>
 <p>To hide a message, use the <code>_hide</code> endpoints like this:</p>
-<pre><code class="bash"># API V3
+<p> <pre><code class=bash># API V3
 POST https://api.elmah.io/v3/messages/LOG_ID/99CDEA3D6A631F09/_hide
 
 # API V2
 POST https://elmah.io/api/v2/messages/_hide?id=99CDEA3D6A631F09&amp;logid=LOG_ID
-</code></pre>
-
+</code></pre></p>
 <p>If successful, the endpoint returns a HTTP status code of <code>200</code>.</p>
 
             <br/>

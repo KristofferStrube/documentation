@@ -400,11 +400,14 @@
 </blockquote>
 <p>ASP.NET Core offers a feature called Health Checks from version 2.2 and forward. For more information about health checks, check out our blog post: <a href="https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/">ASP.NET Core 2.2 Health Checks Explained</a>. The Heartbeats feature on elmah.io support health checks too, by publishing health check results as heartbeats.</p>
 <p>To publish health checks as elmah.io heartbeats, install the <code>Elmah.Io.AspNetCore.HealthChecks</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.HealthChecks
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.AspNetCore.HealthChecks
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.AspNetCore.HealthChecks
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.AspNetCore.HealthChecks&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.AspNetCore.HealthChecks
+</code></pre></div></div></div>
 
 <p>Then configure the elmah.io health check publisher:</p>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher(options =&gt;
     {
@@ -412,27 +415,25 @@
         options.LogId = new Guid(&quot;LOG_ID&quot;);
         options.HeartbeatId = &quot;HEARTBEAT_ID&quot;;
     });
-</code></pre>
-
+</code></pre></p>
 <p>Replace the variables with the correct values as explained in <a href="/setup-heartbeats/">Set up Heartbeats</a>. Remember to use an API key that includes the <em>Heartbeats - Write</em> permission.</p>
 <h2 id="additional-options">Additional options</h2>
 <h3 id="application-name">Application name</h3>
 <p>Much like the error logging integration with ASP.NET Core, you can set an application name on log messages produced by Heartbeats. To do so, set the <code>Application</code> property when adding the publisher:</p>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher(options =&gt;
     {
         ...
         options.Application = &quot;My app&quot;;
     });
-</code></pre>
-
+</code></pre></p>
 <p>If <code>Application</code> is not set, log messages will receive a default value of <code>Heartbeats</code> to make the messages distinguable from other messages.</p>
 <h3 id="callbacks">Callbacks</h3>
 <p>The elmah.io publisher offer callbacks already known from <code>Elmah.Io.AspNetCore</code>.</p>
 <p><strong>OnHeartbeat</strong></p>
 <p>The <code>OnHeartbeat</code> callback can be used to set a version number on all log messages produced by a heartbeat and/or trigger your own code every time a heartbeat is logged to elmah.io:</p>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher(options =&gt;
     {
@@ -442,11 +443,10 @@
             hb.Version = &quot;1.0.0&quot;;
         };
     });
-</code></pre>
-
+</code></pre></p>
 <p><strong>OnFilter</strong></p>
 <p>The <code>OnFilter</code> callback can used to ignore one or more heartbeats:</p>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher(options =&gt;
     {
@@ -456,12 +456,11 @@
             return hb.Result == &quot;Degraded&quot;;
         };
     });
-</code></pre>
-
+</code></pre></p>
 <p>The example ignores any <code>Degraded</code> heartbeats.</p>
 <p><strong>OnError</strong></p>
 <p>The <code>OnError</code> callback can be used to listen for errors communicating with the elmah.io API:</p>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher(options =&gt;
     {
@@ -471,34 +470,30 @@
             // Do something
         };
     });
-</code></pre>
-
+</code></pre></p>
 <p>The elmah.io publisher already logs any internal errors through Microsoft.Extensions.Logging, why you don't need to do that in the <code>OnError</code> handler. If you are using another logging framework and don't have that hooked up on Microsoft.Extensions.Logging, the <code>OnError</code> is a good place to add some additional logging.</p>
 <h3 id="period">Period</h3>
 <p>As default, ASP.NET Core runs health checks every 30 seconds when setting up a publisher. To change this interval, add the following code:</p>
-<pre><code class="csharp">services.Configure&lt;HealthCheckPublisherOptions&gt;(options =&gt;
+<p> <pre><code class=csharp>services.Configure&lt;HealthCheckPublisherOptions&gt;(options =&gt;
 {
     options.Period = TimeSpan.FromMinutes(5);
 });
-</code></pre>
-
+</code></pre></p>
 <p>There's a bug in ASP.NET Core 2.2 that requires you to use reflection when setting <code>Period</code>:</p>
-<pre><code class="csharp">services.Configure&lt;HealthCheckPublisherOptions&gt;(options =&gt;
+<p> <pre><code class=csharp>services.Configure&lt;HealthCheckPublisherOptions&gt;(options =&gt;
 {
     var prop = options.GetType().GetField(&quot;_period&quot;, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
     prop.SetValue(options, TimeSpan.FromMinutes(5));
 });
-</code></pre>
-
+</code></pre></p>
 <p>If setting <code>Period</code> to 5 minutes, you should set the heartbeat interval on elmah.io to 5 minutes and grace to 1 minute.</p>
 <h2 id="ignoring-heartbeats-on-localhost-staging-etc">Ignoring heartbeats on localhost, staging, etc.</h2>
 <p>Monitoring hearbeats is important in your production environment. When running locally or even on staging, you probably don't want to monitor heartbeats. ASP.NET Core health checks doesn't seem to support a great deal of configuration through <code>appsettings.json</code>, Azure app settings, etc. The easiest way to tell ASP.NET Core to log heartbeats to elmah.io, is to avoid setting up health checks unless a heartbeat id is configured:</p>
-<pre><code class="csharp">if (!string.IsNullOrWhiteSpace(Configuration[&quot;ElmahIo:HeartbeatId&quot;]))
+<p> <pre><code class=csharp>if (!string.IsNullOrWhiteSpace(Configuration[&quot;ElmahIo:HeartbeatId&quot;]))
 {
     services.AddHealthChecks().AddElmahIoPublisher();
 }
-</code></pre>
-
+</code></pre></p>
 <p>In this example, we only configure health checks and the elmah.io publisher if the <code>ElmahIo:HeartbeatId</code> setting is defined in config.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Here's a list of things to check for if no heartbeats are registered:</p>
@@ -506,23 +501,22 @@
 <li>Did you include both <code>API_KEY</code>, <code>LOG_ID</code>, and <code>HEARTBEAT_ID</code>?</li>
 <li>The publisher needs to be called before the <code>AddElmahIo</code> call from <code>Elmah.Io.AspNetCore</code>:</li>
 </ul>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher();
 
 services.AddElmahIo();
-</code></pre>
-
+</code></pre></p>
 <ul>
 <li>If you are using Health Checks UI, it needs to be configured after the <code>AddElmahIoPublisher</code>-method:</li>
 </ul>
-<pre><code class="csharp">services
+<p> <pre><code class=csharp>services
     .AddHealthChecks()
     .AddElmahIoPublisher();
 
 service
     .AddHealthChecksUI();
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

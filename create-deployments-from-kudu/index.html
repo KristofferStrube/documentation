@@ -382,11 +382,10 @@
             <h1 id="create-deployments-from-kudu">Create deployments from Kudu</h1>
 <p>Kudu is the engine behind Git deployments on Microsoft Azure. To create a new elmah.io deployment every time you deploy a new app service to Azure, add a new post deployment script by navigating your browser to <code>https://yoursite.scm.azurewebsites.net</code> where <code>yoursite</code> is the name of your Azure website. Click the Debug console and navigate to <code>site\deployments\tools\PostDeploymentActions</code> (create it if it doesn't exist).</p>
 <p>To create the new PowerShell file, write the following in the prompt:</p>
-<pre><code class="shell">touch CreateDeployment.ps1
-</code></pre>
-
+<p> <pre><code class=shell>touch CreateDeployment.ps1
+</code></pre></p>
 <p>With a post deployment script running inside Kudu, we have the possibility to extract some more information about the current deployment. A full deployment PowerShell script for Kudu, would look like this:</p>
-<pre><code class="powershell">$version = Get-Date -format u
+<p> <pre><code class=powershell>$version = Get-Date -format u
 
 (Get-Content ..\wwwroot\web.config).replace('$version', $version) | Set-Content ..\wwwroot\web.config
 
@@ -416,8 +415,7 @@ $body = @{
     [Net.SecurityProtocolType]::Tls11,
     [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
+</code></pre></p>
 <p>(replace <code>MY_USERNAME</code> and <code>MY_PASSWORD</code> with your Azure deployment credentials and <code>API_KEY</code> with your elmah.io API key located on your organization settings page)</p>
 <p>The script generates a new version string from the current date and time. How you want your version string looking, is really up to you. To fetch additional information about the deployment, the Kudu <code>deployments</code> endpoint is requested with the current commit id. Finally, the script creates the deployment using the elmah.io REST API.</p>
 

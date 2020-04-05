@@ -383,14 +383,16 @@
 <blockquote>
 <p>Please notice that we currently support server-side Blazor only. When client-side Blazor is officially released, we will make sure to follow along.</p>
 </blockquote>
-<p>To start logging to elmah.io from Blazor, install the following NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Extensions.Logging
-</code></pre>
+<p>To start logging to elmah.io from Blazor, install the <code>Elmah.Io.Extensions.Logging</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Extensions.Logging&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Extensions.Logging
+</code></pre></div></div></div>
 
 <p>In the <code>Startup.cs</code> file, add elmah.io logging configuration:</p>
-<pre><code class="csharp">using Microsoft.Extensions.DependencyInjection;
+<p> <pre><code class=csharp>using Microsoft.Extensions.DependencyInjection;
 using Elmah.Io.Extensions.Logging;
-...
 
 namespace MyBlazorApp
 {
@@ -407,17 +409,16 @@ namespace MyBlazorApp
             );
         }
 
-        ...
+        // ...
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>Exceptions can be logged manually, by injecting an <code>ILogger</code> into your view and adding <code>try/catch</code>:</p>
-<pre><code class="csharp">@using Microsoft.Extensions.Logging
+<p> <pre><code class=csharp>@using Microsoft.Extensions.Logging
 @inject ILogger&lt;FetchData&gt; logger
 
-...
+&lt;!-- ... --&gt;
 
 @functions {
     WeatherForecast[] forecasts;
@@ -434,13 +435,12 @@ namespace MyBlazorApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p><code>Information</code> and other severities can be logged as well:</p>
-<pre><code class="csharp">@using Microsoft.Extensions.Logging
+<p> <pre><code class=csharp>@using Microsoft.Extensions.Logging
 @inject ILogger&lt;Counter&gt; logger
 
-...
+&lt;!-- ... --&gt;
 
 @functions {
     int currentCount = 0;
@@ -451,7 +451,7 @@ namespace MyBlazorApp
         logger.LogInformation(&quot;Incremented count to {currentCount}&quot;, currentCount);
     }
 }
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

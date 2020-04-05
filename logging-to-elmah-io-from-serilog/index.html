@@ -402,28 +402,29 @@
 </div>
 <p>Serilog is a great addition to the flowering .NET logging community, described as “A no-nonsense logging library for the NoSQL era” on their project page. Serilog works just like other logging frameworks such as log4net and NLog, but offers a great fluent API and the concept of sinks (a bit like appenders in log4net). Sinks are superior to appenders, because they threat errors as objects rather than strings, a perfect fit for elmah.io which itself is built on NoSQL. Serilog already comes with native support for elmah.io, which makes it easy to integrate with any application using Serilog.</p>
 <p>In this example we’ll use a ASP.NET MVC project as an example. Neither Serilog nor elmah.io are bound to log errors from web applications. Adding this type of logging to your windows and console applications is just as easy. Add the <code>Serilog.Sinks.ElmahIo</code> NuGet package to your project:</p>
-<pre><code class="powershell">Install-Package Serilog.Sinks.ElmahIo
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Serilog.Sinks.ElmahIo
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Serilog.Sinks.ElmahIo
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Serilog.Sinks.ElmahIo&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Serilog.Sinks.ElmahIo
+</code></pre></div></div></div>
 
 <p>To configure Serilog, add the following code to the Application_Start method in global.asax.cs:</p>
-<pre><code class="csharp">var log =
+<p> <pre><code class=csharp>var log =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)))
         .CreateLogger();
 Log.Logger = log;
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>First, we create a new LoggerConfiguration and tell it to write to elmah.io. The log object can be used to log errors and you should register this in your IoC container. In this case, we don’t use IoC, that is why the log object is set as the public static Logger property, which makes it accessible from everywhere.</p>
 <p>To log log exceptions to elmah.io through Serilog, is the <code>Log</code> class provided by Serilog:</p>
-<pre><code class="csharp">try {
+<p> <pre><code class=csharp>try {
     // Do some stuff which may cause an exception
 }
 catch (Exception e) {
     Log.Error(e, &quot;The actual error message&quot;);
 }
-</code></pre>
-
+</code></pre></p>
 <p>The Error method tells Serilog to log the error in the configured sinks, which in our case logs to elmah.io. Simple and beautiful.</p>
 <blockquote>
 <p>Always call <code>Log.CloseAndFlush();</code> before your program terminates.</p>
@@ -431,7 +432,7 @@ catch (Exception e) {
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>Serilog support logging custom properties in three ways: As part of the log message, through enrichers and using <code>LogContext</code>. All three types of properties are implemented in the elmah.io sink as part of the Data dictionary to elmah.io.</p>
 <p>The following example shows how to log all three types of properties:</p>
-<pre><code class="csharp">var logger =
+<p> <pre><code class=csharp>var logger =
     new LoggerConfiguration()
         .Enrich.WithProperty(&quot;ApplicationIdentifier&quot;, &quot;MyCoolApp&quot;)
         .Enrich.FromLogContext()
@@ -442,13 +443,11 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 {
     logger.Error(&quot;This is a message with {Type} properties&quot;, &quot;custom&quot;);
 }
-</code></pre>
-
+</code></pre></p>
 <p>Beneath the Data tab on the logged message details, the <code>ApplicationIdentifier</code>, <code>ThreadId</code> and <code>Type</code> properties can be found.</p>
 <p><code>Serilog.Sinks.ElmahIo</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the User field using structured logging only:</p>
-<pre><code class="csharp">logger.Information(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
-</code></pre>
-
+<p> <pre><code class=csharp>logger.Information(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;Arnold Schwarzenegger&quot;);
+</code></pre></p>
 <p>This will fill in the value <code>Arnold Schwarzenegger</code> in the <code>User</code> field, as well as add two key/value pairs (Quote and User) to the Data tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 <h2 id="message-hooks">Message hooks</h2>
 <p><code>Serilog.Sinks.ElmahIo</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
@@ -457,7 +456,7 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
 </blockquote>
 <h3 id="decorating-log-messages">Decorating log messages</h3>
 <p>To include additional information on log messages, you can use the OnMessage event when initializing the elmah.io target:</p>
-<pre><code class="csharp">Log.Logger =
+<p> <pre><code class=csharp>Log.Logger =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
         {
@@ -467,12 +466,11 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
             }
         })
         .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <p>The example above includes a version number on all errors. Since the elmah.io sink also picks up encrichers specified with Serilog, this example could be implemented by enriching all log messages with a field named <code>version</code>.</p>
 <h3 id="handle-errors">Handle errors</h3>
 <p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io sink:</p>
-<pre><code class="csharp">Log.Logger =
+<p> <pre><code class=csharp>Log.Logger =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
         {
@@ -482,12 +480,11 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
             }
         })
         .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <p>The example implements a callback if logging to elmah.io fails. How you choose to implement this is entirely up to your application and tech stack.</p>
 <h3 id="error-filtering">Error filtering</h3>
 <p>To ignore specific messages based on their content, you can use the OnFilter event when initializing the elmah.io sink:</p>
-<pre><code class="csharp">Log.Logger =
+<p> <pre><code class=csharp>Log.Logger =
     new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
         {
@@ -497,18 +494,23 @@ using (LogContext.PushProperty(&quot;ThreadId&quot;, Thread.CurrentThread.Manage
             }
         })
         .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <p>The example above ignores any log message with the word <code>trace</code> in the title.</p>
 <h2 id="aspnet-core">ASP.NET Core</h2>
 <p>Serilog provides a package for ASP.NET Core, that routes log messages from inside core through Serilog. We recommend to use this package together with the elmah.io sink, in order to capture warnings and errors happening inside ASP.NET Core.</p>
 <p>To use this, install the following packages:</p>
-<pre><code class="powershell">Install-Package Serilog.AspNetCore -DependencyVersion Highest
+<div class=md-fenced-code-tabs id=tab-tab-group-8><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-8-0_powershell-panel role=tab id=tab-group-8-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-8-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-1_cmd-panel role=tab id=tab-group-8-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-8-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-2_xml-panel role=tab id=tab-group-8-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-3_xml-panel role=tab id=tab-group-8-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-8-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-8-0_powershell-tab><pre><code class=powershell>Install-Package Serilog.AspNetCore
 Install-Package Serilog.Sinks.ElmahIo
-</code></pre>
+</code></pre></div><div id=tab-group-8-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-1_cmd-tab><pre><code class=cmd>dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.ElmahIo
+</code></pre></div><div id=tab-group-8-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Serilog.AspNetCore&quot; Version=&quot;3.*&quot; /&gt;
+&lt;PackageReference Include=&quot;Serilog.Sinks.ElmahIo&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-8-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-3_xml-tab><pre><code class=xml>paket add Serilog.AspNetCore
+paket add Serilog.Sinks.ElmahIo
+</code></pre></div></div></div>
 
 <p>Configure Serilog as usual:</p>
-<pre><code class="csharp">public static int Main(string[] args)
+<p> <pre><code class=csharp>public static int Main(string[] args)
 {
     Log.Logger = new LoggerConfiguration()
         .WriteTo.ElmahIo(new ElmahIoSinkOptions(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;))
@@ -532,41 +534,40 @@ Install-Package Serilog.Sinks.ElmahIo
         Log.CloseAndFlush();
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Finally, call the <code>UseSerilog</code>-method in <code>BuildWebHost</code>:</p>
-<pre><code class="csharp">public static IWebHost BuildWebHost(string[] args) =&gt;
+<p> <pre><code class=csharp>public static IWebHost BuildWebHost(string[] args) =&gt;
     WebHost
         .CreateDefaultBuilder(args)
         .UseStartup&lt;Startup&gt;()
         .UseSerilog();
-</code></pre>
-
+</code></pre></p>
 <p>Now, all warnings, errors and fatals happening inside ASP.NET Core are logged to elmah.io.</p>
 <p>A common request is to include all of the HTTP contextual information you usually get logged when using a package like <code>Elmah.Io.AspNetCore</code>. We have developed a specialized NuGet package to include cookies, server variables, etc. when logging through Serilog from ASP.NET Core. To set it up, install the <code>Elmah.Io.AspNetCore.Serilog</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.AspNetCore.Serilog
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-11><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-11-0_powershell-panel role=tab id=tab-group-11-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-11-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-11-1_cmd-panel role=tab id=tab-group-11-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-11-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-11-2_xml-panel role=tab id=tab-group-11-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-11-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-11-3_xml-panel role=tab id=tab-group-11-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-11-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-11-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-11-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.AspNetCore.Serilog
+</code></pre></div><div id=tab-group-11-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-11-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.AspNetCore.Serilog
+</code></pre></div><div id=tab-group-11-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-11-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.AspNetCore.Serilog&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-11-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-11-3_xml-tab><pre><code class=xml>paket add Elmah.Io.AspNetCore.Serilog
+</code></pre></div></div></div>
 
 <p>Then, call the <code>UseElmahIoSerilog</code> method in the <code>Configure</code> method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+<p> <pre><code class=csharp>public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 {
-    ... // Exception handling middleware
+    // ... Exception handling middleware
     app.UseElmahIoSerilog();
-    ... // UseMvc etc.
+    // ... UseMvc etc.
 }
-</code></pre>
-
+</code></pre></p>
 <p>The middleware uses Serilog's <code>LogContext</code> feature to enrich each log message with additional properties. To turn on the log context, extend your Serilog config:</p>
-<pre><code class="csharp">Log.Logger = new LoggerConfiguration()
-    .WriteTo.ElmahIo(...)
+<p> <pre><code class=csharp>Log.Logger = new LoggerConfiguration()
+    .WriteTo.ElmahIo(/*...*/)
     .Enrich.FromLogContext() // &lt;-- add this line
     .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <h2 id="config-using-appsettingsjson">Config using appsettings.json</h2>
 <p>While Serilog provides a great fluent C# API, some prefer to configure Serilog using an <code>appsettings.json</code> file. To configure the elmah.io sink this way, you will need to install the <code>Serilog.Settings.Configuration</code> NuGet package. Then configure elmah.io in your <code>appsettings.json</code> file:</p>
-<pre><code class="json">{
-    ...
+<p> <pre><code class=json>{
+    // ...
     &quot;Serilog&quot;:{
         &quot;Using&quot;:[
             &quot;Serilog.Sinks.ElmahIo&quot;
@@ -583,33 +584,33 @@ Install-Package Serilog.Sinks.ElmahIo
         ]
     }
 }
-</code></pre>
-
+</code></pre></p>
 <blockquote>
 <p>Make sure to specify the <code>apiKey</code> and <code>logId</code> arguments with the first character in lowercase.</p>
 </blockquote>
 <p>Finally, tell Serilog to read the configuration from the <code>appsettings.json</code> file:</p>
-<pre><code class="csharp">var configuration = new ConfigurationBuilder()
+<p> <pre><code class=csharp>var configuration = new ConfigurationBuilder()
     .AddJsonFile(&quot;appsettings.json&quot;)
     .Build();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)
     .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <h2 id="extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</h2>
 <p>The more information you have on an error, the easier it is to find out what went wrong. Muhammad Rehan Saeed made a nice enrichment package for Serilog named <code>Serilog.Exceptions</code>. The package uses reflection on a logged exception to log additional information depending on the concrete exception type. You can install the package through NuGet:</p>
-<pre><code class="ps">Install-Package Serilog.Exceptions
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-16><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-16-0_powershell-panel role=tab id=tab-group-16-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-16-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-16-1_cmd-panel role=tab id=tab-group-16-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-16-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-16-2_xml-panel role=tab id=tab-group-16-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-16-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-16-3_xml-panel role=tab id=tab-group-16-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-16-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-16-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-16-0_powershell-tab><pre><code class=powershell>Install-Package Serilog.Exceptions
+</code></pre></div><div id=tab-group-16-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-16-1_cmd-tab><pre><code class=cmd>dotnet add package Serilog.Exceptions
+</code></pre></div><div id=tab-group-16-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-16-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Serilog.Exceptions&quot; Version=&quot;5.*&quot; /&gt;
+</code></pre></div><div id=tab-group-16-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-16-3_xml-tab><pre><code class=xml>paket add Serilog.Exceptions
+</code></pre></div></div></div>
 
 <p>And configure it in C# code:</p>
-<pre><code class="csharp">var logger = new LoggerConfiguration()
+<p> <pre><code class=csharp>var logger = new LoggerConfiguration()
     .Enrich.WithExceptionDetails()
-    .WriteTo.ElmahIo(...)    
+    .WriteTo.ElmahIo(/*...*/)    
     .CreateLogger();
-</code></pre>
-
+</code></pre></p>
 <p>The elmah.io sink will automatically pick up the additional information and show them in the extended message details overlay. To navigate to this view, click an error on the search view. Then click the <kbd><span class="fa fa-bars"></span></kbd> button in the upper right corner to open extended message details. The information logged by <code>Serilog.Exceptions</code> are available beneath the <em>Data</em> tab.</p>
 
             <br/>

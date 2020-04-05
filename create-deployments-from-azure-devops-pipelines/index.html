@@ -408,7 +408,7 @@
 <p>Select the <em>Inline</em> radio button and input the following script:</p>
 </li>
 </ol>
-<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
+<p> <pre><code class=powershell>$ProgressPreference = &quot;SilentlyContinue&quot;
 
 $url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
 $body = @{
@@ -423,8 +423,7 @@ $body = @{
     [Net.SecurityProtocolType]::Tls11,
     [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the id of the log representing the application deployed by this build configuration.</p>
 <p>Click the <em>Add</em> button and the new task will be added to your YAML definition. You typically want to move the deployment task to the last placement in <em>tasks</em>.</p>
 <h2 id="using-classic-editor">Using Classic editor</h2>
@@ -442,7 +441,7 @@ Invoke-RestMethod -Method Post -Uri $url -Body $body
 </li>
 </ol>
 <p>... and here's the code from the screenshot above:</p>
-<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
+<p> <pre><code class=powershell>$ProgressPreference = &quot;SilentlyContinue&quot;
 
 $url = &quot;https://api.elmah.io/v3/deployments?api_key=API_KEY&quot;
 $body = @{
@@ -457,8 +456,7 @@ $body = @{
     [Net.SecurityProtocolType]::Tls11,
     [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with the id of the log representing the application deployed by this build configuration.</p>
 
             <br/>

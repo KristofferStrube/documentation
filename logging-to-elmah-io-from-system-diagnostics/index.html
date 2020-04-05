@@ -386,28 +386,29 @@
 <p>Logging through <code>System.Diagnostics</code> has been deprecated. Please use the <code>Elmah.Io.Client</code> package to log trace messages to elmah.io.</p>
 </blockquote>
 <p>.NET comes with its own tracing/logging feature located in the <a href="https://msdn.microsoft.com/en-us/library/gg145030(v=vs.110).aspx">System.Diagnostics namespaces</a>. A core part of <code>System.Diagnostics</code> is the <code>Trace</code> class, but that namespace contains utilities for performance counters, working with the event log and a lot of other features. In this article, we will focus on logging to elmah.io from <code>System.Diagnostics.Trace</code>.</p>
-<p>To start logging, install the <a href="https://www.nuget.org/packages/Elmah.Io.Trace/">Elmah.Io.Trace</a> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Trace
-</code></pre>
+<p>To start logging, install the <code>Elmah.Io.Trace</code> package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Trace
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Trace
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Trace&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Trace
+</code></pre></div></div></div>
 
 <p>As default, <code>Trace</code> logs to the Win32 OutputDebugString function, but it is possible to log to multiple targets (like appenders in log4net). To do so, tell <code>Trace</code> about elmah.io:</p>
-<pre><code class="csharp">System.Diagnostics.Trace.Listeners.Add(
+<p> <pre><code class=csharp>System.Diagnostics.Trace.Listeners.Add(
     new ElmahIoTraceListener(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;)));
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log id (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>To start logging, call the <code>Trace</code> API:</p>
-<pre><code class="csharp">try
+<p> <pre><code class=csharp>try
 {
     System.DIagnostics.Trace.Write(&quot;Starting something dangerous&quot;);
-    ...
+    // ...
 }
 catch (Exception e)
 {
     System.Diagnostics.Trace.Fail(e.Message, e.ToString());
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the example, we write an information message with the message <code>Starting something dangerous</code> and logs any thrown exception to elmah.io.</p>
 
             <br/>

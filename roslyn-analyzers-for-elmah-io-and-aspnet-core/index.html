@@ -399,23 +399,21 @@
 <p>All issues are listed as warnings in the <em>Error list</em> as well. The following is an explanation of possible warnings.</p>
 <h2 id="eio1000-configureservices-must-call-addelmahio">EIO1000 ConfigureServices must call AddElmahIo</h2>
 <p><code>AddElmahIo</code> needs to be added as part of the <code>ConfigureServices</code> method:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+<p> <pre><code class=csharp>public void ConfigureServices(IServiceCollection services)
 {
-    services.AddElmahIo(...); //👈
+    services.AddElmahIo(/*...*/); //👈
 }
-</code></pre>
-
+</code></pre></p>
 <h2 id="eio1001-configure-must-call-useelmahio">EIO1001 Configure must call UseElmahIo</h2>
 <p><code>UseElmahIo</code> needs to be added as part of the <code>Configure</code> method:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+<p> <pre><code class=csharp>public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
     app.UseElmahIo(); //👈
 }
-</code></pre>
-
+</code></pre></p>
 <h2 id="eio1002-useelmahio-must-be-called-beforeafter-use">EIO1002 UseElmahIo must be called before/after Use*</h2>
 <p><code>UseElmahIo</code> needs to be called after any calls to <code>UseDeveloperExceptionPage</code>, <code>UseExceptionHandler</code>, <code>UseAuthorization</code>, and <code>UseAuthentication</code> but before any calls to <code>UseEndpoints</code> and <code>UseMvc</code>:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+<p> <pre><code class=csharp>public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
     if (env.IsDevelopment())
     {
@@ -423,7 +421,7 @@
     }
     else
     {
-        app.UseExceptionHandler(...);
+        app.UseExceptionHandler(/*...*/);
     }
 
     app.UseAuthentication();
@@ -432,9 +430,9 @@
     app.UseElmahIo(); //👈
 
     app.UseEndpoints();
-    app.UseMvc(...);
+    app.UseMvc(/*...*/);
 }
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

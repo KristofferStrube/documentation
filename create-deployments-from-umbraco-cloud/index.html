@@ -382,25 +382,22 @@
             <h1 id="create-deployments-from-umbraco-cloud">Create deployments from Umbraco Cloud</h1>
 <p>Umbraco Cloud uses Azure to host Umbraco websites, why supporting deployment tracking pretty much corresponds the steps specified in <a href="#using-kudu">Using Kudu</a>. Navigate to <code>https://your-umbraco-site.scm.s1.umbraco.io</code> where <code>your-umbraco-site</code> is the name of your Umbraco site. Click the Debug console link and navigate to <code>site\deployments\tools\PostDeploymentActions\deploymenthooks</code> (create it if it doesn't exist). Notice the folder <code>deploymenthooks</code>, which is required in order for your scripts to run on Umbraco Cloud.</p>
 <p>Unlike Kudu, Umbraco Cloud only executes <code>cmd</code> and <code>bat</code> files. Create a new <code>cmd</code> file:</p>
-<pre><code class="shell">touch create-deployment.cmd
-</code></pre>
-
+<p> <pre><code class=shell>touch create-deployment.cmd
+</code></pre></p>
 <p>with the following content:</p>
-<pre><code class="shell">echo &quot;Creating elmah.io deployment&quot;
+<p> <pre><code class=shell>echo &quot;Creating elmah.io deployment&quot;
 
 cd %POST_DEPLOYMENT_ACTIONS_DIR%
 
 cd deploymenthooks
 
 powershell -command &quot;. .\create-deployment.ps1&quot;
-</code></pre>
-
+</code></pre></p>
 <p>The script executes a PowerShell script, which we will create next:</p>
-<pre><code class="shell">touch create-deployment.ps1
-</code></pre>
-
+<p> <pre><code class=shell>touch create-deployment.ps1
+</code></pre></p>
 <p>The content of the PowerShell script looks a lot like in <a href="#using-kudu">Using Kudu</a>, but with some minor tweaks to support Umbraco Cloud:</p>
-<pre><code class="powershell">$version = Get-Date -format u
+<p> <pre><code class=powershell>$version = Get-Date -format u
 
 $ProgressPreference = &quot;SilentlyContinue&quot;
 
@@ -428,8 +425,7 @@ $body = @{
     [Net.SecurityProtocolType]::Tls11,
     [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>your-umbraco-site</code> with the name of your site, <code>MY_USERNAME</code> with your Umbraco Cloud username, <code>MY_PASSWORD</code> with your Umbraco Cloud password, <code>LOG_ID</code> with the id if the elmah.io log that should contain the deployments (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) and finally <code>API_KEY</code> with your elmah.io API key, found and your organization settings page.</p>
 <p>There you go. When deploying changes to your Umbraco Cloud site, a new deployment is automatically created on elmah.io.</p>
 

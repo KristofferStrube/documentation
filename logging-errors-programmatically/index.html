@@ -382,7 +382,7 @@
             <h1 id="logging-errors-programmatically">Logging errors programmatically</h1>
 <p>So you’ve setup a shiny new ELMAH log and all of your un-handled errors are logged to ELMAH. Now you’re wondering: “How do I log my handled errors to ELMAH programmatically?”</p>
 <p>You are in luck! ELMAH provides a nice API to do just that through error signaling. Consider the following code:</p>
-<pre><code class="csharp">try
+<p> <pre><code class=csharp>try
 {
     int i = 0;
     int result = 42 / i;
@@ -391,10 +391,9 @@ catch (DivideByZeroException e)
 {
     // What to do?
 }
-</code></pre>
-
+</code></pre></p>
 <p>Obviously an exception is thrown when trying to divide by zero, but what if we want to catch (and log) that exception instead of throwing it back through the call stack? With ELMAH’s <code>ErrorSignal</code> class we can log the error:</p>
-<pre><code class="csharp">try
+<p> <pre><code class=csharp>try
 {
     int i = 0;
     int result = 42 / i;
@@ -403,13 +402,11 @@ catch (DivideByZeroException e)
 {
     ErrorSignal.FromCurrentContext().Raise(e);
 }
-</code></pre>
-
+</code></pre></p>
 <p>We call the static method <code>FromCurrentContext</code> on the <code>ErrorSignal</code> class, which returns a new object for doing the actual logging. Logging happens through the Raise method, which logs the exception to the configured ELMAH storage endpoint.</p>
 <p>In the example above, I use the <code>FromCurrentContext</code> helper to create a new instance of <code>ErrorSignal</code>. ELMAH also works outside the context of a webserver and in this case, you would simply use the default logger with <code>null</code> as the http context:</p>
-<pre><code class="csharp">ErrorLog.GetDefault(null).Log(new Error(e));
-</code></pre>
-
+<p> <pre><code class=csharp>ErrorLog.GetDefault(null).Log(new Error(e));
+</code></pre></p>
 <p>If you simply want to log text messages and don't need all of the HTTP context information, consider using one of our integrations for popular logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a> or <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>. Also, the <a href="https://www.nuget.org/packages/Elmah.Io.Client/">Elmah.Io.Client</a> package contains a logging API <a href="https://github.com/elmahio/Elmah.Io.Client">documented here</a>.</p>
 
             <br/>

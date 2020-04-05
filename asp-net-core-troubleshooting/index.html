@@ -405,29 +405,27 @@
 <p>Here you will a list of common exceptions and how to solve them.</p>
 <h3 id="invalidoperationexception">InvalidOperationException</h3>
 <p><strong>Exception</strong></p>
-<pre><code>[InvalidOperationException: Unable to resolve service for type 'Elmah.Io.AspNetCore.IBackgroundTaskQueue' while attempting to activate 'Elmah.Io.AspNetCore.ElmahIoMiddleware'.]
+<p> <pre><code class>[InvalidOperationException: Unable to resolve service for type 'Elmah.Io.AspNetCore.IBackgroundTaskQueue' while attempting to activate 'Elmah.Io.AspNetCore.ElmahIoMiddleware'.]
    Microsoft.Extensions.Internal.ActivatorUtilities+ConstructorMatcher.CreateInstance(IServiceProvider provider)
    Microsoft.AspNetCore.Builder.UseMiddlewareExtensions+&lt;&gt;c__DisplayClass4_0.&lt;UseMiddleware&gt;b__0(RequestDelegate next)
    Microsoft.AspNetCore.Builder.Internal.ApplicationBuilder.Build()
    Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
-</code></pre>
-
+</code></pre></p>
 <p><strong>Solution</strong></p>
 <p>You forgot to call the <code>AddElmahIo</code>-method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+<p> <pre><code class=csharp>public void ConfigureServices(IServiceCollection services)
 {
-    ...
+    // ...
     services.AddElmahIo(o =&gt;
     {
-        ...
+        // ...
     });
-    ....
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <h3 id="argumentexception">ArgumentException</h3>
 <p><strong>Exception</strong></p>
-<pre><code>[ArgumentException: Input an API key Parameter name: apiKey]
+<p> <pre><code class>[ArgumentException: Input an API key Parameter name: apiKey]
    Elmah.Io.AspNetCore.Extensions.StringExtensions.AssertApiKey(string apiKey)
    Elmah.Io.AspNetCore.ElmahIoMiddleware..ctor(RequestDelegate next, IBackgroundTaskQueue queue, IOptions&lt;ElmahIoOptions&gt; options)
    Microsoft.Extensions.Internal.ActivatorUtilities+ConstructorMatcher.CreateInstance(IServiceProvider provider)
@@ -435,48 +433,44 @@
    Microsoft.AspNetCore.Builder.UseMiddlewareExtensions+&lt;&gt;c__DisplayClass4_0.&lt;UseMiddleware&gt;b__0(RequestDelegate next)
    Microsoft.AspNetCore.Builder.Internal.ApplicationBuilder.Build()
    Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
-</code></pre>
-
+</code></pre></p>
 <p><strong>Solution</strong></p>
 <p>You forgot to call the <code>AddElmahIo</code>-method in the <code>Startup.cs</code> file:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+<p> <pre><code class=csharp>public void ConfigureServices(IServiceCollection services)
 {
-    ...
+    // ...
     services.AddElmahIo(o =&gt;
     {
-        ...
+        // ...
     });
-    ....
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <p>or you called <code>AddElmahIo</code> without options and didn't provide these options elsewhere:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+<p> <pre><code class=csharp>public void ConfigureServices(IServiceCollection services)
 {
-    ...
+    // ...
     services.AddElmahIo();
-    ....
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <p>Even though you configure elmah.io through <code>appsettings.json</code> you still need to call <code>AddElmahIo</code>. In this case, you can register <code>ElmahIoOptions</code> manually and use the empty <code>AddElmahIo</code> overload:</p>
-<pre><code class="csharp">public void ConfigureServices(IServiceCollection services)
+<p> <pre><code class=csharp>public void ConfigureServices(IServiceCollection services)
 {
-    ...
+    // ...
     services.Configure&lt;ElmahIoOptions&gt;(Configuration.GetSection(&quot;ElmahIo&quot;));
     services.AddElmahIo();
-    ....
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <h3 id="an-error-occurred-while-starting-the-application">An error occurred while starting the application</h3>
 <p>If you see the error <code>An error occurred while starting the application</code> and the exception isn't logged to elmah.io, the error probably happens before hitting the elmah.io middleware. To help find out what is going on, add the following lines to your <code>Program.cs</code> file:</p>
-<pre><code class="csharp">public static IWebHostBuilder CreateWebHostBuilder(string[] args) =&gt;
+<p> <pre><code class=csharp>public static IWebHostBuilder CreateWebHostBuilder(string[] args) =&gt;
     WebHost.CreateDefaultBuilder(args)
         .UseSetting(WebHostDefaults.DetailedErrorsKey, &quot;true&quot;)
         .CaptureStartupErrors(true)
         .UseStartup&lt;Startup&gt;();
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

@@ -389,7 +389,7 @@
 <p>Select <em>Inline</em> in <em>Script location</em> and add the following PowerShell to <em>Script body</em>:</p>
 </li>
 </ol>
-<pre><code class="powershell">$ProgressPreference = &quot;SilentlyContinue&quot;
+<p> <pre><code class=powershell>$ProgressPreference = &quot;SilentlyContinue&quot;
 
 Write-Host $bamboo_buildNumber
 
@@ -403,8 +403,7 @@ $body = @{
     [Net.SecurityProtocolType]::Tls11,
     [Net.SecurityProtocolType]::Tls
 Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
-
+</code></pre></p>
 <p><img alt="PowerShell task in Bamboo" src="../images/bamboo.png" /></p>
 <p>Replace <code>API_KEY</code> and <code>LOG_ID</code> and everything is configured. The script uses the build number of the current build as version number (<code>$Env:bamboo_buildNumber</code>). If you prefer another scheme, Bamboo offers a range of <a href="https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html" target="_blank" rel="noopener noreferrer">variables</a>.</p>
 

@@ -385,17 +385,15 @@
 </blockquote>
 <p>To enable error logging to elmah.io, you usually install one of our client integrations through PowerShell or Visual Studio and deploy a new version of your website to a web server. Sometimes you need to monitor an already running website or don't want logging logic as part of your repository. elmah.io can be added to a running website by following this guide.</p>
 <p>Run the following command somewhere on your computer:</p>
-<pre><code class="ps">nuget install elmah.io
-</code></pre>
-
+<p> <pre><code class=ps>nuget install elmah.io
+</code></pre></p>
 <p>From the folder where you ran the command, copy the following files to the <code>bin</code> folder of your running website:</p>
-<pre><code>elmah.corelibrary.x.y.z\lib\Elmah.dll
+<p> <pre><code class>elmah.corelibrary.x.y.z\lib\Elmah.dll
 elmah.io.x.y.z\lib\net45\Elmah.Io.dll
 Elmah.Io.Client.x.y.z\lib\&lt;.net version your website is using&gt;\Elmah.Io.Client.dll
 Microsoft.Rest.ClientRuntime.x.y.z\lib\net452\Microsoft.Rest.ClientRuntime.dll
 Newtonsoft.Json.x.y.z\lib\&lt;.net version your website is using&gt;\Newtonsoft.Json.dll
-</code></pre>
-
+</code></pre></p>
 <p>Configure elmah.io in <code>Web.config</code> as described here: <a href="/configure-elmah-io-manually/">Configure elmah.io manually</a> (you don't need to call the <code>Install-Package</code> command).</p>
 <p>If the website doesn't start logging errors to elmah.io, you may need to restart it.</p>
 

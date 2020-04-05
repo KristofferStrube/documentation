@@ -399,28 +399,29 @@
 </ul>
 </div>
 <p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>, and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple.</p>
-<p>To start logging, install the <a href="https://www.nuget.org/packages/elmah.io.client/">Elmah.Io.Client</a> NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Client
-</code></pre>
+<p>To start logging, install the <code>Elmah.Io.Client</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Client&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Client
+</code></pre></div></div></div>
 
 <p>Create a new <code>ElmahioAPI</code>:</p>
-<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
-</code></pre>
-
+<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>).</p>
 <p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
-<pre><code class="csharp">var logId = new Guid(&quot;LOG_ID&quot;);
+<p> <pre><code class=csharp>var logId = new Guid(&quot;LOG_ID&quot;);
 logger.Messages.Fatal(logId, new ApplicationException(&quot;A fatal exception&quot;), &quot;Fatal message&quot;);
 logger.Messages.Error(logId, new ApplicationException(&quot;An exception&quot;), &quot;Error message&quot;);
 logger.Messages.Warning(logId, &quot;A warning&quot;);
 logger.Messages.Information(logId, &quot;An info message&quot;);
 logger.Messages.Debug(logId, &quot;A debug message&quot;);
 logger.Messages.Verbose(logId, &quot;A verbose message&quot;);
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>LOG_ID</code> with your log ID from elmah.io (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>To have 100% control of how the message is logged to elmah.io, you can use the <code>CreateAndNotify</code>-method:</p>
-<pre><code class="csharp">logger.Messages.CreateAndNotify(logId, new CreateMessage
+<p> <pre><code class=csharp>logger.Messages.CreateAndNotify(logId, new CreateMessage
 {
     Title = &quot;Hello World&quot;,
     Application = &quot;Elmah.Io.Client sample&quot;,
@@ -437,56 +438,50 @@ logger.Messages.Verbose(logId, &quot;A verbose message&quot;);
         new Item {Key = &quot;visible form item&quot;, Value = &quot;With a value&quot;}
     }
 });
-</code></pre>
-
+</code></pre></p>
 <p>Like the integrations for Serilog, NLog and, Microsoft.Extensions.Logging, the elmah.io client supports structured logging:</p>
-<pre><code class="csharp">logger.Messages.CreateAndNotify(logId, new CreateMessage
+<p> <pre><code class=csharp>logger.Messages.CreateAndNotify(logId, new CreateMessage
 {
     Title = &quot;Thomas says Hello&quot;,
     TitleTemplate = &quot;{User} says Hello&quot;,
 });
-</code></pre>
-
+</code></pre></p>
 <h2 id="events">Events</h2>
 <p>The elmah.io client supports to different events: <code>OnMessage</code> and <code>OnMessageFail</code>.</p>
 <h3 id="onmessage">OnMessage</h3>
 <p>To get a callback every time a new message is being logged to elmah.io, you can implement the <code>OnMessage</code> event. This is a great chance to decorate all log messages with a specific property or similar.</p>
-<pre><code class="csharp">logger.Messages.OnMessage += (sender, eventArgs) =&gt;
+<p> <pre><code class=csharp>logger.Messages.OnMessage += (sender, eventArgs) =&gt;
 {
     eventArgs.Message.Version = &quot;1.0.0&quot;;
 };
-</code></pre>
-
+</code></pre></p>
 <h3 id="onmessagefail">OnMessageFail</h3>
 <p>Logging to elmah.io can fail if the network connection is down, if elmah.io experience downtime, or something third. To make sure you log an error elsewhere if this happen, you can implement the <code>OnMessageFail</code> event:</p>
-<pre><code class="csharp">logger.Messages.OnMessageFail += (sender, eventArgs) =&gt;
+<p> <pre><code class=csharp>logger.Messages.OnMessageFail += (sender, eventArgs) =&gt;
 {
     System.Console.Error.WriteLine(&quot;Error when logging to elmah.io&quot;);
 };
-</code></pre>
-
+</code></pre></p>
 <h2 id="bulk-upload">Bulk upload</h2>
 <p>If logging many messages to elmah.io, bulk upload can be a way to optimize performance. The elmah.io client supports bulk upload using the <code>CreateBulkAndNotify</code>-method:</p>
-<pre><code class="csharp">logger.Messages.CreateBulkAndNotify(logId, new[]
+<p> <pre><code class=csharp>logger.Messages.CreateBulkAndNotify(logId, new[]
 {
     new CreateMessage { Title = &quot;This is a bulk message&quot; },
     new CreateMessage { Title = &quot;This is another bulk message&quot; },
 }.ToList());
-</code></pre>
-
+</code></pre></p>
 <h2 id="options">Options</h2>
 <p>The elmah.io client contains a set of default options that you can override.</p>
 <h3 id="proxy">Proxy</h3>
 <p>To log through a HTTP proxy, set the <code>WebProxy</code> property:</p>
-<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
 logger.Options.WebProxy = new WebProxy(&quot;localhost&quot;, 8888);
-</code></pre>
-
+</code></pre></p>
 <h3 id="opfuscate-form-values">Opfuscate form values</h3>
 <p>When logging POSTs with form values, you don't want users password and similar logged to elmah.io. The elmah.io client automatically filter form keys named <code>password</code> and <code>pwd</code>. Using the <code>FormKeysToObfuscate</code> you can tell the client to opfuscate additional form entries:</p>
-<pre><code class="csharp">var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
 logger.Options.FormKeysToObfuscate.Add(&quot;secret_key&quot;);
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

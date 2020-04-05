@@ -396,8 +396,11 @@
 </div>
 <p>Since Umbraco itself is written in ASP.NET, ELMAH works like a dream inside Umbraco. Besides logging uncaught errors, elmah.io also supports other types of messages like information and debug. In fact, all the log levels that you already know from log4net, NLog and Serilog, are supported on elmah.io as well. Logging in Umbraco CMS is based on Serilog, <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">which elmah.io also support</a>. We have brought all these pieces together into a NuGet package that we call: <a href="https://www.nuget.org/packages/elmah.io.umbraco/">Elmah.Io.Umbraco</a>.</p>
 <p>To start utilizing elmah.io from your Umbraco site, all you need to do is install the <code>Elmah.Io.Umbraco</code> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Umbraco
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Umbraco&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Umbraco
+</code></pre></div></div></div>
 
 <p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>Hit F5 and watch messages start flowing into elmah.io.</p>
@@ -411,8 +414,11 @@
 <p>Install <code>Elmah.Io.Umbraco</code> into your local clone. During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 </li>
 </ul>
-<pre><code class="powershell">Install-Package Elmah.Io.Umbraco
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-1><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-1-0_powershell-panel role=tab id=tab-group-1-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-1-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-1_cmd-panel role=tab id=tab-group-1-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-1-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-2_xml-panel role=tab id=tab-group-1-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-1-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-3_xml-panel role=tab id=tab-group-1-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-1-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-1-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-1-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-1-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-1-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Umbraco&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-1-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Umbraco
+</code></pre></div></div></div>
 
 <ul>
 <li>Commit and push all changes to the git respository. This will add elmah.io logging to your remote Umbraco Cloud project.</li>
@@ -429,9 +435,12 @@
 <h2 id="configuration">Configuration</h2>
 <p>If you are running on the default Umbraco template, all nessecary configuration is added during installation of the <code>Elmah.Io.Umbraco</code> NuGet package. If your <code>web.config</code> file for some reason aren't updated during installation, you can configure elmah.io manually: <a href="https://docs.elmah.io/configure-elmah-io-manually/">Configure elmah.io manually</a>. Likewise, the installer configure the elmah.io sink for Serilog in your <code>config\serilog.user.config</code> file.</p>
 <h2 id="umbraco-7">Umbraco 7</h2>
-<p>We still support Umbraco 7 through <a href="https://www.nuget.org/packages/elmah.io.umbraco/3.2.35">Elmah.Io.Umbraco 3.2.35</a>:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Umbraco -Version 3.2.35
-</code></pre>
+<p>We still support Umbraco 7 through the <code>Elmah.Io.Umbraco</code> package version <code>3.2.35</code>:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-2><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-2-0_powershell-panel role=tab id=tab-group-2-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-2-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-1_cmd-panel role=tab id=tab-group-2-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-2-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-2_xml-panel role=tab id=tab-group-2-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-3_xml-panel role=tab id=tab-group-2-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-2-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-2-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Umbraco -Version 3.2.35
+</code></pre></div><div id=tab-group-2-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Umbraco --version 3.2.35
+</code></pre></div><div id=tab-group-2-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Umbraco&quot; Version=&quot;3.2.35&quot; /&gt;
+</code></pre></div><div id=tab-group-2-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Umbraco --version 3.2.35
+</code></pre></div></div></div>
 
 <p>New features will be added to the updated package for Umbraco 8 only.</p>
 

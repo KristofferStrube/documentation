@@ -382,19 +382,17 @@
             <h1 id="logging-to-elmahio-from-powershell">Logging to elmah.io from PowerShell</h1>
 <p>In order for you to be able to log to elmah.io from PowerShell, you will need the <a href="https://www.nuget.org/packages/elmah.io.client/">elmah.io.client</a> NuGet package. This package contains the raw client libraries for communicating with the <a href="https://elmah.io/api/v2">elmah.io API</a>.</p>
 <p>First of all, you will need to include <code>elmah.io.client.dll</code> in your PowerShell script. How you do this is entirely up to you of course. You can place this assembly with your script or you can download it through NuGet on every execution. To download the elmah.io.client package through NuGet, you will need <code>nuget.exe</code>:</p>
-<pre><code class="powershell">$source = &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot;
+<p> <pre><code class=powershell>$source = &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot;
 $target = &quot;.\nuget.exe&quot;
 Invoke-WebRequest $source -OutFile $target
 Set-Alias nuget $target -Scope Global
-</code></pre>
-
+</code></pre></p>
 <p>This script will download the latest version of the NuGet command line tool and make it available through the command <code>nuget</code>.</p>
 <p>To install elmah.io.client, run <code>nuget.exe</code>:</p>
-<pre><code class="powershell">nuget install Elmah.Io.Client
-</code></pre>
-
+<p> <pre><code class=powershell>nuget install Elmah.Io.Client
+</code></pre></p>
 <p>This will create a <code>Elmah.Io.Client-version</code> folder containing the latest stable version of the elmah.io.client package. Since you probably don't want to hardcode the path to the current version number, reference <code>Elmah.Io.Client.dll</code> and its dependencies using <code>Get-ChildItem</code> and a bit of recursive magic:</p>
-<pre><code class="powershell">$elmahIoClientPath = Get-ChildItem -Path . -Filter Elmah.Io.Client.dll -Recurse `
+<p> <pre><code class=powershell>$elmahIoClientPath = Get-ChildItem -Path . -Filter Elmah.Io.Client.dll -Recurse `
   | Where-Object {$_.FullName -match &quot;net45&quot;}
 [Reflection.Assembly]::LoadFile($elmahIoClientPath.FullName)
 
@@ -405,18 +403,16 @@ $restClientPath = Get-ChildItem -Path . -Filter Microsoft.Rest.ClientRuntime.dll
 $jsonNetPath = Get-ChildItem -Path . -Filter Newtonsoft.Json.dll -Recurse `
   | Where-Object {$_.FullName -match &quot;net45&quot; -and $_.FullName -notmatch &quot;portable&quot;}
 [Reflection.Assembly]::LoadFile($jsonNetPath.FullName)
-</code></pre>
-
+</code></pre></p>
 <p>You now have <code>Elmah.Io.Client.dll</code> loaded into your shell and everything is set up in order to log to elmah.io. To do so, add try-catch around critical code:</p>
-<pre><code class="powershell">$logger = [Elmah.Io.Client.ElmahioAPI]::Create(&quot;API_KEY&quot;)
+<p> <pre><code class=powershell>$logger = [Elmah.Io.Client.ElmahioAPI]::Create(&quot;API_KEY&quot;)
 Try {
     # some code that may throw exceptions
 }
 Catch {
     $logger.Messages.Error([guid]::new(&quot;LOG_ID&quot;), $_.Exception, &quot;Oh no&quot;)
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the first line, we create a new logger object with the <code>API_KEY</code> of the subscription we want to use (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). Then, in the <code>Catch</code> block, the catched exception is shipped off to the elmah.io log specified in <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) together with a custom message.</p>
 
             <br/>

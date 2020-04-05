@@ -381,23 +381,21 @@
 
             <h1 id="specify-api-key-and-log-id-through-appsettings">Specify API key and log ID through appSettings</h1>
 <p>When integrating to elmah.io from ASP.NET, MVC, Web API and similar, we use the open source project ELMAH to log uncaught exceptions. ELMAH requires configuration in <code>web.config</code>, which in the case of elmah.io could look something like this:</p>
-<pre><code class="xml">&lt;elmah&gt;
+<p> <pre><code class=xml>&lt;elmah&gt;
     &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
-</code></pre>
-
+</code></pre></p>
 <p>You'd normally use web.config Transformations to specify different API keys and log IDs for different environments (see <a href="https://docs.elmah.io/use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>). When hosting on Microsoft Azure (and other cloud-based offerings), a better approach is to specify configuration in the <code>appSettings</code> element and overwrite values through the web app settings in the Portal.</p>
 <p>The elmah.io clients built for ASP.NET based web frameworks support this scenario through additional attributes on the <code>&lt;errorLog&gt;</code> element:</p>
-<pre><code class="xml">&lt;appSettings&gt;
+<p> <pre><code class=xml>&lt;appSettings&gt;
     &lt;add key=&quot;apiKeyRef&quot; value=&quot;API_KEY&quot; /&gt;
     &lt;add key=&quot;logIdRef&quot; value=&quot;LOG_ID&quot; /&gt;
 &lt;/appSettings&gt;
-...
+&lt;!-- ... --&gt;
 &lt;elmah&gt;
     &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKeyKey=&quot;apiKeyRef&quot; logIdKey=&quot;logIdRef&quot; /&gt;
 &lt;/elmah&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Unlike the first example, the term <em>Key</em> has been appended to both the <code>apiKey</code> and <code>logId</code> attributes. The values of those attributes needs to match a key specified in <code>appSettings</code> (in this example <em>apiKeyRef</em> and <em>logIdRef</em>). How you choose to name these keys is entirely up to you, as long as the names match.</p>
 <p>elmah.io now picks up your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) from the <code>appSettings</code> element and can be overwritten on your production site on Azure.</p>
 

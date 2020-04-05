@@ -382,42 +382,41 @@
             <h1 id="configure-elmahio-manually">Configure elmah.io manually</h1>
 <p>The <a href="https://www.nuget.org/packages/elmah.io/">Elmah.Io NuGet package</a> normally adds all of the necessary configuration, in order to get up and running with elmah.io. In fact, this is one of our killer features and our customers tell us, that we have the simplest installer on the market. In some cases, you may experience problems with the automatic configuration, though. Different reasons can cause the configuration not to be added automatically. The most common reason is restrictions to executing PowerShell inside Visual Studio.</p>
 <p>Start by installing the <code>Elmah.Io</code> package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io
+</code></pre></div></div></div>
 
 <p>If a dialog is shown during the installation, input your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>). Don't worry if the configuration isn't added, since we will verify this later.</p>
 <p>Add the following to the <code>&lt;configSections&gt;</code> element in your <code>web.config</code>:</p>
-<pre><code class="xml">&lt;sectionGroup name=&quot;elmah&quot;&gt;
+<p> <pre><code class=xml>&lt;sectionGroup name=&quot;elmah&quot;&gt;
   &lt;section name=&quot;security&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.SecuritySectionHandler, Elmah&quot; /&gt;
   &lt;section name=&quot;errorLog&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorLogSectionHandler, Elmah&quot; /&gt;
   &lt;section name=&quot;errorMail&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorMailSectionHandler, Elmah&quot; /&gt;
   &lt;section name=&quot;errorFilter&quot; requirePermission=&quot;false&quot; type=&quot;Elmah.ErrorFilterSectionHandler, Elmah&quot; /&gt;
 &lt;/sectionGroup&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Add the following to the <code>&lt;httpModules&gt;</code> element (inside <code>&lt;system.web&gt;</code>) in your <code>web.config</code>:</p>
-<pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; /&gt;
+<p> <pre><code class=xml>&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; /&gt;
 &lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; /&gt;
 &lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot;/&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Add the following to the <code>&lt;modules&gt;</code> element (inside <code>&lt;system.webServer&gt;</code>) in your <code>web.config</code>:</p>
-<pre><code class="xml">&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
+<p> <pre><code class=xml>&lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
 &lt;add name=&quot;ErrorMail&quot; type=&quot;Elmah.ErrorMailModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
 &lt;add name=&quot;ErrorFilter&quot; type=&quot;Elmah.ErrorFilterModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Add the following as a root element beneath the <code>&lt;configuration&gt;</code> element in your <code>web.config</code>:</p>
-<pre><code class="xml">&lt;elmah&gt;
+<p> <pre><code class=xml>&lt;elmah&gt;
     &lt;security allowRemoteAccess=&quot;false&quot; /&gt;
     &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with your log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>That's it. You managed to install elmah.io manually and you should go to your LinkedIn profile and update with a new certification called "Certified elmah.io installer" :)</p>
 <p>In case you need to access your error log on <code>/elmah.axd</code>, you need to add the following to the <code>&lt;configuration&gt;</code> element in your <code>web.config</code>:</p>
-<pre><code class="xml">&lt;location path=&quot;elmah.axd&quot; inheritInChildApplications=&quot;false&quot;&gt;
+<p> <pre><code class=xml>&lt;location path=&quot;elmah.axd&quot; inheritInChildApplications=&quot;false&quot;&gt;
     &lt;system.web&gt;
         &lt;httpHandlers&gt;
             &lt;add verb=&quot;POST,GET,HEAD&quot; path=&quot;elmah.axd&quot; type=&quot;Elmah.ErrorLogPageFactory, Elmah&quot; /&gt;
@@ -429,7 +428,7 @@
         &lt;/handlers&gt;
     &lt;/system.webServer&gt;
 &lt;/location&gt;
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

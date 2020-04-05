@@ -409,16 +409,19 @@
 </ul>
 </div>
 <p>NLog is one of the most popular logging frameworks for .NET. With an active history on almost 10 years, the possibilities with NLog are many and it’s easy to find documentation on how to use it.</p>
-<p>To start logging messages from NLog to elmah.io, you need to install the <a href="https://www.nuget.org/packages/Elmah.Io.NLog/">Elmah.Io.NLog</a> NuGet package:</p>
-<pre><code class="powershell">Install-Package elmah.io.nlog
-</code></pre>
+<p>To start logging messages from NLog to elmah.io, you need to install the <code>Elmah.Io.NLog</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.NLog
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.NLog
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.NLog&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.NLog
+</code></pre></div></div></div>
 
 <blockquote>
 <p>Please don't use NLog <code>4.6.0</code> since that version contains a bug that causes the elmah.io target to not load correctly. <code>4.5.11</code>, <code>4.6.1</code>, or newer.</p>
 </blockquote>
 <h2 id="configuration-in-net">Configuration in .NET</h2>
 <p>To configure the elmah.io target, add the following configuration to your app.config/web.config/nlog.config depending on what kind of project you’ve created:</p>
-<pre><code class="xml">&lt;extensions&gt;
+<p> <pre><code class=xml>&lt;extensions&gt;
   &lt;add assembly=&quot;Elmah.Io.NLog&quot;/&gt;
 &lt;/extensions&gt;
 
@@ -429,47 +432,45 @@
 &lt;rules&gt;
   &lt;logger name=&quot;*&quot; minlevel=&quot;Info&quot; writeTo=&quot;elmahio&quot; /&gt;
 &lt;/rules&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>In the example we specify the level minimum as Info. This tells NLog to log only information, warning, error and fatal messages. You may adjust this, but be aware that your elmah.io log may run full pretty fast, especially if you log thousands and thousands of trace and debug messages.</p>
 <p>Log messages to elmah.io, just as with every other target and NLog:</p>
-<pre><code class="csharp">log.Warn(&quot;This is a warning message&quot;);
+<p> <pre><code class=csharp>log.Warn(&quot;This is a warning message&quot;);
 log.Error(new Exception(), &quot;This is an error message&quot;);
-</code></pre>
-
+</code></pre></p>
 <h3 id="specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</h3>
 <p>If you are already using elmah.io, you may have your API key and log ID in the <code>appSettings</code> element already. To use these settings from withing the NLog target configuration you can use an NLog layout formatter:</p>
-<pre><code class="xml">&lt;targets&gt;
+<p> <pre><code class=xml>&lt;targets&gt;
   &lt;target name=&quot;elmahio&quot; type=&quot;elmah.io&quot; apiKey=&quot;${appsetting:item=apiKey}&quot; logId=&quot;${appsetting:item=logId}&quot;/&gt;
 &lt;/targets&gt;
-</code></pre>
-
+</code></pre></p>
 <p>By using the layout <code>${appsetting:item=apiKey}</code> you tell NLog that the value for this attribute is in an <code>appSettings</code> element named <code>elmahKey</code>:</p>
-<pre><code class="xml">&lt;appSettings&gt;
+<p> <pre><code class=xml>&lt;appSettings&gt;
   &lt;add key=&quot;apiKey&quot; value=&quot;API_KEY&quot; /&gt;
   &lt;add key=&quot;logId&quot; value=&quot;LOG_ID&quot; /&gt;
 &lt;/appSettings&gt;
-</code></pre>
-
+</code></pre></p>
 <blockquote>
 <p>The <code>appSettings</code> layout formatter only works when targeting .NET Full Framework and requires <code>Elmah.Io.NLog</code> version 3.3.x or above and <code>NLog</code> version 4.6.x or above.</p>
 </blockquote>
 <h3 id="setting-application-name">Setting application name</h3>
 <p>The application field on elmah.io can be set globally through NLog config:</p>
-<pre><code class="xml">&lt;targets&gt;
+<p> <pre><code class=xml>&lt;targets&gt;
   &lt;target name=&quot;elmahio&quot; xsi:type=&quot;elmahio:elmah.io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; application=&quot;APP_NAME&quot; /&gt;
 &lt;/targets&gt;
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>APP_NAME</code> with the application you want logged to elmah.io</p>
 <h2 id="configuration-in-net-core">Configuration in .NET Core</h2>
 <p>.NET Core switched from declaring XML configuration in <code>app/web/nlog.config</code> files to JSON configuration in an <code>appsettings.json</code> file. To configure elmah.io in JSON, install the <code>NLog.Extensions.Logging</code> NuGet package:</p>
-<pre><code class="ps">Install-Package NLog.Extensions.Logging
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-6><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-6-0_powershell-panel role=tab id=tab-group-6-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-6-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-1_cmd-panel role=tab id=tab-group-6-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-6-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-2_xml-panel role=tab id=tab-group-6-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-6-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-3_xml-panel role=tab id=tab-group-6-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-6-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-6-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-6-0_powershell-tab><pre><code class=powershell>Install-Package NLog.Extensions.Logging
+</code></pre></div><div id=tab-group-6-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-1_cmd-tab><pre><code class=cmd>dotnet add package NLog.Extensions.Logging
+</code></pre></div><div id=tab-group-6-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;NLog.Extensions.Logging&quot; Version=&quot;1.*&quot; /&gt;
+</code></pre></div><div id=tab-group-6-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-3_xml-tab><pre><code class=xml>paket add NLog.Extensions.Logging
+</code></pre></div></div></div>
 
 <p>Extend the <code>appsettings.json</code> file with a new <code>NLog</code> section:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;NLog&quot;: {
     &quot;throwConfigExceptions&quot;: true,
     &quot;extensions&quot;: [
@@ -491,25 +492,22 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
     ]
   }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the ID of the log you want messages sent to (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>If you haven't already loaded the configuration in your application, make sure to do so:</p>
-<pre><code class="csharp">var config = new ConfigurationBuilder()
+<p> <pre><code class=csharp>var config = new ConfigurationBuilder()
     .AddJsonFile(&quot;appsettings.json&quot;, optional: true, reloadOnChange: true)
     .Build();
 
-</code></pre>
-
+</code></pre></p>
 <p>Finally, tell NLog how to load the <code>NLog</code> configuration section:</p>
-<pre><code class="csharp">LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
-</code></pre>
-
+<p> <pre><code class=csharp>LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
+</code></pre></p>
 <h3 id="elmahio-configuration-outside-the-nlog-section">elmah.io configuration outside the NLog section</h3>
 <p>You might not want the elmah.io API key and log Id inside the <code>NLog</code> section or already have an <code>ElmahIo</code> section defined and want to reuse that. Splitting up configuration like that is supported through NLog layout renderers:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;NLog&quot;: {
-    ...
+    // ...
     &quot;targets&quot;: {
       &quot;elmahio&quot;: {
         &quot;type&quot;: &quot;elmah.io&quot;,
@@ -517,29 +515,27 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
         &quot;logId&quot;: &quot;${configsetting:item=ElmahIo.LogId}&quot;
       }
     },
-    ...
+    // ...
   },
   &quot;ElmahIo&quot;: {
     &quot;ApiKey&quot;: &quot;API_KEY&quot;,
     &quot;LogId&quot;: &quot;LOG_ID&quot;
   }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Notice how the value of the <code>apiKey</code> and <code>logId</code> parameters have been replaced with <code>${configsetting:item=ElmahIo.*}</code>. In the bottom the <code>ElmahIo</code> section wrap the API key and log Id.</p>
 <p>To make this work, you will need an additional line of C# when setting up NLog logging:</p>
-<pre><code class="csharp">var config = new ConfigurationBuilder()
+<p> <pre><code class=csharp>var config = new ConfigurationBuilder()
     .AddJsonFile(&quot;appsettings.json&quot;, optional: true, reloadOnChange: true)
     .Build();
 
 ConfigSettingLayoutRenderer.DefaultConfiguration = config; // 👈 add this line
 
 LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
-</code></pre>
-
+</code></pre></p>
 <h2 id="configuration-in-code">Configuration in code</h2>
 <p>The elmah.io target can be configured from C# code if you prefer or need to access the built-in events (see more later). The following adds logging to elmah.io:</p>
-<pre><code class="csharp">var config = new LoggingConfiguration();
+<p> <pre><code class=csharp>var config = new LoggingConfiguration();
 var elmahIoTarget = new ElmahIoTarget();
 elmahIoTarget.Name = &quot;elmahio&quot;;
 elmahIoTarget.ApiKey = &quot;API_KEY&quot;;
@@ -547,43 +543,37 @@ elmahIoTarget.LogId = &quot;LOG_ID&quot;;
 config.AddTarget(elmahIoTarget);
 config.AddRuleForAllLevels(elmahIoTarget);
 LogManager.Configuration = config;
-</code></pre>
-
+</code></pre></p>
 <p>The example will log all log levels to elmah.io. For more information about how to configure individual log levels, check out the <a href="https://github.com/NLog/NLog/wiki/Configure-from-code">NLog documentation on GitHub</a>.</p>
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>NLog supports logging custom properties in multiple ways. If you want to include a property (like a version number) to all log messages, you might want to look into the <a href="#decorating-log-messages"><code>OnMessage</code></a> feature on <code>Elmah.Io.NLog</code>.</p>
 <p>With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="https://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
 <p>One way to log custom properties with NLog and elmah.io, is to use the overload of each logging-method that takes a <code>LogEventInfo</code> object as parameter:</p>
-<pre><code class="csharp">var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
+<p> <pre><code class=csharp>var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
 infoMessage.Properties.Add(&quot;Some Property Key&quot;, &quot;Some Property Value&quot;);
 log.Info(infoMessage);
-</code></pre>
-
+</code></pre></p>
 <p>This saves the information message in elmah.io with a custom property with key <code>Some Property Key</code>and value <code>Some Property Value</code>.</p>
 <p>As of NLog 4.5, structured logging is supported as well. To log a property as part of the log message, use the new syntax as shown here:</p>
-<pre><code class="csharp">log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
-</code></pre>
-
+<p> <pre><code class=csharp>log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
+</code></pre></p>
 <p>In the example, NLog will log the message <code>Property named "Donald"</code>, but the key (<code>FirstName</code>) and value (<code>Donald</code>), will also be available in the <em>Data</em> tab inside elmah.io.</p>
 <p><code>Elmah.Io.NLog</code> provides a range of reserved property names, that can be used to fill in data in the correct fields on the elmah.io UI. Let's say you want to fill the <code>User</code> field using structured logging only:</p>
-<pre><code class="csharp">log.Info(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;T-800&quot;);
-</code></pre>
-
+<p> <pre><code class=csharp>log.Info(&quot;{Quote} from {User}&quot;, &quot;Hasta la vista, baby&quot;, &quot;T-800&quot;);
+</code></pre></p>
 <p>This will fill in the value <code>T-800</code> in the <code>User</code> field, as well as add two key/value pairs (<code>Quote</code> and <code>User</code>) to the <em>Data</em> tab on elmah.io. For a reference of all possible property names, check out the property names on <a href="https://github.com/elmahio/Elmah.Io.Client/blob/master/src/Elmah.Io.Client/Models/CreateMessage.cs">CreateMessage</a>.</p>
 <p>NLog also provides a fluent API (available in the <code>NLog.Fluent</code> namespace) that some might find more readable:</p>
-<pre><code class="csharp">logger.Info()
+<p> <pre><code class=csharp>logger.Info()
       .Message(&quot;I'll be back&quot;)
       .Property(&quot;User&quot;, &quot;T-800&quot;)
       .Write();
-</code></pre>
-
+</code></pre></p>
 <p>If you want to use the normal logging methods like <code>Info</code> and <code>Error</code>, you can do so in junction with the <code>MappedDiagnosticsLogicalContext</code> class, also provided by NLog:</p>
-<pre><code class="csharp">using (MappedDiagnosticsLogicalContext.SetScoped(&quot;User&quot;, &quot;T-800&quot;))
+<p> <pre><code class=csharp>using (MappedDiagnosticsLogicalContext.SetScoped(&quot;User&quot;, &quot;T-800&quot;))
 {
    logger.Info(&quot;I'll be back&quot;);
 }
-</code></pre>
-
+</code></pre></p>
 <p>This will create the exact same result as the example above.</p>
 <h2 id="message-hooks">Message hooks</h2>
 <p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io NLog target must be <a href="#configure-the-elmahio-target-from-code">configured through C#</a>.</p>
@@ -592,36 +582,33 @@ log.Info(infoMessage);
 </blockquote>
 <h3 id="decorating-log-messages">Decorating log messages</h3>
 <p>To include additional information on log messages, you can use the OnMessage event when initializing the elmah.io target:</p>
-<pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
-...
+<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
+// ...
 elmahIoTarget.OnMessage = msg =&gt;
 {
     msg.Version = &quot;1.0.0&quot;;
 };
-</code></pre>
-
+</code></pre></p>
 <p>The example above includes a version number on all errors.</p>
 <h3 id="handle-errors">Handle errors</h3>
 <p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io target:</p>
-<pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
-...
+<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
+// ...
 elmahIoTarget.OnError = (msg, err) =&gt;
 {
     // Do something here
 };
-</code></pre>
-
+</code></pre></p>
 <p>The example implements a callback if logging to elmah.io fails. How you choose to implement this is entirely up to your application and tech stack.</p>
 <h3 id="error-filtering">Error filtering</h3>
 <p>To ignore specific errors based on their content, you can use the OnFilter event when initializing the elmah.io target:</p>
-<pre><code class="csharp">var elmahIoTarget = new ElmahIoTarget();
-...
+<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
+// ...
 elmahIoTarget.OnFilter = msg =&gt;
 {
     return msg.Title.Contains(&quot;trace&quot;);
 };
-</code></pre>
-
+</code></pre></p>
 <p>The example above ignores any log messages with the word <code>trace</code> in the title.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Here are some things to try out if logging from NLog to elmah.io doesn't work:</p>

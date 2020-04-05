@@ -385,12 +385,15 @@
 <h1 id="logging-to-elmahio-from-logary">Logging to elmah.io from Logary</h1>
 <p>Logary is a semantic logging framework like Serilog and Microsoft Semantic Logging. Combining semantic logs with elmah.io are a perfect fit, since elmah.io has been designed with semantics from the ground up.</p>
 <p>In this tutorial, we’ll add Logary to a Console application, but the process is almost identical with other project types. Create a new console application and add the elmah.io target for Logary:</p>
-<pre><code class="powershell">Install-Package Logary.Targets.Elmah.Io
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Logary.Targets.Elmah.Io
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Logary.Targets.Elmah.Io
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Logary.Targets.Elmah.Io&quot; Version=&quot;4.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Logary.Targets.Elmah.Io
+</code></pre></div></div></div>
 
 <h2 id="configuration-in-f">Configuration in F&#35;</h2>
 <p>Configure elmah.io just like you would any normal target:</p>
-<pre><code class="fsharp">withTargets [
+<p> <pre><code class=fsharp>withTargets [
   // ...
   ElmahIO.create { ElmahIO with logId = &quot;LOG_ID&quot; } &quot;elmah.io&quot;
 ] &gt;&gt;
@@ -398,31 +401,28 @@ withRules [
  // ...
  Rule.createForTarget &quot;elmah.io&quot;
 ]
-</code></pre>
-
+</code></pre></p>
 <p>where <code>LOG_ID</code> is the id of your log (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <h2 id="configuration-in-c">Configuration in C&#35;</h2>
 <p>Configuration in C# is just as easy:</p>
-<pre><code class="csharp">.Target&lt;ElmahIO.Builder&gt;(
+<p> <pre><code class=csharp>.Target&lt;ElmahIO.Builder&gt;(
   &quot;elmah.io&quot;,
   conf =&gt; conf.Target.SendTo(apiKey: &quot;LOG_ID&quot;))
-</code></pre>
-
+</code></pre></p>
 <p>where <code>LOG_ID</code> is the id of your log.</p>
 <h2 id="logging">Logging</h2>
 <p>To start logging messages to elmah.io, you can use the following F# code:</p>
-<pre><code class="fsharp">let logger = logary.getLogger (PointName [| &quot;Logary&quot;; &quot;Samples&quot;; &quot;main&quot; |])
+<p> <pre><code class=fsharp>let logger = logary.getLogger (PointName [| &quot;Logary&quot;; &quot;Samples&quot;; &quot;main&quot; |])
 
 Message.event Info &quot;User logged in&quot;
   |&gt; Message.setField &quot;userName&quot; &quot;haf&quot;
   |&gt; Logger.logSimple logger
 
-</code></pre>
-
+</code></pre></p>
 <p>or in C#:</p>
-<pre><code class="csharp">var logger = logary.GetLogger(&quot;Logary.CSharpExample&quot;);
+<p> <pre><code class=csharp>var logger = logary.GetLogger(&quot;Logary.CSharpExample&quot;);
 logger.LogEventFormat(LogLevel.Fatal, &quot;Unhandled {exception}!&quot;, e);
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

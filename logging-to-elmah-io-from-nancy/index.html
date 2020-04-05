@@ -380,18 +380,24 @@
           <div class="main-content-body">
 
             <h1 id="logging-to-elmahio-from-nancy">Logging to elmah.io from Nancy</h1>
-<p>As with MVC and WebAPI, Nancy already provides ELMAH support out of the box. Start by installing the elmah.io NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
-</code></pre>
+<p>As with MVC and WebAPI, Nancy already provides ELMAH support out of the box. Start by installing the <code>Elmah.Io</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io
+</code></pre></div></div></div>
 
 <p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>To integrate Nancy and ELMAH, Christian Westman already did a great job with his Nancy.Elmah project. Install it using NuGet:</p>
-<pre><code class="powershell">Install-Package Nancy.Elmah
-</code></pre>
+<p>To integrate Nancy and ELMAH, Christian Westman already did a great job with his <code>Nancy.Elmah</code> package. Install it using NuGet:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-1><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-1-0_powershell-panel role=tab id=tab-group-1-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-1-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-1_cmd-panel role=tab id=tab-group-1-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-1-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-2_xml-panel role=tab id=tab-group-1-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-1-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-1-3_xml-panel role=tab id=tab-group-1-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-1-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-1-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-1-0_powershell-tab><pre><code class=powershell>Install-Package Nancy.Elmah
+</code></pre></div><div id=tab-group-1-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-1_cmd-tab><pre><code class=cmd>dotnet add package Nancy.Elmah
+</code></pre></div><div id=tab-group-1-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Nancy.Elmah&quot; Version=&quot;0.*&quot; /&gt;
+</code></pre></div><div id=tab-group-1-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-1-3_xml-tab><pre><code class=xml>paket add Nancy.Elmah
+</code></pre></div></div></div>
 
 <p>It’s important that you install the elmah.io package before Nancy.Elmah, because both packages like to add the ELMAH configuration to the web.config file. If you install it the other way around, you will need to add the elmah.io ErrorLog element manually.</p>
 <p>In order for Nancy to know how to log errors to Elmah, you need to add an override of the DefaultNancyBootstrapper. Create a new class in the root named Bootstrapper:</p>
-<pre><code class="csharp">using Nancy;
+<p> <pre><code class=csharp>using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Elmah;
 using Nancy.TinyIoc;
@@ -407,8 +413,7 @@ namespace Elmah.Io.NancyExample
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>The important thing in the code sample is line 13, where we tell Nancy.Elmah to hook into the pipeline of Nancy in order for it to catch and log HTTP errors. The second parameter for the Enable-method, lets us define a URL for the ELMAH error page, which can be used as an alternative to elmah.io for quick viewing of errors.</p>
 
             <br/>

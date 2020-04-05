@@ -385,21 +385,23 @@
 </blockquote>
 <p>Umbraco comes with a nice health check feature which can carry out a range of built-in health checks as well as custom checks you may want to add. Umbraco Health Checks fits perfectly with elmah.io Heartbeats.</p>
 <p>To start publishing Umbraco Health Checks to elmah.io, create a new health check. Select <em>1 day</em> in <em>Interval</em> and <em>5 minutes</em> in <em>Grace</em>. Next, install the <code>Elmah.Io.Umbraco</code> NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Umbraco -IncludePrelease
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Umbraco
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Umbraco&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Umbraco
+</code></pre></div></div></div>
 
 <p>For Umbraco to automatically execute health checks, you will need to set your back office URL in the <code>umbracoSettings.config</code> file:</p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+<p> <pre><code class=xml>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
 &lt;settings&gt;
-  ...
-  &lt;web.routing ... umbracoApplicationUrl=&quot;https://localhost:44381/umbraco/&quot;&gt;
+  &lt;!-- ... --&gt;
+  &lt;web.routing umbracoApplicationUrl=&quot;https://localhost:44381/umbraco/&quot;&gt;
   &lt;/web.routing&gt;
 &lt;/settings&gt;
-</code></pre>
-
+</code></pre></p>
 <p>(localhost used as an example and should be replaced with a real URL)</p>
 <p>Umbraco comes with an email publisher already configured. To publish health check results to your newly created heartbeat, extend the <code>HealthChecks.config</code> file:</p>
-<pre><code class="xml">&lt;?xml version =&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+<p> <pre><code class=xml>&lt;?xml version =&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
 &lt;HealthChecks&gt;
   &lt;disabledChecks&gt;
   &lt;/disabledChecks&gt;
@@ -422,8 +424,7 @@
     &lt;/disabledChecks&gt;
   &lt;/notificationSettings&gt;
 &lt;/HealthChecks&gt;
-</code></pre>
-
+</code></pre></p>
 <p>For this example I have disabled the email notification publisher but you can run with both if you'd like. Replace <code>API_KEY</code>, <code>LOG_ID</code>, and <code>HEARTBEAT_ID</code> with the values found on the elmah.io UI.</p>
 <p>When launching the website Umbraco automatically executes the health checks once every 24 hours and sends the results to elmah.io.</p>
 

@@ -385,22 +385,24 @@
 </blockquote>
 <p>.NET Core offer Worker Services as a way to schedule recurring tasks either hosted inside an ASP.NET Core website or as a Windows Service. Monitoring that Worker Services run successfully, can be easily set up with elmah.io Heartbeats.</p>
 <p>To register heartbeats from a worker service, start by creating a new heartbeat on the elmah.io UI. For this example, we want to monitor that a Service Worker is running every 5 minutes, why we set <em>Interval</em> to 5 minutes and <em>Grace</em> to 1 minute. Next, install the <code>Elmah.Io.Client</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Client
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Client&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Client
+</code></pre></div></div></div>
 
 <p>In the <code>Program.cs</code> or <code>Startup.cs</code> file (depending on where you register dependencies), register <code>IHeartbeats</code> from the elmah.io client:</p>
-<pre><code class="csharp">.ConfigureServices((hostContext, services) =&gt;
+<p> <pre><code class=csharp>.ConfigureServices((hostContext, services) =&gt;
 {
     var elmahIoApi = ElmahioAPI.Create(hostContext.Configuration[&quot;ElmahIo:ApiKey&quot;]);
     services.AddSingleton(elmahIoApi.Heartbeats);
     // ...
     services.AddHostedService&lt;Worker&gt;();
 });
-</code></pre>
-
+</code></pre></p>
 <p>In the example, the configuration should be made available in the <code>appsettings.json</code> file as shown later in this article.</p>
 <p>In the service class (<code>Worker</code>) you can inject the <code>IHeartbeats</code> object, as well as additional configuration needed to create heartbeats:</p>
-<pre><code class="csharp">public class Worker : BackgroundService
+<p> <pre><code class=csharp>public class Worker : BackgroundService
 {
     private readonly IHeartbeats heartbeats;
     private readonly Guid logId;
@@ -413,10 +415,9 @@
         this.heartbeatId = configuration[&quot;ElmahIo:HeartbeatId&quot;];
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Inside the <code>ExecuteAsync</code> method, wrap the worker code in try-catch and call the <code>HealthyAsync</code> method when the worker successfully run and the <code>UnhealthyAsync</code> method when an exception occurs:</p>
-<pre><code class="csharp">protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+<p> <pre><code class=csharp>protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 {
     while (!stoppingToken.IsCancellationRequested)
     {
@@ -434,18 +435,16 @@
         await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the <code>appsettings.json</code> file, add the elmah.io configuration:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;ElmahIo&quot;: {
     &quot;ApiKey&quot;: &quot;API_KEY&quot;,
     &quot;LogId&quot;: &quot;LOG_ID&quot;,
     &quot;HeartbeatId&quot;: &quot;HEARTBEAT_ID&quot;
   }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Replace the values with values found in the elmah.io UI. Remember to enable the <em>Heartbeats</em> | <em>Write</em> permission on the used API key.</p>
 
             <br/>

@@ -410,7 +410,7 @@
 <p>Insert the following step as the last one in your YAML build specification:</p>
 </li>
 </ol>
-<pre><code class="yaml">- name: Notify elmah.io
+<p> <pre><code class=yaml>- name: Notify elmah.io
       shell: powershell
       run: |
         $ProgressPreference = &quot;SilentlyContinue&quot;
@@ -426,7 +426,7 @@
           [Net.SecurityProtocolType]::Tls11,
           [Net.SecurityProtocolType]::Tls
         Invoke-RestMethod -Method Post -Uri $url -Body $body
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

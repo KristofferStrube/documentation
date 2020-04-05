@@ -382,12 +382,15 @@
             <h1 id="logging-to-elmahio-from-wcf">Logging to elmah.io from WCF</h1>
 <p>ELMAH and WCF isn't exactly known to go hand in hand. But, with a bit of custom code, logging exceptions from WCF to elmah.io is possible.</p>
 <p>Let's get started. Install elmah.io into your WCF project using NuGet:</p>
-<pre><code class="powershell">Install-Package Elmah.Io
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io
+</code></pre></div></div></div>
 
 <p>During the installation, you will be asked for your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
 <p>Add a new class named <code>HttpErrorHandler</code>:</p>
-<pre><code class="csharp">public class HttpErrorHandler : IErrorHandler
+<p> <pre><code class=csharp>public class HttpErrorHandler : IErrorHandler
 {
     public bool HandleError(Exception error)
     {
@@ -402,11 +405,10 @@
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>This is an implementation of WCF's <code>IErrorHandler</code> that instructs WCF to log any errors to ELMAH, using the <code>Raise</code>-method on <code>ErrorSignal</code>.</p>
 <p>Then create an attribute named <code>ServiceErrorBehaviourAttribute</code>:</p>
-<pre><code class="csharp">public class ServiceErrorBehaviourAttribute : Attribute, IServiceBehavior
+<p> <pre><code class=csharp>public class ServiceErrorBehaviourAttribute : Attribute, IServiceBehavior
 {
     Type errorHandlerType;
 
@@ -435,16 +437,14 @@
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>We'll use the <code>ServiceErrorBehaviourAttribute</code> class for decorating endpoints which we want logging uncaught errors to ELMAH. Add the new attribute to your service implementation like this:</p>
-<pre><code class="csharp">[ServiceErrorBehaviour(typeof(HttpErrorHandler))]
+<p> <pre><code class=csharp>[ServiceErrorBehaviour(typeof(HttpErrorHandler))]
 public class Service1 : IService1
 {
-    ...
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <p>That's it. Services decorated with the <code>ServiceErrorBehaviourAttribute</code> now logs exceptions to ELMAH.</p>
 
             <br/>

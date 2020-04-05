@@ -386,23 +386,19 @@
 </blockquote>
 <h2 id="updating-the-nuget-package">Updating the NuGet package</h2>
 <p>First, you need to upgrade the Elmah.Io NuGet package:</p>
-<pre><code class="ps">Update-Package Elmah.Io
-</code></pre>
-
+<p> <pre><code class=ps>Update-Package Elmah.Io
+</code></pre></p>
 <p>This installs the latest 3.x client. After doing so, we recommend to update to the latest Elmah.Io.Client package as well (updating Elmah.Io already updated Elmah.Io.Client, but to the lowest possible version):</p>
-<pre><code class="ps">Update-Package Elmah.Io.Client
-</code></pre>
-
+<p> <pre><code class=ps>Update-Package Elmah.Io.Client
+</code></pre></p>
 <p>The elmah.io.core package is no longer needed and can be uninstalled:</p>
-<pre><code class="ps">Uninstall-Package elmah.io.core
-</code></pre>
-
+<p> <pre><code class=ps>Uninstall-Package elmah.io.core
+</code></pre></p>
 <p>Next, you will need to add your API key to your <code>web.config</code>. Where the 2.x client only required a log ID in order to log messages to elmah.io, the new API improves security by introducing API keys (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>). Copy your API key and extend the <code>errorLog</code>-element in <code>web.config</code>:</p>
-<pre><code class="xml">&lt;elmah&gt;
+<p> <pre><code class=xml>&lt;elmah&gt;
   &lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKey=&quot;API_KEY&quot; logId=&quot;LOG_ID&quot; /&gt;
 &lt;/elmah&gt;
-</code></pre>
-
+</code></pre></p>
 <p>If you didn't utilize elmah.io's code from C#, you are ready to rock and roll.</p>
 <h2 id="code-changes">Code changes</h2>
 <p>The 3.x client is auto generated from our new Swagger endpoint. This means that the code doesn't work like previously. We have tried to create extension methods to make some of the API work like previously, but since the client now supports both Messages, Logs and Deployments, code changes are needed.</p>

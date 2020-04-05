@@ -399,12 +399,15 @@
 </ul>
 </div>
 <p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. We've created a client specifically for Azure Functions.</p>
-<p>Install the newest <code>Elmah.Io.Functions</code> prerelease package in your Azure Functions project:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Functions -IncludePrerelease
-</code></pre>
+<p>Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions project:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Functions
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Functions
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Functions&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Functions
+</code></pre></div></div></div>
 
 <p>The elmah.io integration for Azure Functions v2 uses function filters and dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package. To configure elmah.io, open the <code>Startup.cs</code> file or create a new one if not already there. In the <code>Configure</code>-method, add the elmah.io options and exception filter:</p>
-<pre><code class="csharp">using Elmah.Io.Functions;
+<p> <pre><code class=csharp>using Elmah.Io.Functions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
@@ -434,42 +437,38 @@ namespace MyFunction
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Notice how API key and log ID are configured through the <code>ElmahIoFunctionOptions</code> object. In the last line of the <code>Configure</code>-method, the <code>ElmahIoExceptionFilter</code>-filter is configured. This filter will automatically catch any exception caused by your filter and log it to elmah.io.</p>
 <p>A quick comment about the obsolete warning showed when using the package. Microsoft marked <code>IFunctionFilter</code> as obsolete. Not because it will be removed, but because they may change the way attributes work in functions in the future. For now, you can suppress this warning with the following code:</p>
-<pre><code class="csharp">#pragma warning disable CS0618 // Type or member is obsolete
+<p> <pre><code class=csharp>#pragma warning disable CS0618 // Type or member is obsolete
 builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
 #pragma warning restore CS0618 // Type or member is obsolete
-</code></pre>
-
+</code></pre></p>
 <p>In your settings, add the <code>apiKey</code>and <code>logId</code> variables:</p>
-<pre><code class="json">{
-  ...
+<p> <pre><code class=json>{
+  // ...
   &quot;Values&quot;: {
-    ...
+    // ...
     &quot;apiKey&quot;: &quot;API_KEY&quot;,
     &quot;logId&quot;: &quot;LOG_ID&quot;
   }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID. When running on Azure or similar, you can overwrite <code>apiKey</code> and <code>logId</code> with application settings or environment variables as already thoroughly documented on Microsoft's documentation.</p>
 <h2 id="application-name">Application name</h2>
 <p>To set the application name on all errors, set the <code>Application</code> property during initialization:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
+<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
     o.Application = &quot;MyFunction&quot;;
 });
-</code></pre>
-
+</code></pre></p>
 <h2 id="message-hooks">Message hooks</h2>
 <p><code>Elmah.Io.Functions</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
 <h3 id="decorating-log-messages">Decorating log messages</h3>
 <p>To include additional information on log messages, you can use the <code>OnMessage</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
+<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -478,12 +477,11 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
         msg.Version = &quot;1.0.0&quot;;
     };
 });
-</code></pre>
-
+</code></pre></p>
 <p>The example above includes a version number on all errors.</p>
 <h3 id="handle-errors">Handle errors</h3>
 <p>To handle any errors happening while processing a log message, you can use the <code>OnError</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
+<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -492,12 +490,11 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
         logger.LogError(ex, ex.Message);
     };
 });
-</code></pre>
-
+</code></pre></p>
 <p>The example above logs any errors during communication with elmah.io to a local log.</p>
 <h3 id="error-filtering">Error filtering</h3>
 <p>To ignore specific errors based on their content, you can use the <code>OnFilter</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<pre><code class="csharp">builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
+<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
 {
     o.ApiKey = config[&quot;apiKey&quot;];
     o.LogId = new Guid(config[&quot;logId&quot;]);
@@ -506,16 +503,18 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
         return msg.Method == &quot;GET&quot;;
     };
 });
-</code></pre>
-
+</code></pre></p>
 <p>The example above ignores any errors generated during an HTTP <code>GET</code> request.</p>
 <h2 id="logging-through-ilogger">Logging through ILogger</h2>
 <p>Azure Functions can log through Microsoft.Extensions.Logging (MEL) too. By adding the filter, as shown above, all uncaught exceptions are automatically logged. But when configuring your Function app to log through MEL, custom messages can be logged through the <code>ILogger</code> interface. Furthermore, you will get detailed log messages from within the Function host. To set this up, install the <code>Elmah.Io.Extensions.Logging</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Extensions.Logging -IncludePrerelease
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-8><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-8-0_powershell-panel role=tab id=tab-group-8-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-8-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-1_cmd-panel role=tab id=tab-group-8-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-8-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-2_xml-panel role=tab id=tab-group-8-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-3_xml-panel role=tab id=tab-group-8-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-8-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-8-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-8-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-8-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Extensions.Logging&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-8-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Extensions.Logging
+</code></pre></div></div></div>
 
 <p>Then extend your <code>Startup.cs</code> file like this:</p>
-<pre><code class="csharp">builder.Services.AddLogging(logging =&gt;
+<p> <pre><code class=csharp>builder.Services.AddLogging(logging =&gt;
 {
     logging.AddElmahIo(o =&gt;
     {
@@ -524,21 +523,19 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
     });
     logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
 });
-</code></pre>
-
+</code></pre></p>
 <p>In the example, only warning messages and above are logged to elmah.io. You can remove the filter or set another log level if you want to log more.</p>
 <p>Either pass an <code>ILogger</code> to your function method:</p>
-<pre><code class="csharp">public class MyFunction
+<p> <pre><code class=csharp>public class MyFunction
 {
     public static void Run([TimerTrigger(&quot;...&quot;)]TimerInfo myTimer, ILogger log)
     {
         log.LogWarning(&quot;This is a warning&quot;);
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Or inject an <code>ILoggerFactory</code> and create a logger as part of the constructor:</p>
-<pre><code class="csharp">public class MyFunction
+<p> <pre><code class=csharp>public class MyFunction
 {
     private readonly ILogger log;
 
@@ -552,7 +549,7 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
         log.LogWarning(&quot;This is a warning&quot;);
     }
 }
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

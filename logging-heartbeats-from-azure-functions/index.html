@@ -397,12 +397,15 @@
 <h2 id="using-a-filter-in-elmahiofunctions">Using a filter in Elmah.Io.Functions</h2>
 <p>The easiest way of including a heartbeat is to include the <code>ElmahIoHeartbeatFilter</code> available in the <code>Elmah.Io.Functions</code> package. This will automatically publish a <code>Healthy</code> or <code>Unhealthy</code> heartbeat, depending on if your functions execute successfully. This option is great for timer triggered functions like nightly batch jobs.</p>
 <p>Start by installing the <code>Elmah.Io.Functions</code> package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Functions
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Functions
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Functions
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Functions&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Functions
+</code></pre></div></div></div>
 
 <p><code>Elmah.Io.Functions</code> requires dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package, why you will need this package if not already added.</p>
 <p>Extend the <code>Startup.cs</code> (or whatever you named your function startup class) file with the following code:</p>
-<pre><code class="csharp">using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+<p> <pre><code class=csharp>using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -432,18 +435,20 @@ namespace My.FunctionApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>The code installs the <code>ElmahIoHeartbeatFilter</code> class, which will handle all of the communication with the elmah.io API.</p>
 <p>Finally, add the config variables (<code>apiKey</code>, <code>logId</code>, and <code>heartbeatId</code>) to the <code>local.settings.json</code> file, environment variables, Azure configuration settings, or in whatever way you specify settings for your function app.</p>
 <h2 id="manually-using-elmahioclient">Manually using Elmah.Io.Client</h2>
 <p>The example above installs the heartbeat filter for all functions. If you have multiple functions inside your function app, or you want greater control of when and how to send heartbeats, you can use <code>Elmah.Io.Client</code> to create heartbeats.</p>
 <p>Start by installing the <code>Elmah.Io.Client</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Client
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-2><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-2-0_powershell-panel role=tab id=tab-group-2-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-2-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-1_cmd-panel role=tab id=tab-group-2-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-2-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-2_xml-panel role=tab id=tab-group-2-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-3_xml-panel role=tab id=tab-group-2-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-2-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-2-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Client
+</code></pre></div><div id=tab-group-2-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Client
+</code></pre></div><div id=tab-group-2-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Client&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-2-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-2-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Client
+</code></pre></div></div></div>
 
 <p>Extend the <code>Startup.cs</code> file with the following code:</p>
-<pre><code class="csharp">using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+<p> <pre><code class=csharp>using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -469,10 +474,9 @@ namespace My.FunctionApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Inside your function, wrap all of the code in <code>try/catch</code> and add code to create either a <code>Healthy</code> or <code>Unhealthy</code> heartbeat:</p>
-<pre><code class="csharp">using System;
+<p> <pre><code class=csharp>using System;
 using System.Threading.Tasks;
 using Elmah.Io.Client;
 using Elmah.Io.Client.Models;
@@ -517,12 +521,11 @@ namespace My.FunctionApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>If your function code executes successfully, a <code>Healthy</code> heartbeat is created. If an exception is thrown, an <code>Unhealthy</code> heartbeat with the thrown exception in <code>Reason</code> is created.</p>
 <h2 id="using-a-separate-heartbeat-function">Using a separate heartbeat function</h2>
 <p>You may want a single heartbeat representing your entire function app consisting of multiple functions. This is a good option if you want to create heartbeats from queue triggered functions or similar. In these cases, you don't want to create a heartbeat every time a message from the queue is handled, but you will want to notify elmah.io if dependencies like database connection suddenly aren't available. We recommend creating a new heartbeat function for this kind of functions. Like in the previous example, make sure to extend your <code>Startup.cs</code> file like this:</p>
-<pre><code class="csharp">using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+<p> <pre><code class=csharp>using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -548,10 +551,9 @@ namespace My.FunctionApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Then create a new timed function with the following code:</p>
-<pre><code class="csharp">using System;
+<p> <pre><code class=csharp>using System;
 using System.Threading.Tasks;
 using Elmah.Io.Client;
 using Elmah.Io.Client.Models;
@@ -594,28 +596,26 @@ namespace My.FunctionApp
         }
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the example above, the new function named <code>Heartbeat</code> (the name is entirely up to you) executes every 5 minutes. Replace the comment with your checks like opening a connection to the database. If everything works as it should, a <code>Healthy</code> heartbeat is logged to elmah.io. If an exception is thrown while checking your dependencies, an <code>Unhealthy</code> heartbeat is created.</p>
 <p>When running locally, you may want to disable heartbeats. You can use the <code>Disable</code> attribute for that by including the following code:</p>
-<pre><code class="csharp">#if DEBUG
+<p> <pre><code class=csharp>#if DEBUG
     [Disable]
 #endif
     public class Heartbeat
     {
-        ...
+        // ...
     }
-</code></pre>
-
+</code></pre></p>
 <p>or add the following to <code>local.settings.json</code>:</p>
-<pre><code class="json">{
-  ...
+<p> <pre><code class=json>{
+  // ...
   &quot;Values&quot;: {
     &quot;AzureWebJobs.Heartbeat.Disabled&quot;: true,
-    ...
+    // ...
   }
 }
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

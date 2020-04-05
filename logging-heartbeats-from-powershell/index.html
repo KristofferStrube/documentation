@@ -385,7 +385,7 @@
 </blockquote>
 <p>The Heartbeats feature is a great way to verify that scripts run successfully too. A lot of people have PowerShell scripts running on a schedule to clean up folders on the file system, make batch changes in a database, and more.</p>
 <p>To include heartbeats in your PowerShell script, wrap the code in <code>try/catch</code> and add either <code>Healthy</code> or <code>Unhealthy</code> result:</p>
-<pre><code class="powershell">$apiKey = &quot;API_KEY&quot;
+<p> <pre><code class=powershell>$apiKey = &quot;API_KEY&quot;
 $logId = &quot;LOG_ID&quot;
 $heartbeatId = &quot;HEARTBEAT_ID&quot;
 $url = &quot;https://api.elmah.io/v3/heartbeats/$logId/$heartbeatId/?api_key=$apiKey&quot;
@@ -407,8 +407,7 @@ catch
     }
     Invoke-RestMethod -Method Post -Uri $url -Body ($body|ConvertTo-Json) -ContentType &quot;application/json-patch+json&quot;
 }
-</code></pre>
-
+</code></pre></p>
 <p>If everything goes well, a <code>Healthy</code> heartbeat is logged using the <code>Invoke-RestMethod</code> cmdlet. If an exception is thrown in your script, an <code>Unhealthy</code> heartbeat is logged.</p>
 
             <br/>

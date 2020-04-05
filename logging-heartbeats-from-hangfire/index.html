@@ -388,30 +388,30 @@
 </blockquote>
 <p>Scheduling recurring tasks with Hangfire is easy. Monitoring if tasks successfully execute or even run can be a challenge. With elmah.io Heartbeats we provide native monitoring of Hangfire recurring taks.</p>
 <p>To publish heartbeats from Hangifre, install the <code>Elmah.Io.Heartbeats.Hangfire</code> NuGet package:</p>
-<pre><code class="ps">Install-Package Elmah.Io.Heartbeats.Hangfire -IncludePrerelease
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Heartbeats.Hangfire -IncludePrerelease
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Heartbeats.Hangfire --version 3.0.4-pre
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Heartbeats.Hangfire&quot; Version=&quot;3.0.4-pre&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Heartbeats.Hangfire --version 3.0.4-pre
+</code></pre></div></div></div>
 
 <p>For this example, we'll schedule a method named <code>Test</code> to execute every minute:</p>
-<pre><code class="csharp">RecurringJob.AddOrUpdate(() =&gt; Test(), Cron.Minutely);
-</code></pre>
-
+<p> <pre><code class=csharp>RecurringJob.AddOrUpdate(() =&gt; Test(), Cron.Minutely);
+</code></pre></p>
 <p>To automatically publish a heartbeat when the job is executed, add the following <code>using</code>:</p>
-<pre><code class="csharp">using Elmah.Io.Heartbeats.Hangfire;
-</code></pre>
-
+<p> <pre><code class=csharp>using Elmah.Io.Heartbeats.Hangfire;
+</code></pre></p>
 <p>And decorate the <code>Test</code>-method with the <code>ElmahIoHeartbeat</code> attribute:</p>
-<pre><code class="csharp">[ElmahIoHeartbeat(&quot;API_KEY&quot;, &quot;LOG_ID&quot;, &quot;HEARTBEAT_ID&quot;)]
+<p> <pre><code class=csharp>[ElmahIoHeartbeat(&quot;API_KEY&quot;, &quot;LOG_ID&quot;, &quot;HEARTBEAT_ID&quot;)]
 public void Test()
 {
-    ...
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>), <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>), and <code>HEARTBEAT_ID</code> with the correct variables from elmah.io.</p>
 <p>When the job successfully runs, a <code>Healthy</code> heartbeat is logged to elmah.io. If an exception is thrown an <code>Unhealthy</code> heartbeat is logged. elmah.io will automatically create an error if a heartbeat is missing, as long as the heartbeat is correctly configured as explained in <a href="https://docs.elmah.io/setup-heartbeats/">Set up Heartbeats</a>.</p>
 <h2 id="move-configuration-to-config-files">Move configuration to config files</h2>
 <p>You normally don't include your API key, log ID and heartbeat ID in C# code as shown in the example above. Unfortunately, Hangfire attributes doesn't support dependency injection or configuration from config files. There's a small "hack" that you can use to move configuration to a configuration file by creating a custom attribute:</p>
-<pre><code class="csharp">using Elmah.Io.Heartbeats.Hangfire;
+<p> <pre><code class=csharp>using Elmah.Io.Heartbeats.Hangfire;
 using Hangfire.Common;
 using Hangfire.Server;
 using System.Configuration;
@@ -438,16 +438,15 @@ public class AppSettingsElmahIoHeartbeatAttribute : JobFilterAttribute, IServerF
         _inner.OnPerforming(filterContext);
     }
 }
-</code></pre>
-
+</code></pre></p>
 <p>In the example the <code>AppSettingsElmahIoHeartbeatAttribute</code> class wrap <code>ElmahIoHeartbeatAttribute</code>. By doing so, it is possible to fetch configuration from application settings as part of the constructor. The approach would be similar when using <code>IConfiguration</code> (like in ASP.NET Core), but you will need to share a reference to the configuration object somehow.</p>
 <p>To use <code>AppSettingsElmahIoHeartbeatAttribute</code> simply add it to the method:</p>
-<pre><code class="csharp">[AppSettingsElmahIoHeartbeat]
+<p> <pre><code class=csharp>[AppSettingsElmahIoHeartbeat]
 public void Test()
 {
-    ...
+    // ...
 }
-</code></pre>
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>

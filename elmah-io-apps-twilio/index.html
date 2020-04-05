@@ -387,7 +387,7 @@
 <p>Click <em>Save</em> and the app is added to your log. When new errors are logged, an SMS/Text message is automatically sent to the configured phone number.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>If errors aren't being sent to your phone, verify that the configured variables work. To do so, replace the four variables in the top of this PowerShell script and execute it:</p>
-<pre><code class="ps">$sid = &quot;INSERT_SID&quot;
+<p> <pre><code class=ps>$sid = &quot;INSERT_SID&quot;
 $token = &quot;INSERT_TOKEN&quot;
 $from = &quot;INSERT_FROM&quot;
 $to = &quot;INSERT_TO&quot;
@@ -406,8 +406,7 @@ $from = $from.Replace(&quot;+&quot;, &quot;%2B&quot;)
 $to = $to.Replace(&quot;+&quot;, &quot;%2B&quot;)
 
 $response = Invoke-WebRequest -Uri $url -Method POST -Headers $Headers -Body &quot;Body=Affirmative&amp;From=$from&amp;To=$to&quot;
-</code></pre>
-
+</code></pre></p>
 <p>You should see a text message on your phone. The script will output any errors from Twilio if something isn't working.</p>
 
             <br/>

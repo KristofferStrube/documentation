@@ -385,28 +385,24 @@
 <h2 id="using-appsettingsenvironmentjson">Using appsettings.{Environment}.json</h2>
 <p>All ASP.NET Core websites read an environment variable named <code>ASPNETCORE_ENVIRONMENT</code>. The value can be used to set config variables depending on the current environment. The feature works a bit like Web.config transformations that you may remember from the good old ASP.NET days. The value of <code>ASPNETCORE_ENVIRONMENT</code> can be tailored to your need but the following three values are provided out of the box: <code>Development</code>, <code>Staging</code>, and <code>Production</code>.</p>
 <p>To only add elmah.io when on staging or production, you can add the following code when setting up the elmah.io middleware:</p>
-<pre><code class="csharp">public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+<p> <pre><code class=csharp>public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    ...
-
+    // ...
     if (env.IsProduction() || env.IsStaging())
     {
         app.UseElmahIo();
     }
-
-    ...
+    // ...
 }
-</code></pre>
-
+</code></pre></p>
 <p>To create errors in different logs depending on the current environment, create two new files: <code>appsettings.staging.json</code> and <code>appsettings.production.json</code>. Add the <code>ElmahIo</code> config section to both files:</p>
-<pre><code class="json">{
+<p> <pre><code class=json>{
   &quot;ElmahIo&quot;: {
     &quot;ApiKey&quot;: &quot;API_KEY&quot;,
     &quot;LogId&quot;: &quot;LOG_ID&quot;
   }
 }
-</code></pre>
-
+</code></pre></p>
 <p>Inside each file, replace <code>API_KEY</code> with your API key and <code>LOG_ID</code> with the different log IDs.</p>
 <p>The downside of this approach is that you have your production API key and log ID in source control.</p>
 <h2 id="using-azure-application-settings">Using Azure Application settings</h2>

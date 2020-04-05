@@ -395,17 +395,15 @@
 <p>If you want to include your production API key and log ID on AWS only (to avoid having sensitive information in source control), you can do this using <em>Environment properties</em> on AWS. Go to your environment on the AWS console and click the <em>Configuration</em> tab. In the bottom, you will see a section named <em>Environment properties</em>. Input your API key and log ID there:</p>
 <p><img alt="AWS Environment Properties" src="../images/aws-environment-properties.png" /></p>
 <p>AWS inserts the properties as application settings in the <code>Web.config</code> file. To make sure that elmah.io uses API key and log ID from <code>appSettings</code>, change the <code>&lt;elmah&gt;</code> element to reference the keys specified on AWS:</p>
-<pre><code class="xml">&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKeyKey=&quot;elmahio-apikey&quot; logIdKey=&quot;elmahio-logid&quot; /&gt;
-</code></pre>
-
+<p> <pre><code class=xml>&lt;errorLog type=&quot;Elmah.Io.ErrorLog, Elmah.Io&quot; apiKeyKey=&quot;elmahio-apikey&quot; logIdKey=&quot;elmahio-logid&quot; /&gt;
+</code></pre></p>
 <p>The <code>apiKeyKey</code> and <code>logIdKey</code> attributes reference the app settings keys.</p>
 <p>Finally, if you have an API key and/or log ID specified as part of the <code>appSettings&gt;</code> element in <code>Web.config</code>, you will need to remove those when running in production. The reason for this is that AWS only insert missing keys. To do so, modify your <code>Web.release.config</code> file:</p>
-<pre><code class="xml">&lt;appSettings&gt;
+<p> <pre><code class=xml>&lt;appSettings&gt;
   &lt;add key=&quot;elmahio-logid&quot; xdt:Transform=&quot;Remove&quot; xdt:Locator=&quot;Match(key)&quot; /&gt;
   &lt;add key=&quot;elmahio-apikey&quot; xdt:Transform=&quot;Remove&quot; xdt:Locator=&quot;Match(key)&quot; /&gt;
 &lt;/appSettings&gt;
-</code></pre>
-
+</code></pre></p>
 <h2 id="aspnet-core">ASP.NET Core</h2>
 <p>To install elmah.io in ASP.NET Core, follow this guide: <a href="https://docs.elmah.io/logging-to-elmah-io-from-aspnet-core/">Logging to elmah.io from ASP.NET Core</a>.</p>
 <p>Unfortunately, Beanstalk configuration doesn't play well with the configuration system in .NET Core. From the Beanstalk documentation:</p>

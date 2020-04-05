@@ -384,24 +384,25 @@
 <a href="https://github.com/elmahio/Elmah.Io.Extensions.Logging/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-2-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-entity-framework-core">Logging to elmah.io from Entity Framework Core</h1>
 <p>Both elmah.io and Entity Framework Core supports logging through Microsoft.Extensions.Logging. To log all errors happening inside Entity Framework Core, install the <a href="https://www.nuget.org/packages/Elmah.Io.Extensions.Logging/">Elmah.Io.Extensions.Logging</a> NuGet package:</p>
-<pre><code class="powershell">Install-Package Elmah.Io.Extensions.Logging
-</code></pre>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Extensions.Logging
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Extensions.Logging&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Extensions.Logging
+</code></pre></div></div></div>
 
 <p>Then add elmah.io to a new or existing <code>LoggerFactory</code>:</p>
-<pre><code class="csharp">var loggerFactory = new LoggerFactory()
+<p> <pre><code class=csharp>var loggerFactory = new LoggerFactory()
     .AddElmahIo(&quot;API_KEY&quot;, new Guid(&quot;LOG_ID&quot;));
-</code></pre>
-
+</code></pre></p>
 <p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> with the log ID (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) that should receive errors from Entity Framework.</p>
 <blockquote>
 <p>When using Entity Framework Core from ASP.NET Core, you never create your own <code>LoggerFactory</code>. Factories are provided through DI by ASP.NET Core. Check out <a href="https://github.com/elmahio/Elmah.Io.Extensions.Logging/tree/master/samples/Elmah.Io.Extensions.LoggingAspNetCore2WithEfCore2">this sample</a> for details.</p>
 </blockquote>
 <p>Finally, enable logging in Entity Framework Core:</p>
-<pre><code class="csharp">optionsBuilder
+<p> <pre><code class=csharp>optionsBuilder
     .UseLoggerFactory(loggerFactory)
-    .UseSqlServer(...);
-</code></pre>
-
+    .UseSqlServer(/*...*/);
+</code></pre></p>
 <p>(<code>UseSqlServer</code> included for illustration purposes only - elmah.io works with any provider)</p>
 <p>That's it! All errors happening in Entity Framework Core, are now logged in elmah.io.</p>
 
