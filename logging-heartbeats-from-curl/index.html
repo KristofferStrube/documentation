@@ -380,9 +380,6 @@
           <div class="main-content-body">
 
             <h1 id="logging-heartbeats-from-curl">Logging heartbeats from cURL</h1>
-<blockquote>
-<p>The Heartbeats feature is currently in beta and still experimental.</p>
-</blockquote>
 <p>Sometimes is just easier to use cURL when needing to call a REST API. Creating elmah.io heartbeats is easy using cURL and fits well into scripts, scheduled tasks, and similar.</p>
 <p>To create a new heartbeat, include the following cURL command in your script:</p>
 <p> <pre><code class=bash>curl -X POST &quot;https://api.elmah.io/v3/heartbeats/LOG_ID/HEARTBEAT_ID?api_key=API_KEY&quot; -H &quot;accept: application/json&quot; -H &quot;Content-Type: application/json-patch+json&quot; -d &quot;{ \&quot;result\&quot;: \&quot;Healthy\&quot;}&quot;

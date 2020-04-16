@@ -380,9 +380,6 @@
           <div class="main-content-body">
 
             <h1 id="logging-heartbeats-from-powershell">Logging heartbeats from PowerShell</h1>
-<blockquote>
-<p>The Heartbeats feature is currently in beta and still experimental.</p>
-</blockquote>
 <p>The Heartbeats feature is a great way to verify that scripts run successfully too. A lot of people have PowerShell scripts running on a schedule to clean up folders on the file system, make batch changes in a database, and more.</p>
 <p>To include heartbeats in your PowerShell script, wrap the code in <code>try/catch</code> and add either <code>Healthy</code> or <code>Unhealthy</code> result:</p>
 <p> <pre><code class=powershell>$apiKey = &quot;API_KEY&quot;
