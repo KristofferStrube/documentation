@@ -609,7 +609,7 @@ var logger = new LoggerConfiguration()
 <p>And configure it in C# code:</p>
 <p> <pre><code class=csharp>var logger = new LoggerConfiguration()
     .Enrich.WithExceptionDetails()
-    .WriteTo.ElmahIo(/*...*/)    
+    .WriteTo.ElmahIo(/*...*/)
     .CreateLogger();
 </code></pre></p>
 <p>The elmah.io sink will automatically pick up the additional information and show them in the extended message details overlay. To navigate to this view, click an error on the search view. Then click the <kbd><span class="fa fa-bars"></span></kbd> button in the upper right corner to open extended message details. The information logged by <code>Serilog.Exceptions</code> are available beneath the <em>Data</em> tab.</p>
@@ -635,7 +635,9 @@ var logger = new LoggerConfiguration()
 
 <p>Set up destructuring from attributes:</p>
 <p> <pre><code class=csharp>Log.Logger = new LoggerConfiguration()
-    .Destructure.UsingAttributes();
+    .Destructure.UsingAttributes()
+    .WriteTo.ElmahIo(/*...*/)
+    .CreateLogger();
 </code></pre></p>
 <p>Make sure to decorate any properties including sensitive data with the <code>NotLogged</code> attribute:</p>
 <p> <pre><code class=csharp>public class LoginModel
