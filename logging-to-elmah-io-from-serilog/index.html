@@ -396,6 +396,7 @@
 <li><a href="#aspnet-core">ASP.NET Core</a></li>
 <li><a href="#config-using-appsettingsjson">Config using appsettings.json</a></li>
 <li><a href="#extended-exception-details-with-serilogexceptions">Extended exception details with Serilog.Exceptions</a></li>
+<li><a href="#remove-sensitive-data">Remove sensitive data</a></li>
 </ul>
 </li>
 </ul>
@@ -612,6 +613,39 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 </code></pre></p>
 <p>The elmah.io sink will automatically pick up the additional information and show them in the extended message details overlay. To navigate to this view, click an error on the search view. Then click the <kbd><span class="fa fa-bars"></span></kbd> button in the upper right corner to open extended message details. The information logged by <code>Serilog.Exceptions</code> are available beneath the <em>Data</em> tab.</p>
+<h2 id="remove-sensitive-data">Remove sensitive data</h2>
+<p>Structured logging with Serilog is a great way to store a lot of contextual information about a log message. In some cases, it may result in sensitive data being stored in your log, though. We recommend you to remove any sensitive data from your log messages before storing them on elmah.io and anywhere else. To implement this, you can use the <code>OnMessage</code> event as already shown previously in the document:</p>
+<p> <pre><code class=csharp>OnMessage = msg =&gt;
+{
+    foreach (var d in msg.Data)
+    {
+        if (d.Key.Equals(&quot;Password&quot;))
+        {
+            d.Value = &quot;****&quot;;
+        }
+    }
+}
+</code></pre></p>
+<p>An alternative to replacing sensitive values manually is to use a custom destructuring package for Serilog. The following example shows how to achieve this using the <code>Destructurama.Attributed</code> package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-19><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-19-0_powershell-panel role=tab id=tab-group-19-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-19-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-19-1_cmd-panel role=tab id=tab-group-19-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-19-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-19-2_xml-panel role=tab id=tab-group-19-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-19-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-19-3_xml-panel role=tab id=tab-group-19-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-19-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-19-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-19-0_powershell-tab><pre><code class=powershell>Install-Package Destructurama.Attributed
+</code></pre></div><div id=tab-group-19-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-19-1_cmd-tab><pre><code class=cmd>dotnet add package Destructurama.Attributed
+</code></pre></div><div id=tab-group-19-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-19-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Destructurama.Attributed&quot; Version=&quot;2.*&quot; /&gt;
+</code></pre></div><div id=tab-group-19-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-19-3_xml-tab><pre><code class=xml>paket add Destructurama.Attributed
+</code></pre></div></div></div>
+
+<p>Set up destructuring from attributes:</p>
+<p> <pre><code class=csharp>Log.Logger = new LoggerConfiguration()
+    .Destructure.UsingAttributes();
+</code></pre></p>
+<p>Make sure to decorate any properties including sensitive data with the <code>NotLogged</code> attribute:</p>
+<p> <pre><code class=csharp>public class LoginModel
+{
+    public string Username { get; set; }
+
+    [NotLogged]
+    public string Password { get; set; }
+}
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
