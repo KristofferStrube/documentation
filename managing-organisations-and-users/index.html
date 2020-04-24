@@ -379,32 +379,53 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="managing-organisations-and-users">Managing Organisations and Users</h1>
-<p>Chances are that you are not the only one needing to access your logs. Luckily, elmah.io offers great features in order to manage the users in your organisation and to specify who should be allowed access to what.</p>
+            <h1 id="managing-organizations-and-users">Managing Organizations and Users</h1>
+<div class="toc">
+<ul>
+<li><a href="#managing-organizations-and-users">Managing Organizations and Users</a><ul>
+<li><a href="#adding-existing-users-to-an-organization">Adding existing users to an organization</a></li>
+<li><a href="#invite-new-users-to-an-organization">Invite new users to an organization</a></li>
+<li><a href="#control-security">Control security</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Chances are that you are not the only one needing to access your logs. Luckily, elmah.io offers great features to manage the users in your organization and to specify who should be allowed access to what.</p>
 <p>This guide is also available as a short video tutorial here:</p>
 <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/7O43XBy4Kfg?rel=0" allowfullscreen></iframe>
 </div>
 
 <p><br/></p>
-<p>In order to manage access, you will need to know about the concepts of <strong>users</strong> and <strong>organisations</strong>.</p>
-<p>A <strong>user</strong> represents a person wanting to access one or more logs. Each user has its own login using username/password or a social provider of choice. A user can be added to one or more organisations. Each user has an access level within the organisation as well as an access level on each log. The access level on the organisation and the logs doesn't need to be the same.</p>
-<p>An <strong>organisation</strong> is a collection of users and their role inside the organisation. You will typically only need a single organisation, representing all of the users in your company needing to access one or more logs on elmah.io. Your elmah.io subscription is attached your organization and everyone with administrator access to the organization, will be able to manage the subscription.</p>
-<h2 id="adding-users-to-an-organisation">Adding users to an organisation</h2>
-<p>To assign users to a log, you will need to add them to the organisation first. When hovering the organisation name in either the left menu or on the dashboard, you will see a small gear icon. When clicking the icon, you will be taken to the organisation settings page:</p>
-<p><img alt="Organisation Settings" src="../images/organisation_settings.png" /></p>
-<p>At first, the user creating the organisation will be the only one in the list. To add a new user to the list, input the user's email or name in the textbox below <em>Add new user</em>. The dropdown will show a list of users on elmah.io matching your query.</p>
+<p>To manage access, you will need to know about the concepts of <strong>users</strong> and <strong>organizations</strong>.</p>
+<p>A <strong>user</strong> represents a person wanting to access one or more logs. Each user has its login using username/password or a social provider of choice. A user can be added to one or more organizations. Each user has an access level within the organization as well as an access level on each log. The access level on the organization and the logs doesn't need to be the same.</p>
+<p>An <strong>organization</strong> is a collection of users and their role inside the organization. You will typically only need a single organization, representing all of the users in your company needing to access one or more logs on elmah.io. Your elmah.io subscription is attached your organization and everyone with administrator access to the organization, will be able to manage the subscription.</p>
+<h2 id="adding-existing-users-to-an-organization">Adding existing users to an organization</h2>
+<p>To assign users to a log, you will need to add them to the organization first. When hovering the organization name in either the left menu or on the dashboard, you will see a small gear icon. When clicking the icon, you will be taken to the organization settings page:</p>
+<p><img alt="Organization Settings" src="../images/organisation_settings.png" /></p>
+<p>At first, the user creating the organization will be the only one in the list. To add a new user to the list, click the <em>Add user</em> button and input the user's email or name in the textbox. The dropdown will show a list of users on elmah.io matching your query.</p>
 <blockquote>
-<p>Each user needs to sign up on elmah.io before being visible in the <em>Add new user</em> list.</p>
+<p>Each user needs to sign up on elmah.io before being visible through <em>Add user</em>. Read on to learn how to invite new users.</p>
 </blockquote>
-<p>When the new user is visible in the dropdown, click the user and select an access level. The chosen access level decides what the new user is allowed to do inside the organisation. <em>Read</em> users are only allowed to view the organisation, while <em>Administrator</em> users are allowed to add new users and delete the entire organisation and all logs beneath it. The access level set for the user in the organisation, will become the user's access level on all new logs inside that organisation as well. Let's add a new user to the organisation:</p>
-<p><img alt="Add User to Organisation" src="../images/add_user_to_org.png" /></p>
-<p>To change the access level on an already added user, click one of the grouped buttons to the right of the user's name. Changing a user's access level on the organisation won't change the users access level on each log. To delete a user from the organisation, click the red delete button to the far right.</p>
-<p>When a user is added to an organisation, the user will automatically have access to all new logs created in that organisation. For security reasons, a new user added to the organisation, will not have access to existing logs in the organisation. To assign the new user to existing logs, assign an access level on each log shown beneath the user. The list of logs can be opened by clicking the dropdown button to the right of the user.</p>
+<p>When the new user is visible in the dropdown, click the user and select an access level. The chosen access level decides what the new user is allowed to do inside the organization. <em>Read</em> users are only allowed to view the organization, while <em>Administrator</em> users are allowed to add new users and delete the entire organization and all logs beneath it. The access level set for the user in the organization, will become the user's access level on all new logs inside that organization as well. Let's add a new user to the organization:</p>
+<p><img alt="Add User to Organization" src="../images/add_user_to_org.png" /></p>
+<p>To change the access level on an already added user, click one of the grouped buttons to the right of the user's name. Changing a user's access level on the organization won't change the users access level on each log. To delete a user from the organization, click the red delete button to the far right.</p>
+<p>When a user is added to an organization, the user will automatically have access to all new logs created in that organization. For security reasons, a new user added to the organization, will not have access to existing logs in the organization. To assign the new user to existing logs, assign an access level on each log shown beneath the user. The list of logs can be opened by clicking the dropdown button to the right of the user.</p>
 <blockquote>
-<p>Awarding a user <em>Administrator</em> on a log, doesn't give them <em>Administrator</em> rights on the organisation.</p>
+<p>Awarding a user <em>Administrator</em> on a log, doesn't give them <em>Administrator</em> rights on the organization.</p>
 </blockquote>
 <p>To assign a user to all logs, click the <em>None</em>, <em>Read</em>, <em>Write</em> or <em>Administrator</em> buttons in the table header above the list of logs.</p>
+<h2 id="invite-new-users-to-an-organization">Invite new users to an organization</h2>
+<p>If someone not already created as a user on elmah.io needs access to your organization, you can use the <em>Invite</em> feature. Inviting users will send them an email telling them to sign up for elmah.io and automatically add them to your organization.</p>
+<p>To invite a user click the <em>Invite user</em> button and input the new users email. Select an organization access level and click the green <em>Invite user</em> button. This will add the new user to the organization and display it as "Invited" until the user sign up.</p>
+<h2 id="control-security">Control security</h2>
+<p>You may have requirements of using two-factor authentication or against using social logins in your company. These requirements can be configured on elmah.io as well. Click the <em>Security</em> button above the users list to set it up:</p>
+<p><img alt="Users security" src="../images/users-security.png" /></p>
+<p>The toggles are documented through the UI. Here's an explanation for reference:</p>
+<p><strong>Enforce two-factor authentication</strong></p>
+<p>When enabling this toggle, all users in your organization will be required to set up two-factor authentication. Requiring two-factor authentication will also disallow social accounts since we have no way of knowing if a user signing up with a social account has enabled two-factor authentication or not.</p>
+<p><strong>Disallow social login</strong></p>
+<p>When enabling this toggle, all users in your organization will need to be signed up with a username and password. The icon next to each user's name on the list of users shows the bug icon if the user signed up with a username and password.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
