@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from Azure Functions | elmah.io">
+    <meta name="twitter:title" content="Logging heartbeats from AWS Lambdas | elmah.io">
     
     
-    <meta property="og:title" content="Logging from Azure Functions | elmah.io">
+    <meta property="og:title" content="Logging heartbeats from AWS Lambdas | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-azure-functions/">
+    <meta property="og:url" content="https://docs.elmah.io/logging-heartbeats-from-aws-lambdas/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from Azure Functions | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-azure-functions/">
+    <title>Logging heartbeats from AWS Lambdas | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/logging-heartbeats-from-aws-lambdas/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -192,7 +192,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Logging from something else</a>
                 <ul>
                   
@@ -208,7 +208,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-azure-webjobs/">Logging from Azure WebJobs</a></li>
                   
-                  <li class="active"><a href="./">Logging from Azure Functions</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-azure-functions/">Logging from Azure Functions</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-aws-beanstalk/">Logging from AWS Beanstalk</a></li>
                   
@@ -277,7 +277,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Heartbeats</a>
                 <ul>
                   
@@ -297,7 +297,7 @@
                   
                   <li ><a href="../logging-heartbeats-from-net-core-worker-services/">Logging heartbeats from .NET Core Worker Services</a></li>
                   
-                  <li ><a href="../logging-heartbeats-from-aws-lambdas/">Logging heartbeats from AWS Lambdas</a></li>
+                  <li class="active"><a href="./">Logging heartbeats from AWS Lambdas</a></li>
                   
                 </ul>
               </li>
@@ -381,177 +381,47 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-functions"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/wijhscta71muvd5b?svg=true" /></a>
-<a href="https://www.nuget.org/packages/Elmah.Io.Functions"><img alt="NuGet" src="https://img.shields.io/nuget/v/Elmah.Io.Functions.svg" /></a>
-<a href="https://github.com/elmahio/Elmah.Io.Functions/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-4-brightgreen.svg" /></a></p>
-<h1 id="logging-to-elmahio-from-azure-functions">Logging to elmah.io from Azure Functions</h1>
-<div class="toc">
-<ul>
-<li><a href="#logging-to-elmahio-from-azure-functions">Logging to elmah.io from Azure Functions</a><ul>
-<li><a href="#application-name">Application name</a></li>
-<li><a href="#message-hooks">Message hooks</a><ul>
-<li><a href="#decorating-log-messages">Decorating log messages</a></li>
-<li><a href="#handle-errors">Handle errors</a></li>
-<li><a href="#error-filtering">Error filtering</a></li>
-</ul>
-</li>
-<li><a href="#logging-through-ilogger">Logging through ILogger</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Logging errors from <a href="https://elmah.io/features/azure-functions/">Azure Functions</a>, requires only a few lines of code. We've created a client specifically for Azure Functions.</p>
-<p>Install the newest <code>Elmah.Io.Functions</code> package in your Azure Functions project:</p>
-<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Functions
-</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Functions
-</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Functions&quot; Version=&quot;3.*&quot; /&gt;
-</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Functions
+            <h1 id="logging-heartbeats-from-aws-lambdas">Logging heartbeats from AWS Lambdas</h1>
+<p>AWS Lambdas running on a schedule are great candidates for logging heartbeats to elmah.io. To send a healthy heartbeat when the Lambda runs successfully and an unhealthy heartbeat when an error happens, start by installing the <code>Elmah.Io.Client</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Client
+</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Client&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Client
 </code></pre></div></div></div>
 
-<p>The elmah.io integration for Azure Functions v2 uses function filters and dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package. To configure elmah.io, open the <code>Startup.cs</code> file or create a new one if not already there. In the <code>Configure</code>-method, add the elmah.io options and exception filter:</p>
-<p> <pre><code class=csharp>using Elmah.Io.Functions;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+<p>Include elmah.io API key, log ID, and heartbeat ID in your code. In this example, they are added as static fields:</p>
+<p> <pre><code class=csharp>private const string ApiKey = &quot;API_KEY&quot;;
+private const string HeartbeatId = &quot;HEARTBEAT_ID&quot;;
+private static Guid LogId = new Guid(&quot;LOG_ID&quot;);
+</code></pre></p>
+<p>Replace <code>API_KEY</code> with an API key with the <em>Heartbeats | Write</em> permission (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>), <code>HEARTBEAT_ID</code> with the ID of the heartbeat available on the elmah.io UI, and <code>LOG_ID</code> with the ID of the log containing the heartbeat (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
+<p>Create the elmah.io client and store the <code>IHeartbeat</code> object somewhere. In the following example, it is initialized in the <code>Main</code> method and stored in a static field:</p>
+<p> <pre><code class=csharp>private static IHeartbeats heartbeats;
 
-[assembly: FunctionsStartup(typeof(MyFunction.Startup))]
-
-namespace MyFunction
+private static async Task Main(string[] args)
 {
-    public class Startup : FunctionsStartup
-    {
-        public override void Configure(IFunctionsHostBuilder builder)
-        {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile(&quot;local.settings.json&quot;, optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
-            {
-                o.ApiKey = config[&quot;apiKey&quot;];
-                o.LogId = new Guid(config[&quot;logId&quot;]);
-            });
-
-            builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
-        }
-    }
-}
-</code></pre></p>
-<p>Notice how API key and log ID are configured through the <code>ElmahIoFunctionOptions</code> object. In the last line of the <code>Configure</code>-method, the <code>ElmahIoExceptionFilter</code>-filter is configured. This filter will automatically catch any exception caused by your filter and log it to elmah.io.</p>
-<p>A quick comment about the obsolete warning showed when using the package. Microsoft marked <code>IFunctionFilter</code> as obsolete. Not because it will be removed, but because they may change the way attributes work in functions in the future. For now, you can suppress this warning with the following code:</p>
-<p> <pre><code class=csharp>#pragma warning disable CS0618 // Type or member is obsolete
-builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
-#pragma warning restore CS0618 // Type or member is obsolete
-</code></pre></p>
-<p>In your settings, add the <code>apiKey</code>and <code>logId</code> variables:</p>
-<p> <pre><code class=json>{
-  // ...
-  &quot;Values&quot;: {
+    heartbeats = ElmahioAPI.Create(ApiKey).Heartbeats;
     // ...
-    &quot;apiKey&quot;: &quot;API_KEY&quot;,
-    &quot;logId&quot;: &quot;LOG_ID&quot;
-  }
 }
 </code></pre></p>
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) and <code>LOG_ID</code> (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>) with your log ID. When running on Azure or similar, you can overwrite <code>apiKey</code> and <code>logId</code> with application settings or environment variables as already thoroughly documented on Microsoft's documentation.</p>
-<h2 id="application-name">Application name</h2>
-<p>To set the application name on all errors, set the <code>Application</code> property during initialization:</p>
-<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
+<p>In the function handler, wrap your code in try/catch and call either the <code>Healthy</code> or <code>Unhealthy</code> method:</p>
+<p> <pre><code class=csharp>public static string FunctionHandler(string input, ILambdaContext context)
 {
-    o.ApiKey = config[&quot;apiKey&quot;];
-    o.LogId = new Guid(config[&quot;logId&quot;]);
-    o.Application = &quot;MyFunction&quot;;
-});
-</code></pre></p>
-<h2 id="message-hooks">Message hooks</h2>
-<p><code>Elmah.Io.Functions</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core.</p>
-<h3 id="decorating-log-messages">Decorating log messages</h3>
-<p>To include additional information on log messages, you can use the <code>OnMessage</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
-{
-    o.ApiKey = config[&quot;apiKey&quot;];
-    o.LogId = new Guid(config[&quot;logId&quot;]);
-    o.OnMessage = msg =&gt;
+    try
     {
-        msg.Version = &quot;1.0.0&quot;;
-    };
-});
-</code></pre></p>
-<p>The example above includes a version number on all errors.</p>
-<h3 id="handle-errors">Handle errors</h3>
-<p>To handle any errors happening while processing a log message, you can use the <code>OnError</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
-{
-    o.ApiKey = config[&quot;apiKey&quot;];
-    o.LogId = new Guid(config[&quot;logId&quot;]);
-    o.OnError = (msg, ex) =&gt;
-    {
-        logger.LogError(ex, ex.Message);
-    };
-});
-</code></pre></p>
-<p>The example above logs any errors during communication with elmah.io to a local log.</p>
-<h3 id="error-filtering">Error filtering</h3>
-<p>To ignore specific errors based on their content, you can use the <code>OnFilter</code> event when initializing <code>ElmahIoFunctionOptions</code>:</p>
-<p> <pre><code class=csharp>builder.Services.Configure&lt;ElmahIoFunctionOptions&gt;(o =&gt;
-{
-    o.ApiKey = config[&quot;apiKey&quot;];
-    o.LogId = new Guid(config[&quot;logId&quot;]);
-    o.OnFilter = msg =&gt;
-    {
-        return msg.Method == &quot;GET&quot;;
-    };
-});
-</code></pre></p>
-<p>The example above ignores any errors generated during an HTTP <code>GET</code> request.</p>
-<h2 id="logging-through-ilogger">Logging through ILogger</h2>
-<p>Azure Functions can log through Microsoft.Extensions.Logging (MEL) too. By adding the filter, as shown above, all uncaught exceptions are automatically logged. But when configuring your Function app to log through MEL, custom messages can be logged through the <code>ILogger</code> interface. Furthermore, you will get detailed log messages from within the Function host. To set this up, install the <code>Elmah.Io.Extensions.Logging</code> NuGet package:</p>
-<div class=md-fenced-code-tabs id=tab-tab-group-8><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-8-0_powershell-panel role=tab id=tab-group-8-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-8-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-1_cmd-panel role=tab id=tab-group-8-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-8-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-2_xml-panel role=tab id=tab-group-8-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-8-3_xml-panel role=tab id=tab-group-8-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-8-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-8-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-8-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Extensions.Logging
-</code></pre></div><div id=tab-group-8-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Extensions.Logging
-</code></pre></div><div id=tab-group-8-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Extensions.Logging&quot; Version=&quot;3.*&quot; /&gt;
-</code></pre></div><div id=tab-group-8-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-8-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Extensions.Logging
-</code></pre></div></div></div>
+        // Lambda code goes here
 
-<p>Then extend your <code>Startup.cs</code> file like this:</p>
-<p> <pre><code class=csharp>builder.Services.AddLogging(logging =&gt;
-{
-    logging.AddElmahIo(o =&gt;
+        heartbeats.Healthy(LogId, HeartbeatId);
+        return input?.ToUpper();
+    }
+    catch (Exception e)
     {
-        o.ApiKey = config[&quot;apiKey&quot;];
-        o.LogId = new Guid(config[&quot;logId&quot;]);
-    });
-    logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
-});
-</code></pre></p>
-<p>In the example, only warning messages and above are logged to elmah.io. You can remove the filter or set another log level if you want to log more.</p>
-<p>Either pass an <code>ILogger</code> to your function method:</p>
-<p> <pre><code class=csharp>public class MyFunction
-{
-    public static void Run([TimerTrigger(&quot;...&quot;)]TimerInfo myTimer, ILogger log)
-    {
-        log.LogWarning(&quot;This is a warning&quot;);
+        heartbeats.Unhealthy(LogId, HeartbeatId, e.ToString());
+        throw;
     }
 }
 </code></pre></p>
-<p>Or inject an <code>ILoggerFactory</code> and create a logger as part of the constructor:</p>
-<p> <pre><code class=csharp>public class MyFunction
-{
-    private readonly ILogger log;
-
-    public Function1(ILoggerFactory loggerFactory)
-    {
-        this.log = loggerFactory.CreateLogger(&quot;MyFunction&quot;);
-    }
-
-    public void Run([TimerTrigger(&quot;...&quot;)]TimerInfo myTimer)
-    {
-        log.LogWarning(&quot;This is a warning&quot;);
-    }
-}
-</code></pre></p>
+<p>When the lambda code runs (replace the <code>Lambda code goes here</code> comment with your code) without exceptions, a healthy heartbeat is logged to elmah.io. In case of an exception, an unhealthy heartbeat is logged to elmah.io. In case your Lambda doesn't run at all, elmah.io automatically logs a missing heartbeat.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
