@@ -396,6 +396,7 @@
 </ul>
 </li>
 <li><a href="#logging-through-ilogger">Logging through ILogger</a></li>
+<li><a href="#azure-functions-v1">Azure Functions v1</a></li>
 </ul>
 </li>
 </ul>
@@ -552,6 +553,8 @@ builder.Services.AddSingleton&lt;IFunctionFilter, ElmahIoExceptionFilter&gt;();
     }
 }
 </code></pre></p>
+<h2 id="azure-functions-v1">Azure Functions v1</h2>
+<p>The recent <code>Elmah.Io.Functions</code> package no longer supports Azure Functions v1. You can still log from Functions v1 using an older version of the package. Check out <a href="/logging-to-elmah-io-from-azure-webjobs/">Logging to elmah.io from Azure WebJobs</a> for details. The guide is for Azure WebJobs but installation for Functions v1 is identical.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
