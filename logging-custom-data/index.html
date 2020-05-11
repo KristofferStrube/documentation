@@ -417,9 +417,10 @@ logger.OnMessage += (sender, args) =&gt;
 <p>Example:</p>
 <p> <pre><code class=csharp>Elmah.ErrorLog.GetDefault(null);
 var logger = ErrorLog.Client;
-logger.OnMessage += (sender, args) =&gt;{
+logger.OnMessage += (sender, args) =&gt;
+{
     if (args.Message.Data == null) args.Message.Data = new List&lt;Item&gt;();
-    args.Message.Data.Add(new Item { Key = &quot;X-ELMAHIO-SEARCH-myVariable&quot;, Value = &quot;Some funky value&quot; });
+    args.Message.Data.Add(new Item { Key = &quot;X-ELMAHIO-SEARCH-myVariable&quot;, Value = &quot;Some value&quot; });
 };
 </code></pre></p>
 <p>would make <code>myVariable</code> searchable using this query:</p>
