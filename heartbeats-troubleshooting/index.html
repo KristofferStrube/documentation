@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging errors programmatically | elmah.io">
+    <meta name="twitter:title" content="Heartbeats Troubleshooting | elmah.io">
     
     
-    <meta property="og:title" content="Logging errors programmatically | elmah.io">
+    <meta property="og:title" content="Heartbeats Troubleshooting | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-errors-programmatically/">
+    <meta property="og:url" content="https://docs.elmah.io/heartbeats-troubleshooting/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging errors programmatically | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-errors-programmatically/">
+    <title>Heartbeats Troubleshooting | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/heartbeats-troubleshooting/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -92,7 +92,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">ASP.NET / MVC / Web API</a>
                 <ul>
                   
@@ -110,7 +110,7 @@
                   
                   <li ><a href="../logging-custom-data/">Logging custom data</a></li>
                   
-                  <li class="active"><a href="./">Logging errors programmatically</a></li>
+                  <li ><a href="../logging-errors-programmatically/">Logging errors programmatically</a></li>
                   
                   <li ><a href="../logging-to-multiple-elmah-logs/">Logging to multiple logs</a></li>
                   
@@ -277,7 +277,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Heartbeats</a>
                 <ul>
                   
@@ -299,7 +299,7 @@
                   
                   <li ><a href="../logging-heartbeats-from-aws-lambdas/">Logging heartbeats from AWS Lambdas</a></li>
                   
-                  <li ><a href="../heartbeats-troubleshooting/">Heartbeats Troubleshooting</a></li>
+                  <li class="active"><a href="./">Heartbeats Troubleshooting</a></li>
                   
                 </ul>
               </li>
@@ -383,35 +383,16 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-errors-programmatically">Logging errors programmatically</h1>
-<p>So you’ve setup a shiny new ELMAH log and all of your un-handled errors are logged to ELMAH. Now you’re wondering: “How do I log my handled errors to ELMAH programmatically?”</p>
-<p>You are in luck! ELMAH provides a nice API to do just that through error signaling. Consider the following code:</p>
-<p> <pre><code class=csharp>try
-{
-    int i = 0;
-    int result = 42 / i;
-}
-catch (DivideByZeroException e)
-{
-    // What to do?
-}
+            <h1 id="heartbeats-troubleshooting">Heartbeats Troubleshooting</h1>
+<h2 id="common-problems-and-how-to-fix-them">Common problems and how to fix them</h2>
+<p>Here you will a list of common problems and how to solve them.</p>
+<h3 id="timeout-when-creating-heartbeats-through-elmahioclient">Timeout when creating heartbeats through Elmah.Io.Client</h3>
+<p>If you experience a timeout when calling the <code>Healthy</code>, <code>Degraded</code>, or <code>Unhealthy</code> method, you may want to adjust the default HTTP timeout. <code>Elmah.Io.Client</code> has a default timeout of 5 seconds to make sure that logging to elmah.io from a web application won't slow down the web app too much in case of slow response time from the elmah.io API. While 99.9% of the requests to the elmah.io API finishes within this timeout, problems with Azure, the network connection, and a lot of other issues can happen.</p>
+<p>Since heartbeats typically run outside the scope of a web request, it's safe to increase the default HTTP timeout in this case:</p>
+<p> <pre><code class=csharp>var api = (ElmahioAPI)ElmahioAPI.Create(&quot;API_KEY&quot;);
+api.HttpClient.Timeout = new TimeSpan(0, 0, 30);
 </code></pre></p>
-<p>Obviously an exception is thrown when trying to divide by zero, but what if we want to catch (and log) that exception instead of throwing it back through the call stack? With ELMAH’s <code>ErrorSignal</code> class we can log the error:</p>
-<p> <pre><code class=csharp>try
-{
-    int i = 0;
-    int result = 42 / i;
-}
-catch (DivideByZeroException e)
-{
-    ErrorSignal.FromCurrentContext().Raise(e);
-}
-</code></pre></p>
-<p>We call the static method <code>FromCurrentContext</code> on the <code>ErrorSignal</code> class, which returns a new object for doing the actual logging. Logging happens through the Raise method, which logs the exception to the configured ELMAH storage endpoint.</p>
-<p>In the example above, I use the <code>FromCurrentContext</code> helper to create a new instance of <code>ErrorSignal</code>. ELMAH also works outside the context of a webserver and in this case, you would simply use the default logger with <code>null</code> as the http context:</p>
-<p> <pre><code class=csharp>ErrorLog.GetDefault(null).Log(new Error(e));
-</code></pre></p>
-<p>If you simply want to log text messages and don't need all of the HTTP context information, consider using one of our integrations for popular logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a> or <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>. Also, the <a href="https://www.nuget.org/packages/Elmah.Io.Client/">Elmah.Io.Client</a> package contains a logging API <a href="https://github.com/elmahio/Elmah.Io.Client">documented here</a>.</p>
+<p>The example set a timeout of 30 seconds.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
