@@ -580,15 +580,13 @@ log.Info(infoMessage);
 </code></pre></p>
 <p>This will create the exact same result as the example above.</p>
 <h2 id="message-hooks">Message hooks</h2>
-<p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Similar for all hooks is that the elmah.io NLog target must be <a href="#configure-the-elmahio-target-from-code">configured through C#</a>.</p>
-<blockquote>
-<p>Message hooks require <code>Elmah.Io.NLog</code> version <code>3.4.53</code> or newer.</p>
-</blockquote>
+<p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Message hooks needs to be implemented in C#. Either <a href="#configuration-in-code">configure the elmah.io target in C#</a> or fetch the target already configured in XML:</p>
+<p> <pre><code class=csharp>var elmahIoTarget = (ElmahIoTarget)LogManager.Configuration.FindTargetByName(&quot;elmahio&quot;);
+</code></pre></p>
+<p>You also need to install the most recent version of the <code>Elmah.Io.Client</code> NuGet package to use message hooks.</p>
 <h3 id="decorating-log-messages">Decorating log messages</h3>
-<p>To include additional information on log messages, you can use the OnMessage event when initializing the elmah.io target:</p>
-<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
-// ...
-elmahIoTarget.OnMessage = msg =&gt;
+<p>To include additional information on log messages, you can use the <code>OnMessage</code> action:</p>
+<p> <pre><code class=csharp>elmahIoTarget.OnMessage = msg =&gt;
 {
     msg.Version = &quot;1.0.0&quot;;
 };
@@ -596,9 +594,7 @@ elmahIoTarget.OnMessage = msg =&gt;
 <p>The example above includes a version number on all errors.</p>
 <h3 id="handle-errors">Handle errors</h3>
 <p>To handle any errors happening while processing a log message, you can use the OnError event when initializing the elmah.io target:</p>
-<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
-// ...
-elmahIoTarget.OnError = (msg, err) =&gt;
+<p> <pre><code class=csharp>elmahIoTarget.OnError = (msg, err) =&gt;
 {
     // Do something here
 };
@@ -606,9 +602,7 @@ elmahIoTarget.OnError = (msg, err) =&gt;
 <p>The example implements a callback if logging to elmah.io fails. How you choose to implement this is entirely up to your application and tech stack.</p>
 <h3 id="error-filtering">Error filtering</h3>
 <p>To ignore specific errors based on their content, you can use the OnFilter event when initializing the elmah.io target:</p>
-<p> <pre><code class=csharp>var elmahIoTarget = new ElmahIoTarget();
-// ...
-elmahIoTarget.OnFilter = msg =&gt;
+<p> <pre><code class=csharp>elmahIoTarget.OnFilter = msg =&gt;
 {
     return msg.Title.Contains(&quot;trace&quot;);
 };
