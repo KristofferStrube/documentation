@@ -411,6 +411,7 @@
 </ul>
 </li>
 <li><a href="#message-reference">Message reference</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -726,6 +727,20 @@ export default class App extends Component {
 }
 </code></pre></p>
 <p>For a complete definition, check out the <code>Message</code> interface in the <a href="https://github.com/elmahio/elmah.io.javascript/blob/master/typescript/elmahio.d.ts">elmah.io.javascript TypeScript mappings</a>.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>If errors aren't logged from JavaScript, here's a list of things to try out:</p>
+<ul>
+<li>Make sure that the log with the specified ID exists.</li>
+<li>Make sure that the log isn't disabled and/or contain any ignore filters that could ignore client-side errors.</li>
+<li>Make sure that the API key is valid and contain the <em>Messages</em> | <em>Write</em> permission.</li>
+<li>Enable debugging when initializing <code>elmah.io.javascript</code> to get additional debug and error messages from within the script printed to the browser console:</li>
+</ul>
+<p> <pre><code class=javascript>new Elmahio({
+    apiKey: 'YOUR-API-KEY',
+    logId: 'YOUR-LOG-ID',
+    debug: true
+});
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
