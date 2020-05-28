@@ -626,7 +626,14 @@ log.Info(infoMessage);
 </code></pre></p>
 <p>The example above ignores any log messages with the word <code>trace</code> in the title.</p>
 <h2 id="include-http-context-in-aspnet-and-aspnet-core">Include HTTP context in ASP.NET and ASP.NET Core</h2>
-<p>When logging through NLog from a web application, you may want to include HTTP contextual information like the current URL, status codes, server variables, etc. NLog provides two web-packages to include this information. For ASP.NET, MVC, and Web API you can install the <code>NLog.Web</code> NuGet package. For ASP.NET Core you can install the <code>NLog.Web.AspNetCore</code> NuGet package. When installed, the elmah.io NLog target automatically picks up the HTTP context and fill in all possible fields on messages sent to elmah.io.</p>
+<p>When logging through NLog from a web application, you may want to include HTTP contextual information like the current URL, status codes, server variables, etc. NLog provides two web-packages to include this information. For ASP.NET, MVC, and Web API you can install the <code>NLog.Web</code> NuGet package and include the following code in <code>web.config</code>:</p>
+<p> <pre><code class=xml>&lt;system.webServer&gt;
+  &lt;modules runAllManagedModulesForAllRequests=&quot;true&quot;&gt;
+    &lt;add name=&quot;NLog&quot; type=&quot;NLog.Web.NLogHttpModule, NLog.Web&quot; /&gt;
+  &lt;/modules&gt;
+&lt;/system.webServer&gt;
+</code></pre></p>
+<p>For ASP.NET Core you can install the <code>NLog.Web.AspNetCore</code> NuGet package. When installed, the elmah.io NLog target automatically picks up the HTTP context and fill in all possible fields on messages sent to elmah.io.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Here are some things to try out if logging from NLog to elmah.io doesn't work:</p>
 <ul>
