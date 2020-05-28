@@ -385,7 +385,7 @@
 
             <p><a href="https://ci.appveyor.com/project/ThomasArdal/elmah-io-nlog"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/gdgwwlu1j8yh7esl?svg=true" /></a>
 <a href="https://www.nuget.org/packages/elmah.io.nlog"><img alt="NuGet" src="https://img.shields.io/nuget/v/elmah.io.nlog.svg" /></a>
-<a href="https://github.com/elmahio/elmah.io.nlog/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-3-brightgreen.svg" /></a></p>
+<a href="https://github.com/elmahio/elmah.io.nlog/tree/master/samples"><img alt="Samples" src="https://img.shields.io/badge/samples-4-brightgreen.svg" /></a></p>
 <h1 id="logging-to-elmahio-from-nlog">Logging to elmah.io from NLog</h1>
 <div class="toc">
 <ul>
@@ -393,10 +393,12 @@
 <li><a href="#configuration-in-net">Configuration in .NET</a><ul>
 <li><a href="#specify-api-key-and-log-id-in-appsettings">Specify API key and log ID in appSettings</a></li>
 <li><a href="#setting-application-name">Setting application name</a></li>
+<li><a href="#intellisense">IntelliSense</a></li>
 </ul>
 </li>
 <li><a href="#configuration-in-net-core">Configuration in .NET Core</a><ul>
 <li><a href="#elmahio-configuration-outside-the-nlog-section">elmah.io configuration outside the NLog section</a></li>
+<li><a href="#intellisense_1">IntelliSense</a></li>
 </ul>
 </li>
 <li><a href="#configuration-in-code">Configuration in code</a></li>
@@ -407,12 +409,13 @@
 <li><a href="#error-filtering">Error filtering</a></li>
 </ul>
 </li>
+<li><a href="#include-http-context-in-aspnet-and-aspnet-core">Include HTTP context in ASP.NET and ASP.NET Core</a></li>
 <li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>NLog is one of the most popular logging frameworks for .NET. With an active history on almost 10 years, the possibilities with NLog are many and it’s easy to find documentation on how to use it.</p>
+<p>NLog is one of the most popular logging frameworks for .NET. With an active history of almost 10 years, the possibilities with NLog are many and it’s easy to find documentation on how to use it.</p>
 <p>To start logging messages from NLog to elmah.io, you need to install the <code>Elmah.Io.NLog</code> NuGet package:</p>
 <div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.NLog
 </code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.NLog
@@ -465,12 +468,22 @@ log.Error(new Exception(), &quot;This is an error message&quot;);
 &lt;/targets&gt;
 </code></pre></p>
 <p>Replace <code>APP_NAME</code> with the application you want logged to elmah.io</p>
+<h3 id="intellisense">IntelliSense</h3>
+<p>There is support for adding IntelliSense in Visual Studio for the <code>NLog.config</code> file. Extend the <code>nlog</code> root element like this:</p>
+<p> <pre><code class=xml>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xmlns:elmahio=&quot;http://www.nlog-project.org/schemas/NLog.Targets.Elmah.Io.xsd&quot;
+      xsi:schemaLocation=&quot;http://www.nlog-project.org/schemas/NLog.Targets.Elmah.Io.xsd http://www.nlog-project.org/schemas/NLog.Targets.Elmah.Io.xsd&quot;&gt;
+  &lt;!-- ... --&gt;
+&lt;/nlog&gt;
+</code></pre></p>
 <h2 id="configuration-in-net-core">Configuration in .NET Core</h2>
 <p>.NET Core switched from declaring XML configuration in <code>app/web/nlog.config</code> files to JSON configuration in an <code>appsettings.json</code> file. To configure elmah.io in JSON, install the <code>NLog.Extensions.Logging</code> NuGet package:</p>
-<div class=md-fenced-code-tabs id=tab-tab-group-6><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-6-0_powershell-panel role=tab id=tab-group-6-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-6-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-1_cmd-panel role=tab id=tab-group-6-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-6-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-2_xml-panel role=tab id=tab-group-6-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-6-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-6-3_xml-panel role=tab id=tab-group-6-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-6-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-6-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-6-0_powershell-tab><pre><code class=powershell>Install-Package NLog.Extensions.Logging
-</code></pre></div><div id=tab-group-6-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-1_cmd-tab><pre><code class=cmd>dotnet add package NLog.Extensions.Logging
-</code></pre></div><div id=tab-group-6-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;NLog.Extensions.Logging&quot; Version=&quot;1.*&quot; /&gt;
-</code></pre></div><div id=tab-group-6-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-6-3_xml-tab><pre><code class=xml>paket add NLog.Extensions.Logging
+<div class=md-fenced-code-tabs id=tab-tab-group-7><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-7-0_powershell-panel role=tab id=tab-group-7-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-7-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-7-1_cmd-panel role=tab id=tab-group-7-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-7-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-7-2_xml-panel role=tab id=tab-group-7-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-7-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-7-3_xml-panel role=tab id=tab-group-7-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-7-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-7-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-7-0_powershell-tab><pre><code class=powershell>Install-Package NLog.Extensions.Logging
+</code></pre></div><div id=tab-group-7-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-7-1_cmd-tab><pre><code class=cmd>dotnet add package NLog.Extensions.Logging
+</code></pre></div><div id=tab-group-7-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-7-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;NLog.Extensions.Logging&quot; Version=&quot;1.*&quot; /&gt;
+</code></pre></div><div id=tab-group-7-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-7-3_xml-tab><pre><code class=xml>paket add NLog.Extensions.Logging
 </code></pre></div></div></div>
 
 <p>Extend the <code>appsettings.json</code> file with a new <code>NLog</code> section:</p>
@@ -537,6 +550,10 @@ ConfigSettingLayoutRenderer.DefaultConfiguration = config; // 👈 add this line
 
 LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection(&quot;NLog&quot;));
 </code></pre></p>
+<h3 id="intellisense_1">IntelliSense</h3>
+<p>There is support for adding IntelliSense in Visual Studio for the <code>NLog</code> section in the <code>appsettings.json</code> file. Copy and paste the following link into the <em>Schema</em> textbox above the file content:</p>
+<p> <pre><code class>https://nlog-project.org/schemas/appsettings.schema.json
+</code></pre></p>
 <h2 id="configuration-in-code">Configuration in code</h2>
 <p>The elmah.io target can be configured from C# code if you prefer or need to access the built-in events (see more later). The following adds logging to elmah.io:</p>
 <p> <pre><code class=csharp>var config = new LoggingConfiguration();
@@ -551,13 +568,13 @@ LogManager.Configuration = config;
 <p>The example will log all log levels to elmah.io. For more information about how to configure individual log levels, check out the <a href="https://github.com/NLog/NLog/wiki/Configure-from-code">NLog documentation on GitHub</a>.</p>
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p>NLog supports logging custom properties in multiple ways. If you want to include a property (like a version number) to all log messages, you might want to look into the <a href="#decorating-log-messages"><code>OnMessage</code></a> feature on <code>Elmah.Io.NLog</code>.</p>
-<p>With custom properties, you can log additional key/value pairs with every log message. The elmah.io appender for NLog, supports <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="https://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
-<p>One way to log custom properties with NLog and elmah.io, is to use the overload of each logging-method that takes a <code>LogEventInfo</code> object as parameter:</p>
+<p>With custom properties, you can log additional key/value pairs with every log message. The elmah.io target for NLog supports <a href="https://docs.elmah.io/logging-custom-data/">custom properties</a> as well. Properties are persisted alongside every log message in elmah.io and searchable if <a href="https://docs.elmah.io/logging-custom-data/#searching-custom-data">named correctly</a>.</p>
+<p>One way to log custom properties with NLog and elmah.io is to use the overload of each logging-method that takes a <code>LogEventInfo</code> object as a parameter:</p>
 <p> <pre><code class=csharp>var infoMessage = new LogEventInfo(LogLevel.Info, &quot;&quot;, &quot;This is an information message&quot;);
 infoMessage.Properties.Add(&quot;Some Property Key&quot;, &quot;Some Property Value&quot;);
 log.Info(infoMessage);
 </code></pre></p>
-<p>This saves the information message in elmah.io with a custom property with key <code>Some Property Key</code>and value <code>Some Property Value</code>.</p>
+<p>This saves the information message in elmah.io with a custom property with key <code>Some Property Key</code> and value <code>Some Property Value</code>.</p>
 <p>As of NLog 4.5, structured logging is supported as well. To log a property as part of the log message, use the new syntax as shown here:</p>
 <p> <pre><code class=csharp>log.Warn(&quot;Property named {FirstName}&quot;, &quot;Donald&quot;);
 </code></pre></p>
@@ -572,15 +589,15 @@ log.Info(infoMessage);
       .Property(&quot;User&quot;, &quot;T-800&quot;)
       .Write();
 </code></pre></p>
-<p>If you want to use the normal logging methods like <code>Info</code> and <code>Error</code>, you can do so in junction with the <code>MappedDiagnosticsLogicalContext</code> class, also provided by NLog:</p>
+<p>If you want to use the normal logging methods like <code>Info</code> and <code>Error</code>, you can do so injunction with the <code>MappedDiagnosticsLogicalContext</code> class, also provided by NLog:</p>
 <p> <pre><code class=csharp>using (MappedDiagnosticsLogicalContext.SetScoped(&quot;User&quot;, &quot;T-800&quot;))
 {
    logger.Info(&quot;I'll be back&quot;);
 }
 </code></pre></p>
-<p>This will create the exact same result as the example above.</p>
+<p>This will create the same result as the example above.</p>
 <h2 id="message-hooks">Message hooks</h2>
-<p><code>Elmah.Io.NLog</code> provide message hooks similar to the integrations with ASP.NET and ASP.NET Core. Message hooks needs to be implemented in C#. Either <a href="#configuration-in-code">configure the elmah.io target in C#</a> or fetch the target already configured in XML:</p>
+<p><code>Elmah.Io.NLog</code> provides message hooks similar to the integrations with ASP.NET and ASP.NET Core. Message hooks need to be implemented in C#. Either <a href="#configuration-in-code">configure the elmah.io target in C#</a> or fetch the target already configured in XML:</p>
 <p> <pre><code class=csharp>var elmahIoTarget = (ElmahIoTarget)LogManager.Configuration.FindTargetByName(&quot;elmahio&quot;);
 </code></pre></p>
 <p>You also need to install the most recent version of the <code>Elmah.Io.Client</code> NuGet package to use message hooks.</p>
@@ -608,6 +625,8 @@ log.Info(infoMessage);
 };
 </code></pre></p>
 <p>The example above ignores any log messages with the word <code>trace</code> in the title.</p>
+<h2 id="include-http-context-in-aspnet-and-aspnet-core">Include HTTP context in ASP.NET and ASP.NET Core</h2>
+<p>When logging through NLog from a web application, you may want to include HTTP contextual information like the current URL, status codes, server variables, etc. NLog provides two web-packages to include this information. For ASP.NET, MVC, and Web API you can install the <code>NLog.Web</code> NuGet package. For ASP.NET Core you can install the <code>NLog.Web.AspNetCore</code> NuGet package. When installed, the elmah.io NLog target automatically picks up the HTTP context and fill in all possible fields on messages sent to elmah.io.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>Here are some things to try out if logging from NLog to elmah.io doesn't work:</p>
 <ul>
@@ -616,7 +635,7 @@ log.Info(infoMessage);
 <li>Make sure that the API key is valid and allow the <em>Messages</em> | <em>Write</em> <a href="https://docs.elmah.io/how-to-configure-api-key-permissions/">permission</a>.</li>
 <li>Make sure to include a valid log ID.</li>
 <li>Make sure that you have sufficient log messages in your subscription and that you didn't disable logging to the log or include any ignore filters/rules.</li>
-<li>Always make sure to call <code>LogManager.Shutdown()</code> before existing the application to make sure that all log messages are flushed.</li>
+<li>Always make sure to call <code>LogManager.Shutdown()</code> before exiting the application to make sure that all log messages are flushed.</li>
 <li>Extend the <code>nlog</code> element with <code>internalLogLevel="Warn" internalLogFile="c:\temp\nlog-internal.log</code> and inspect that log file for any internal NLog errors.</li>
 </ul>
 
