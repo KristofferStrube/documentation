@@ -411,7 +411,7 @@
 </code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Functions
 </code></pre></div></div></div>
 
-<p>The elmah.io integration for Azure Functions v2 uses function filters and dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package. To configure elmah.io, open the <code>Startup.cs</code> file or create a new one if not already there. In the <code>Configure</code>-method, add the elmah.io options and exception filter:</p>
+<p>The elmah.io integration for Azure Functions uses function filters and dependency injection part of the <code>Microsoft.Azure.Functions.Extensions</code> package. To configure elmah.io, open the <code>Startup.cs</code> file or create a new one if not already there. In the <code>Configure</code>-method, add the elmah.io options and exception filter:</p>
 <p> <pre><code class=csharp>using Elmah.Io.Functions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host;

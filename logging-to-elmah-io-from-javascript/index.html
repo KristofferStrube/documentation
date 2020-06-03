@@ -418,7 +418,7 @@
 </div>
 <p>elmah.io doesn't only support server-side .NET logging. We also log JavaScript errors happening on your website. Logging client-side errors, requires nothing more than installing the <code>elmahio.js</code> script on your website.</p>
 <blockquote>
-<p>Remember to <a href="https://headwayapp.co/elmah-io-changelog/deprecating-the-v2-api-68030" target="_blank" rel="noopener noreferrer">disable access to the v2 API</a> on your log and <a href="https://blog.elmah.io/api-key-permissions/">generate a new API key</a> with <code>messages_write</code> permission only. Without these changes, everyone will be able to browse your logs (<a href="https://www.troyhunt.com/aspnet-session-hijacking-with-google/" target="_blank" rel="noopener noreferrer">you don't want that!</a>).</p>
+<p>Remember to <a href="https://blog.elmah.io/api-key-permissions/">generate a new API key</a> with <code>messages_write</code> permission only. This makes it easy to revoke the API key if someone starts sending messages to your log with your key.</p>
 </blockquote>
 <h2 id="installation">Installation</h2>
 <p>Pick an installation method of your choice:</p>

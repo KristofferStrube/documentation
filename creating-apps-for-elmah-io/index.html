@@ -474,13 +474,12 @@ Your package was pushed.
 <p>Observe how the <code>bin</code> variable from <code>manifest.json</code> shows up in the log settings with the <code>description</code> and <code>example</code> as we specified.</p>
 <p>Input the bin ID and click the <em>Save</em> button.</p>
 <p>To test that everything is working, you can use elmah.io's API to publish a new message to your log, which should match the query specified in <code>manifest.json</code>:</p>
-<p> <pre><code class=powershell>curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;: &quot;Manual error&quot;, &quot;severity&quot;: &quot;Error&quot;}' https://elmah.io/api/v2/messages?logId=MyLogId
+<p> <pre><code class=powershell>curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;: &quot;Manual error&quot;, &quot;severity&quot;: &quot;Error&quot;}' https://api.elmah.io/v3/messages/LOG_ID
 </code></pre></p>
-<p>(replace <code>MyLogId</code> with your log ID)</p>
+<p>(replace <code>LOG_ID</code> with your log ID)</p>
 <p>Refresh the bin at RequestBin and observe the HTTP request performed by the app:</p>
 <p><img alt="HTTP request in RequestBin" src="/images/requestbin_message.png" /></p>
 <p>Isn't that just the most awesome thing you have seen all day? The JSON format specified in <code>manifest.json</code> now ends up on RequestBin using a homebrewed elmah.io app.</p>
-<p>To see more examples of elmah.io apps, check out <a href="https://github.com/elmahio/elmah.io.apps.slack">elmah.io.apps.slack</a>, <a href="https://github.com/elmahio/elmah.io.apps.hipchat">elmah.io.apps.hipchat</a> and <a href="https://github.com/elmahio/elmah.io.apps.github">elmah.io.apps.github</a> all available on GitHub. We also provide a <a href="https://github.com/elmahio/elmah.io.apps.playground">Playground app</a> to showcase the different types of variables. For even more information, get in contact with us. We are always happy to help, even if you're just playing around with app development for the fun of it.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
