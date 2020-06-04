@@ -392,7 +392,10 @@
 <li><a href="#logging-to-elmahio-from-umbraco">Logging to elmah.io from Umbraco</a><ul>
 <li><a href="#umbraco-cloud">Umbraco Cloud</a></li>
 <li><a href="#whats-inside">What's inside?</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#configuration">Configuration</a><ul>
+<li><a href="#different-environments">Different environments</a></li>
+</ul>
+</li>
 <li><a href="#umbraco-7">Umbraco 7</a></li>
 </ul>
 </li>
@@ -438,6 +441,8 @@
 <p>All unhandled exceptions from both ASP.NET / MVC / Web API as well as 404's are logged automatically. Warnings, errors and fatal messages logged through Serilog are send to elmah.io as well.</p>
 <h2 id="configuration">Configuration</h2>
 <p>If you are running on the default Umbraco template, all nessecary configuration is added during installation of the <code>Elmah.Io.Umbraco</code> NuGet package. If your <code>web.config</code> file for some reason aren't updated during installation, you can configure elmah.io manually: <a href="https://docs.elmah.io/configure-elmah-io-manually/">Configure elmah.io manually</a>. Likewise, the installer configure the elmah.io sink for Serilog in your <code>config\serilog.user.config</code> file.</p>
+<h3 id="different-environments">Different environments</h3>
+<p>You may have different environments like <em>Staging</em> and <em>Production</em>. At least you have two: <em>Localhost</em> and <em>Production</em>. If you want to log to different error logs depending on the current environment, check out <a href="/use-multiple-logs-for-different-environments/">Use multiple logs for different environments</a>. Web.config transformations work on the <code>Web.config</code> file only but you may have other config files that need transformation as well. In terms of elmah.io, the <code>serilog.user.config</code> file also includes elmah.io configuration that you may want to disable on localhost and include on production. If you are running on Umbraco Cloud this is natively supported as explained here: <a href="https://our.umbraco.com/documentation/Umbraco-Cloud/set-up/Config-Transforms/">Config Transforms</a>. Even in self-hosted environments, you can achieve something similar using the SlowCheetah extension. Check out this question on Our for details: <a href="https://our.umbraco.com/forum/umbraco-7/using-umbraco-7/57392-Deploying-different-umbracoSettingsconfig-for-different-environments">Deploying different umbracoSettings.config for different environments</a>.</p>
 <h2 id="umbraco-7">Umbraco 7</h2>
 <p>We still support Umbraco 7 through the <code>Elmah.Io.Umbraco</code> package version <code>3.2.35</code>:</p>
 <div class=md-fenced-code-tabs id=tab-tab-group-2><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-2-0_powershell-panel role=tab id=tab-group-2-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-2-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-1_cmd-panel role=tab id=tab-group-2-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-2-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-2_xml-panel role=tab id=tab-group-2-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-2-3_xml-panel role=tab id=tab-group-2-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-2-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-2-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-2-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Umbraco -Version 3.2.35
