@@ -456,6 +456,18 @@
     Your error page content goes here 
 &lt;/div&gt; 
 </code></pre></p>
+<h3 id="errors-are-not-logged-when-using-update-panels">Errors are not logged when using update panels</h3>
+<p>ASP.NET Update Panels are great at many things. Unfortunately, one of those things is causing problems when trying to log server-side errors. If errors aren't logged as part of a call made from an update panel, you can try to add the following code to <code>Global.asax.cs</code>:</p>
+<p> <pre><code class=csharp>protected void Application_Error(object sender, EventArgs e)
+{
+    var ex = Server.GetLastError();
+    var error = new Elmah.Error(ex);
+    error.ServerVariables.Add(&quot;URL&quot;, HttpContext.Current?.Request?.Url?.AbsolutePath);
+    error.ServerVariables.Add(&quot;HTTP_USER_AGENT&quot;, HttpContext.Current?.Request?.UserAgent);
+    error.ServerVariables.Add(&quot;REMOTE_ADDR&quot;, HttpContext.Current?.Request?.UserHostAddress);
+    Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(error);
+}
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
