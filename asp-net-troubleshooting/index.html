@@ -468,6 +468,11 @@
     Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(error);
 }
 </code></pre></p>
+<p>If you start experiencing errors logged multiple times, you can remove the ELMAH module from <code>web.config</code>:</p>
+<p> <pre><code class=xml>&lt;modules&gt;
+    &lt;add name=&quot;ErrorLog&quot; type=&quot;Elmah.ErrorLogModule, Elmah&quot; preCondition=&quot;managedHandler&quot; /&gt;
+&lt;/modules&gt;
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
