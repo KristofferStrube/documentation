@@ -406,7 +406,10 @@
 <li><a href="#intellisense">IntelliSense</a></li>
 <li><a href="#source-maps">Source maps</a></li>
 <li><a href="#samples">Samples</a><ul>
-<li><a href="#angular">Angular</a></li>
+<li><a href="#angular">Angular</a><ul>
+<li><a href="#angularjsangular-1">AngularJS/Angular 1</a></li>
+</ul>
+</li>
 <li><a href="#react">React</a></li>
 </ul>
 </li>
@@ -680,6 +683,22 @@ class ElmahIoErrorHandler implements ErrorHandler {
 })
 </code></pre></p>
 <p>All errors are shipped to the <code>handleError</code>-function by Angular and logged to elmah.io. Check out the <a href="https://github.com/elmahio/elmah.io.javascript/tree/master/samples/Elmah.Io.JavaScript.Angular" target="_blank" rel="noopener noreferrer">Elmah.Io.JavaScript.Angular</a> and <a href="https://github.com/elmahio/elmah.io.javascript/tree/master/samples/Elmah.Io.JavaScript.AngularWebpack" target="_blank" rel="noopener noreferrer">Elmah.Io.JavaScript.AngularWebpack</a> samples for some real working code.</p>
+<h6 id="angularjsangular-1">AngularJS/Angular 1</h6>
+<p>For AngularJS you need to implement the <code>$exceptionHandler</code> instead:</p>
+<p> <pre><code class=javascript>(function () {
+  'use strict';
+  angular.module('app').factory('$exceptionHandler', ['$log', function controller($log) {
+    var logger = new Elmahio({
+      apiKey: 'API_KEY',
+      logId: 'LOG_ID'
+    });
+    return function elmahExceptionHandler(exception, cause) {
+      $log.error(exception, cause);
+      logger.error(exception.message, exception);
+    };
+  }]);
+})();
+</code></pre></p>
 <h5 id="react">React</h5>
 <p>To log all errors from a React application, install the <code>elmah.io.javascript</code> npm package as described above. Then modify the <code>App.js</code> file:</p>
 <p> <pre><code class=javascript>// ...
