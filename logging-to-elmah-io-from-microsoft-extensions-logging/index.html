@@ -632,6 +632,19 @@ logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(null, LogLevel.Warning);
     options.BackgroundQueueSize = 5000;
 });
 </code></pre></p>
+<p><strong>Uncaught errors are logged twice</strong></p>
+<p>If you have both <code>Elmah.Io.Extensions.Logging</code> and <code>Elmah.Io.AspNetCore</code> installed, you may see a pattern of uncaught errors being logged twice. This is because a range of middleware from Microsoft (and others) log uncaught exceptions through <code>ILogger</code>. When you have <code>Elmah.Io.AspNetCore</code> installed you typically don't want other pieces of middleware to log the same error but with fewer details.</p>
+<p>To ignore duplicate errors you need to figure out which middleware class that trigger the logging and in which namespace it is located. One or more of the following ignore filters can be added to your <code>Program.cs</code> file:</p>
+<p> <pre><code class=csharp>logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(&quot;Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware&quot;, LogLevel.None);
+logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(&quot;Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware&quot;, LogLevel.None);
+logging.AddFilter&lt;ElmahIoLoggerProvider&gt;(&quot;Microsoft.AspNetCore.Server.IIS.Core&quot;, LogLevel.None);
+</code></pre></p>
+<p>Be aware that these lines will ignore all messages from the specified class or namespace. To ignore specific errors you can implement the <code>OnFilter</code> action as shown previously in this document. Ignoring uncaught errors from IIS would look like this:</p>
+<p> <pre><code class=csharp>options.OnFilter = msg =&gt;
+{
+    return msg.TitleTemplate == &quot;Connection ID \&quot;{ConnectionId}\&quot;, Request ID \&quot;{TraceIdentifier}\&quot;: An unhandled exception was thrown by the application.&quot;;
+};
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
