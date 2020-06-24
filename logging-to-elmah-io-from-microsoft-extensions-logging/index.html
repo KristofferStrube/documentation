@@ -491,7 +491,7 @@
     // ... UseMvc etc.
 }
 </code></pre></p>
-<p>It's important to call the <code>UseElmahIoExtensionsLogging</code> method <strong>after</strong> any calls to <code>UseElmahIo</code>, <code>UseAuthentication</code>, and other exception handling middleware but <strong>before</strong> <code>UseMvc</code> and <code>UseEndpoints</code>.</p>
+<p>It's important to call the <code>UseElmahIoExtensionsLogging</code> method <strong>after</strong> any calls to <code>UseElmahIo</code>, <code>UseAuthentication</code>, and other exception handling middleware but <strong>before</strong> <code>UseMvc</code> and <code>UseEndpoints</code>. If you experience logged errors without the HTTP context, try moving the <code>UseElmahIoExtensionsLogging</code> method as the first call in the <code>Configure</code> method.</p>
 <h2 id="logging-custom-properties">Logging custom properties</h2>
 <p><code>Elmah.Io.Extensions.Logging</code> support Microsoft.Extensions.Logging scopes from version <code>3.6.x</code>. In short, scopes are a way to decorate your log messages like enrichers in Serilog and context in NLog and log4net. By including properties to a scope, these properties automatically go into the <em>Data</em> tab on elmah.io.</p>
 <p>To define a new scope, wrap your logging code in a <code>using</code>:</p>
