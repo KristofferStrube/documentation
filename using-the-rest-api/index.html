@@ -395,6 +395,7 @@
 <li><a href="#deleting-a-message">Deleting a message</a></li>
 <li><a href="#deleting-messages">Deleting messages</a></li>
 <li><a href="#hiding-a-message">Hiding a message</a></li>
+<li><a href="#fixing-a-message">Fixing a message</a></li>
 </ul>
 </li>
 </ul>
@@ -493,10 +494,18 @@
 <p>An option for deleting messages by date range is available as well. Check out the API documentation for details.</p>
 <h3 id="hiding-a-message">Hiding a message</h3>
 <p>Depending on your use case, you may want to hide a message, rather than deleting it. Hidden messages are not shown as default through neither the UI, nor the REST API. But you will be able to search for them by enabling the <code>Hidden</code> checkbox on the UI.</p>
-<p>To hide a message, use the <code>_hide</code> endpoints like this:</p>
+<p>To hide a message, use the <code>_hide</code> endpoint like this:</p>
 <p> <pre><code class=bash>POST https://api.elmah.io/v3/messages/LOG_ID/99CDEA3D6A631F09/_hide
 </code></pre></p>
-<p>If successful, the endpoint returns a HTTP status code of <code>200</code>.</p>
+<p>If successful, the endpoint returns an HTTP status code of <code>200</code>.</p>
+<h3 id="fixing-a-message">Fixing a message</h3>
+<p>When you have fixed a bug in your code, it's a good idea to mark any instances of this error in elmah.io as fixed. This gives a better overview of what to fix and ensure that you are notified if the error happens again.</p>
+<p>To mark a message as fixed, use the <code>_fix</code> endpoint like this:</p>
+<p> <pre><code class=bash>POST https://api.elmah.io/v3/messages/LOG_ID/99CDEA3D6A631F09/_fix
+</code></pre></p>
+<p>If successful, the endpoint returns an HTTP status code of <code>200</code>. This will mark a single message as fixed. In case you want to mark all instances of this message as fixe, include the <code>markAllAsFixed</code> parameter:</p>
+<p> <pre><code class=bash>POST https://api.elmah.io/v3/messages/LOG_ID/99CDEA3D6A631F09/_fix?markAllAsFixed=true
+</code></pre></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
