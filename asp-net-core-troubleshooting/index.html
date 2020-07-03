@@ -475,6 +475,8 @@
         .CaptureStartupErrors(true)
         .UseStartup&lt;Startup&gt;();
 </code></pre></p>
+<h3 id="url-missing-when-using-map">URL missing when using Map</h3>
+<p>When handling requests with the <code>Map</code> method, ASP.NET Core will remove the path from <code>HttpRequest.Path</code>. In this case, <code>Elmah.Io.AspNetCore</code> will look for an URL in the <code>HttpRequest.PathBase</code> property. This is not already enough and won't always return the right URL. Consider using the <code>MapWhen</code> method instead.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
