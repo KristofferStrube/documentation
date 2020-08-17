@@ -404,7 +404,10 @@
 <li><a href="#handling-errors">Handling errors</a></li>
 </ul>
 </li>
-<li><a href="#logging-manually">Logging manually</a></li>
+<li><a href="#logging-manually">Logging manually</a><ul>
+<li><a href="#logging-from-console">Logging from console</a></li>
+</ul>
+</li>
 <li><a href="#intellisense">IntelliSense</a></li>
 <li><a href="#source-maps">Source maps</a></li>
 <li><a href="#samples">Samples</a><ul>
@@ -447,7 +450,7 @@
 <p></div>
   <div role="tabpanel" class="tab-pane" id="cdn"></p>
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
-<p> <pre><code class=html>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.2.0/dist/elmahio.min.js?apiKey=API_KEY&amp;logId=LOG_ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+<p> <pre><code class=html>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/elmahio/elmah.io.javascript@3.3.0/dist/elmahio.min.js?apiKey=API_KEY&amp;logId=LOG_ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 </code></pre></p>
 <p></div>
   <div role="tabpanel" class="tab-pane" id="npm"></p>
@@ -484,14 +487,14 @@
     // ...
     {
       &quot;provider&quot;: &quot;filesystem&quot;,
-      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.2.0/dist/elmahio.min.js&quot;,
+      &quot;library&quot;: &quot;https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.3.0/dist/elmahio.min.js&quot;,
       &quot;destination&quot;: &quot;wwwroot/lib/elmahio&quot;
     }
   ]
 }
 </code></pre></p>
 <p>or using the LibMan CLI:</p>
-<p> <pre><code class=cmd>libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.2.0/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
+<p> <pre><code class=cmd>libman install https://raw.githubusercontent.com/elmahio/elmah.io.javascript/3.3.0/dist/elmahio.min.js --provider filesystem --destination wwwroot\lib\elmahio
 </code></pre></p>
 <p>Reference <code>elmahio.min.js</code> just before the <code>&lt;/body&gt;</code> tag (but before all other JavaScripts) in your shared <code>_Layout.cshtml</code> or all HTML files, depending on how you've structured your site:</p>
 <p> <pre><code class=html>&lt;script src=&quot;~/lib/elmahio/dist/elmahio.min.js?apiKey=API_KEY&amp;logId=LOG_ID&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
@@ -624,6 +627,27 @@ logger.log(msg);
 <p>As for the <code>log</code>-function, check out <a href="#message-reference">message reference</a>.</p>
 <blockquote>
 <p>Manual logging only works when initializing the elmah.io logger from code.</p>
+</blockquote>
+<h3 id="logging-from-console">Logging from console</h3>
+<p>If you don't like to share the <code>Elmahio</code> logger or you want to hook elmah.io logging up to existing code, you can capture log messages from <code>console</code>. To do so, set the <code>captureConsoleMinimumLevel</code> option:</p>
+<p> <pre><code class=javascript>var log = new Elmahio({
+  apiKey: 'YOUR-API-KEY',
+  logId: 'YOUR-LOG-ID',
+  captureConsoleMinimumLevel: 'error'
+});
+
+console.error('This is an %s message.', 'error');
+</code></pre></p>
+<p><code>captureConsoleMinimumLevel</code> can be set to one of the following values:</p>
+<ul>
+<li><code>none</code>: will disable logging from console (default).</li>
+<li><code>debug</code>: will capture logging from <code>console.debug</code>, <code>console.info</code>, <code>console.warn</code>, <code>console.error</code>.</li>
+<li><code>info</code>: will capture logging from <code>console.info</code>, <code>console.warn</code>, <code>console.error</code>.</li>
+<li><code>warn</code>: will capture logging from <code>console.warn</code>, <code>console.error</code>.</li>
+<li><code>error</code>: will capture logging from <code>console.error</code>.</li>
+</ul>
+<blockquote>
+<p>Capturing the console only works when initializing the elmah.io logger from code. Also, <code>console.log</code> is not captured.</p>
 </blockquote>
 <h2 id="intellisense">IntelliSense</h2>
 <p>If installing through npm or similar, Visual Studio should pick up the TypeScript mappings from the elmah.io.javascript package. If not, add the following line in the top of the JavaScript file where you wan't elmah.io.javascript IntelliSense:</p>
