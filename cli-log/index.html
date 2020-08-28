@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Set up Deployment Tracking | elmah.io">
+    <meta name="twitter:title" content="Log a message from the CLI | elmah.io">
     
     
-    <meta property="og:title" content="Set up Deployment Tracking | elmah.io">
+    <meta property="og:title" content="Log a message from the CLI | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/setup-deployment-tracking/">
+    <meta property="og:url" content="https://docs.elmah.io/cli-log/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Set up Deployment Tracking | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/setup-deployment-tracking/">
+    <title>Log a message from the CLI | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/cli-log/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -308,11 +308,11 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Deployment Tracking</a>
                 <ul>
                   
-                  <li class="active"><a href="./">Set up Deployment Tracking</a></li>
+                  <li ><a href="../setup-deployment-tracking/">Set up Deployment Tracking</a></li>
                   
                   <li ><a href="../create-deployments-from-powershell/">Create deployments from PowerShell</a></li>
                   
@@ -335,7 +335,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">CLI</a>
                 <ul>
                   
@@ -343,7 +343,7 @@
                   
                   <li ><a href="../cli-export/">Export</a></li>
                   
-                  <li ><a href="../cli-log/">Log</a></li>
+                  <li class="active"><a href="./">Log</a></li>
                   
                   <li ><a href="../cli-tail/">Tail</a></li>
                   
@@ -402,132 +402,53 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="set-up-deployment-tracking">Set Up Deployment Tracking</h1>
-<div class="toc">
-<ul>
-<li><a href="#set-up-deployment-tracking">Set Up Deployment Tracking</a><ul>
-<li><a href="#generate-a-new-api-key">Generate a new API key</a></li>
-<li><a href="#tell-elmahio-when-you-release">Tell elmah.io when you release</a></li>
-<li><a href="#decorate-your-messages-with-a-version-number">Decorate your messages with a version number</a></li>
-<li><a href="#versioning-different-services">Versioning Different Services</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Deployment tracking creates an overview of the different versions of your software and show you how well each version performed. With this integration in place, you will be able to see when you released and if some of your releases caused more errors than others. While most pages on elmah.io supports everything from verbose to fatal messages, the context on deployment tracking is around warnings and errors.</p>
-<p>To set up deployment tracking, you will need to tell elmah.io when you release, using our REST API or one of the integrations:</p>
-<div class="guides-boxes row">
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-powershell/" title="PowerShell">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/powershell.png" alt="PowerShell" />
-                </div>
-                <div class="guide-title">PowerShell</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-octopus-deploy/" title="Octopus Deploy">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/octopus-deploy.png" alt="Octopus Deploy" />
-                </div>
-                <div class="guide-title">Octopus Deploy</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-azure-devops-releases/" title="Azure DevOps">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/azure-devops.png" alt="Azure DevOps" />
-                </div>
-                <div class="guide-title">Azure DevOps</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-github-actions/" title="GitHub Actions">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/github-actions.png" alt="GitHub Actions" />
-                </div>
-                <div class="guide-title">GitHub Actions</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-umbraco-cloud/" title="Umbraco Cloud">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/umbraco.png" alt="Umbraco Cloud" />
-                </div>
-                <div class="guide-title">Umbraco Cloud</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-bitbucket-pipelines/" title="Bitbucket Pipelines">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/bitbucket.png" alt="Bitbucket Pipelines" />
-                </div>
-                <div class="guide-title">Bitbucket Pipelines</div>
-            </div>
-        </a>
-    </div>
-    <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
-        <a href="/create-deployments-from-atlassian-bamboo/" title="Bamboo">
-            <div class="guide-box">
-                <div class="guide-image">
-                    <img class="no-lightbox" src="/./assets/img/guides/bamboo.png" alt="Bamboo" />
-                </div>
-                <div class="guide-title">Bamboo</div>
-            </div>
-        </a>
-    </div>
-</div>
+            <h1 id="log-a-message-from-the-cli">Log a message from the CLI</h1>
+<p>The <code>log</code> command is used to store a log message in a specified log</p>
+<h2 id="usage">Usage</h2>
+<p> <pre><code class=cmd>&gt; elmahio log --help
 
-<p>Deployments are as default created on all of your logs, but this can be tweaked. More about this later.</p>
-<p>For a complete overview of the possibilities with deployment tracking, watch this video tutorial:</p>
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/vVX_yaLi4f8?rel=0" allowfullscreen></iframe>
-</div>
+log:
+  Log a message to the specified log
 
-<p><br/></p>
-<h2 id="generate-a-new-api-key">Generate a new API key</h2>
-<p>While you can use the same API key for everything, we recommend you to create an API key specific for deployment tracking. To do so, go to the organization settings page by clicking the gears icon next to the organization name on either the dashboard or in the left menu. Select the <em>API Keys</em> tabs and click <em>Add API Key</em>. Fill in a name of choice and enable the <em>Deployments</em> &gt; <em>Write</em> permission only:</p>
-<p><img alt="Deployment tracking API key" src="../images/deployment-tracking-api-key.png" /></p>
-<p>Click the save button and copy the API key for later use.</p>
-<h2 id="tell-elmahio-when-you-release">Tell elmah.io when you release</h2>
-<p>When you create a release of your software either manually or with the help from a tool like Octopus, you need to tell elmah.io about it. The <a href="https://api.elmah.io/swagger/ui/index">elmah.io REST API v3</a>, provides an endpoint named <code>deployments</code>, which you can call when creating releases. After calling the endpoint, all new messages to your logs, will automatically be decorated with the most recent version number.</p>
-<p>If you release your software manually, creating the new release manually is easy using Swagger UI. Swagger UI is a graphical client for calling a Swagger enabled endpoint (much like Postman). Navigate to <a href="https://api.elmah.io/swagger/ui/index">https://api.elmah.io/swagger/ui/index</a>, expand the <em>Deployments</em> node and click the POST request:</p>
-<p><img alt="Deployments POST" src="../images/deployments_post.png" /></p>
-<p>To create the release, input your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>) in the top right corner and click the JSON beneath <em>Model Schema</em>. This copies the example JSON to the deployment parameter. A minimal deployment would look like the following, but adding more information makes the experience within elmah.io even better:</p>
-<p> <pre><code class=json>{
-  &quot;version&quot;: &quot;1.42.7&quot;
-}
+Usage:
+  elmahio log [options]
+
+Options:
+  --apiKey &lt;apikey&gt; (REQUIRED)       An API key with permission to execute the command
+  --logId &lt;logid&gt; (REQUIRED)         The ID of the log to send the log message to
+  --application &lt;application&gt;        Used to identify which application logged this message. You can use this if you
+                                     have multiple applications and services logging to the same log
+  --detail &lt;detail&gt;                  A longer description of the message. For errors this could be a stacktrace, but
+                                     it's really up to you what to log in there.
+  --hostname &lt;hostname&gt;              The hostname of the server logging the message.
+  --title &lt;title&gt; (REQUIRED)         The textual title or headline of the message to log.
+  --titleTemplate &lt;titletemplate&gt;    The title template of the message to log. This property can be used from logging
+                                     frameworks that supports structured logging like: &quot;{user} says {quote}&quot;. In the
+                                     example, titleTemplate will be this string and title will be &quot;Gilfoyle says It's
+                                     not magic. It's talent and sweat&quot;.
+  --source &lt;source&gt;                  The source of the code logging the message. This could be the assembly name.
+  --statusCode &lt;statuscode&gt;          If the message logged relates to a HTTP status code, you can put the code in this
+                                     property. This would probably only be relevant for errors, but could be used for
+                                     logging successful status codes as well.
+  --dateTime &lt;datetime&gt;              The date and time in UTC of the message. If you don't provide us with a value in
+                                     dateTime, we will set the current date and time in UTC.
+  --type &lt;type&gt;                      The type of message. If logging an error, the type of the exception would go into
+                                     type but you can put anything in there, that makes sense for your domain.
+  --user &lt;user&gt;                      An identification of the user triggering this message. You can put the users
+                                     email address or your user key into this property.
+  --severity &lt;severity&gt;              An enum value representing the severity of this message. The following values are
+                                     allowed: Verbose, Debug, Information, Warning, Error, Fatal
+  --url &lt;url&gt;                        If message relates to a HTTP request, you may send the URL of that request. If
+                                     you don't provide us with an URL, we will try to find a key named URL in
+                                     serverVariables.
+  --method &lt;method&gt;                  If message relates to a HTTP request, you may send the HTTP method of that
+                                     request. If you don't provide us with a method, we will try to find a key named
+                                     REQUEST_METHOD in serverVariables.
+  --version &lt;version&gt;                Versions can be used to distinguish messages from different versions of your
+                                     software. The value of version can be a SemVer compliant string or any other
+                                     syntax that you are using as your version numbering scheme.
+  -?, -h, --help                     Show help and usage information
 </code></pre></p>
-<p>The version string in the example conforms to SemVer, but the content can be anything. The date of the release is automatically added if not specified in the JSON body.</p>
-<p>Click the <em>Try it out!</em> button and the deployment is created.</p>
-<p>We support a range of different integrations to avoid you manually having to use Swagger UI every time you release. Click one of the products below for instructions:</p>
-<ul>
-<li><a href="/create-deployments-from-powershell/">PowerShell</a></li>
-<li><a href="/create-deployments-from-octopus-deploy/">Octopus Deploy</a></li>
-<li><a href="/create-deployments-from-kudu/">Kudu</a></li>
-<li><a href="/create-deployments-from-azure-devops-pipelines/">Azure DevOps Pipelines</a></li>
-<li><a href="/create-deployments-from-azure-devops-releases/">Azure DevOps Releases</a></li>
-<li><a href="/create-deployments-from-github-actions/">GitHub Actions</a></li>
-<li><a href="/create-deployments-from-umbraco-cloud/">Umbraco Cloud</a></li>
-<li><a href="/create-deployments-from-bitbucket-pipelines/">Bitbucket Pipelines</a></li>
-<li><a href="/create-deployments-from-atlassian-bamboo/">Atlassian Bamboo</a></li>
-</ul>
-<h2 id="decorate-your-messages-with-a-version-number">Decorate your messages with a version number</h2>
-<p>As default, all messages are decorated with the most recent deployment version. If you want to override this behavior, check out <a href="https://docs.elmah.io/adding-version-information/">Adding Version Information</a> for details.</p>
-<h2 id="versioning-different-services">Versioning Different Services</h2>
-<p>Chances are that your software consists of multiple services released independently and with different version numbers. This is a common pattern when splitting up a software system in microservices. How you choose to split your elmah.io logs are entirely up to you, but we almost always recommend having a separate log for each service. When doing so, you only want deployment tracking to show the releases from the service you are currently looking at. The problem here is that deployments on elmah.io are shown on all logs as default.</p>
-<p>To make sure that only deployments related to the service you are looking at are shown, you need to decorate each deployment with the log ID where it belong. The <code>deployments</code> API support this through an optional <code>logId</code> property. If set, the new deployment is only shown on the specified log.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
