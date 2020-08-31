@@ -403,7 +403,13 @@
           <div class="main-content-body">
 
             <h1 id="cli-overview">CLI overview</h1>
-<p>The elmah.io CLI lets you execute common tasks against elmah.io. The tool is currently in beta and something you need to clone from GitHub and build manually. We plan to release binaries for Windows, Linux, and Mac at some point.</p>
+<p>The elmah.io CLI lets you execute common tasks against elmah.io.</p>
+<h2 id="installing-the-cli">Installing the CLI</h2>
+<p>The elmah.io CLI can be installed in a number of ways. To set up everything automatically, execute the following script from the command line:</p>
+<p> <pre><code class=cmd>dotnet tool install --global Elmah.Io.Cli
+</code></pre></p>
+<p>If you prefer downloading the CLI as a zip you can <a href="https://github.com/elmahio/Elmah.Io.Cli/releases">download the latest version from GitHub</a>. To clone and build the CLI manually, check out instructions below.</p>
+<h2 id="run-the-cli">Run the CLI</h2>
 <div class="guides-boxes row">
     <div class="guide-col col-4 col-sm-3 col-md-4 col-lg-3 col-xl-2">
         <a href="/cli-export/" title="Export">
@@ -437,16 +443,7 @@
     </div>
 </div>
 
-<h2 id="cloning-the-cli">Cloning the CLI</h2>
-<p>Create a new folder and <code>git clone</code> the repository:</p>
-<p> <pre><code class=cmd>git clone https://github.com/elmahio/Elmah.Io.Cli.git
-</code></pre></p>
-<h2 id="building-the-cli">Building the CLI</h2>
-<p>Navigate to the root repository of the code and execute the following command:</p>
-<p> <pre><code class=cmd>dotnet build
-</code></pre></p>
-<h2 id="run-the-cli">Run the CLI</h2>
-<p>Binaries are available in the <code>/src/Elmah.Io.Cli/bin/Debug/netcoreapp3.1</code> folder. Run the CLI to get help:</p>
+<p>Run the CLI to get help:</p>
 <p> <pre><code class=cmd>elmahio --help
 </code></pre></p>
 <p>Help similar to this is outputted to the console:</p>
@@ -463,6 +460,15 @@ Options:
 Commands:
   export    Export log messages from a specified log
   log       Log a message to the specified log
+  tail      Tail log messages from a specified log
+</code></pre></p>
+<h2 id="cloning-the-cli">Cloning the CLI</h2>
+<p>Create a new folder and <code>git clone</code> the repository:</p>
+<p> <pre><code class=cmd>git clone https://github.com/elmahio/Elmah.Io.Cli.git
+</code></pre></p>
+<h2 id="building-the-cli">Building the CLI</h2>
+<p>Navigate to the root repository of the code and execute the following command:</p>
+<p> <pre><code class=cmd>dotnet build
 </code></pre></p>
 
             <br/>
