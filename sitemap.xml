@@ -220,7 +220,7 @@
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-hipchat/</loc>
+     <loc>https://docs.elmah.io/elmah-io-apps-teams/</loc>
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -236,27 +236,7 @@
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-teams/</loc>
-     <lastmod>2020-09-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
      <loc>https://docs.elmah.io/elmah-io-apps-twilio/</loc>
-     <lastmod>2020-09-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-botbuster/</loc>
-     <lastmod>2020-09-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-ipfilter/</loc>
-     <lastmod>2020-09-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-mailman/</loc>
-     <lastmod>2020-09-15</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.elmah.io/elmah-io-apps-webclient/</loc>
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -276,7 +256,27 @@
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://docs.elmah.io/elmah-io-apps-hipchat/</loc>
+     <lastmod>2020-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://docs.elmah.io/integrate-elmah-io-with-zapier/</loc>
+     <lastmod>2020-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.elmah.io/elmah-io-apps-botbuster/</loc>
+     <lastmod>2020-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.elmah.io/elmah-io-apps-ipfilter/</loc>
+     <lastmod>2020-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.elmah.io/elmah-io-apps-mailman/</loc>
+     <lastmod>2020-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.elmah.io/elmah-io-apps-webclient/</loc>
      <lastmod>2020-09-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
