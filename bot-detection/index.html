@@ -10,17 +10,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@elmah_io">
     <meta name="twitter:creator" content="@elmah_io">
-    <meta name="twitter:title" content="Logging from Console | elmah.io">
+    <meta name="twitter:title" content="Bot detection | elmah.io">
     
     
-    <meta property="og:title" content="Logging from Console | elmah.io">
+    <meta property="og:title" content="Bot detection | elmah.io">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.elmah.io/logging-to-elmah-io-from-console-application/">
+    <meta property="og:url" content="https://docs.elmah.io/bot-detection/">
     
     <meta property="fb:app_id" content="218008838347208" />
-    <title>Logging from Console | elmah.io</title>
-    <link rel="canonical" href="https://docs.elmah.io/logging-to-elmah-io-from-console-application/">
+    <title>Bot detection | elmah.io</title>
+    <link rel="canonical" href="https://docs.elmah.io/bot-detection/">
     <link rel="shortcut icon" href="../favicon.ico">
 
     <!-- Bootstrap CSS -->
@@ -194,7 +194,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown active">
+              <li class="li_dropdown">
                 <a class="li_parent" href="javascript:;">Logging from something else</a>
                 <ul>
                   
@@ -218,7 +218,7 @@
                   
                   <li ><a href="../logging-to-elmah-io-from-entity-framework-core/">Logging from Entity Framework Core</a></li>
                   
-                  <li class="active"><a href="./">Logging from Console</a></li>
+                  <li ><a href="../logging-to-elmah-io-from-console-application/">Logging from Console</a></li>
                   
                   <li ><a href="../logging-to-elmah-io-from-system-diagnostics/">Logging from System.Diagnostics</a></li>
                   
@@ -350,7 +350,7 @@
                 </ul>
               </li>
               
-              <li class="li_dropdown">
+              <li class="li_dropdown active">
                 <a class="li_parent" href="javascript:;">Everything Else</a>
                 <ul>
                   
@@ -376,7 +376,7 @@
                   
                   <li ><a href="../adding-version-information/">Adding version information</a></li>
                   
-                  <li ><a href="../bot-detection/">Bot detection</a></li>
+                  <li class="active"><a href="./">Bot detection</a></li>
                   
                   <li ><a href="../include-filename-and-line-number-in-stacktraces/">Include filename and line number in stack traces</a></li>
                   
@@ -404,109 +404,24 @@
         <article class="col main-content">
           <div class="main-content-body">
 
-            <h1 id="logging-to-elmahio-from-console">Logging to elmah.io from Console</h1>
-<div class="toc">
-<ul>
-<li><a href="#logging-to-elmahio-from-console">Logging to elmah.io from Console</a><ul>
-<li><a href="#events">Events</a><ul>
-<li><a href="#onmessage">OnMessage</a></li>
-<li><a href="#onmessagefail">OnMessageFail</a></li>
-</ul>
-</li>
-<li><a href="#bulk-upload">Bulk upload</a></li>
-<li><a href="#options">Options</a><ul>
-<li><a href="#proxy">Proxy</a></li>
-<li><a href="#opfuscate-form-values">Opfuscate form values</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Even though elmah.io support various logging frameworks like <a href="https://docs.elmah.io/logging-to-elmah-io-from-serilog/">Serilog</a>, <a href="https://docs.elmah.io/logging-to-elmah-io-from-log4net/">log4net</a>, and <a href="https://docs.elmah.io/logging-to-elmah-io-from-nlog/">NLog</a>, logging from a simple console application is dead simple.</p>
-<p>To start logging, install the <code>Elmah.Io.Client</code> NuGet package:</p>
-<div class=md-fenced-code-tabs id=tab-tab-group-0><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-0-0_powershell-panel role=tab id=tab-group-0-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-0-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-1_cmd-panel role=tab id=tab-group-0-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-0-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-2_xml-panel role=tab id=tab-group-0-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-0-3_xml-panel role=tab id=tab-group-0-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-0-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-0-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-0-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.Client
-</code></pre></div><div id=tab-group-0-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.Client
-</code></pre></div><div id=tab-group-0-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.Client&quot; Version=&quot;3.*&quot; /&gt;
-</code></pre></div><div id=tab-group-0-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-0-3_xml-tab><pre><code class=xml>paket add Elmah.Io.Client
-</code></pre></div></div></div>
-
-<p>Create a new <code>ElmahioAPI</code>:</p>
-<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
+            <h1 id="bot-detection">Bot detection</h1>
+<p>elmah.io can help you with classifying log messages generated by bots and crawlers. When storing a log message, we run a range of checks to try and identify if a log message is generated by an automated script or a real human visitor of your website/application. In this case, a flag named <code>isBot</code> is set to <code>true</code> on the message. In case we couldn't identify a log message as generated by a bot, the flag is set to <code>false</code>.</p>
+<p>Besides an automated check, you can also mark a log message as generated by a bot manually. This is done from within the elmah.io UI:</p>
+<p><img alt="" src="../images/mark-message-with-isbot.png" /></p>
+<p>The benefit of marking log messages with the <code>isBot</code> flag manually is that elmah.io will then automatically mark new instances of this log message with <code>isBot=true</code> (this feature is available for automatically bot-marked log messages as well). By doing so you get the possibilities listed later in this article.</p>
+<p>Log messages marked as generated by bots include a small robot icon on the search result:</p>
+<p><img alt="" src="../images/isbot-log-messages.png" /></p>
+<h2 id="search-by-or-not-by-bots">Search by or not by bots</h2>
+<p>If you want to show all log messages generated by bots you can create a search query like this:</p>
+<p> <pre><code class>isBot:true
 </code></pre></p>
-<p>Replace <code>API_KEY</code> with your API key (<a href="https://docs.elmah.io/where-is-my-api-key/">Where is my API key?</a>).</p>
-<p>The elmah.io client supports logging in different log levels much like other logging frameworks for .NET:</p>
-<p> <pre><code class=csharp>var logId = new Guid(&quot;LOG_ID&quot;);
-logger.Messages.Fatal(logId, new ApplicationException(&quot;A fatal exception&quot;), &quot;Fatal message&quot;);
-logger.Messages.Error(logId, new ApplicationException(&quot;An exception&quot;), &quot;Error message&quot;);
-logger.Messages.Warning(logId, &quot;A warning&quot;);
-logger.Messages.Information(logId, &quot;An info message&quot;);
-logger.Messages.Debug(logId, &quot;A debug message&quot;);
-logger.Messages.Verbose(logId, &quot;A verbose message&quot;);
-</code></pre></p>
-<p>Replace <code>LOG_ID</code> with your log ID from elmah.io (<a href="https://docs.elmah.io/where-is-my-log-id/">Where is my log ID?</a>).</p>
-<p>To have 100% control of how the message is logged to elmah.io, you can use the <code>CreateAndNotify</code>-method:</p>
-<p> <pre><code class=csharp>logger.Messages.CreateAndNotify(logId, new CreateMessage
-{
-    Title = &quot;Hello World&quot;,
-    Application = &quot;Elmah.Io.Client sample&quot;,
-    Detail = &quot;This is a long description of the error. Maybe even a stacktrace&quot;,
-    Severity = Severity.Error.ToString(),
-    Data = new List&lt;Item&gt;
-    {
-        new Item {Key = &quot;Username&quot;, Value = &quot;Man in black&quot;}
-    },
-    Form = new List&lt;Item&gt;
-    {
-        new Item {Key = &quot;Password&quot;, Value = &quot;SecretPassword&quot;},
-        new Item {Key = &quot;pwd&quot;, Value = &quot;Other secret value&quot;},
-        new Item {Key = &quot;visible form item&quot;, Value = &quot;With a value&quot;}
-    }
-});
-</code></pre></p>
-<p>Like the integrations for Serilog, NLog and, Microsoft.Extensions.Logging, the elmah.io client supports structured logging:</p>
-<p> <pre><code class=csharp>logger.Messages.CreateAndNotify(logId, new CreateMessage
-{
-    Title = &quot;Thomas says Hello&quot;,
-    TitleTemplate = &quot;{User} says Hello&quot;,
-});
-</code></pre></p>
-<h2 id="events">Events</h2>
-<p>The elmah.io client supports to different events: <code>OnMessage</code> and <code>OnMessageFail</code>.</p>
-<h3 id="onmessage">OnMessage</h3>
-<p>To get a callback every time a new message is being logged to elmah.io, you can implement the <code>OnMessage</code> event. This is a great chance to decorate all log messages with a specific property or similar.</p>
-<p> <pre><code class=csharp>logger.Messages.OnMessage += (sender, eventArgs) =&gt;
-{
-    eventArgs.Message.Version = &quot;1.0.0&quot;;
-};
-</code></pre></p>
-<h3 id="onmessagefail">OnMessageFail</h3>
-<p>Logging to elmah.io can fail if the network connection is down, if elmah.io experience downtime, or something third. To make sure you log an error elsewhere if this happen, you can implement the <code>OnMessageFail</code> event:</p>
-<p> <pre><code class=csharp>logger.Messages.OnMessageFail += (sender, eventArgs) =&gt;
-{
-    System.Console.Error.WriteLine(&quot;Error when logging to elmah.io&quot;);
-};
-</code></pre></p>
-<h2 id="bulk-upload">Bulk upload</h2>
-<p>If logging many messages to elmah.io, bulk upload can be a way to optimize performance. The elmah.io client supports bulk upload using the <code>CreateBulkAndNotify</code>-method:</p>
-<p> <pre><code class=csharp>logger.Messages.CreateBulkAndNotify(logId, new[]
-{
-    new CreateMessage { Title = &quot;This is a bulk message&quot; },
-    new CreateMessage { Title = &quot;This is another bulk message&quot; },
-}.ToList());
-</code></pre></p>
-<h2 id="options">Options</h2>
-<p>The elmah.io client contains a set of default options that you can override.</p>
-<h3 id="proxy">Proxy</h3>
-<p>To log through a HTTP proxy, set the <code>WebProxy</code> property:</p>
-<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
-logger.Options.WebProxy = new WebProxy(&quot;localhost&quot;, 8888);
-</code></pre></p>
-<h3 id="opfuscate-form-values">Opfuscate form values</h3>
-<p>When logging POSTs with form values, you don't want users password and similar logged to elmah.io. The elmah.io client automatically filter form keys named <code>password</code> and <code>pwd</code>. Using the <code>FormKeysToObfuscate</code> you can tell the client to opfuscate additional form entries:</p>
-<p> <pre><code class=csharp>var logger = ElmahioAPI.Create(&quot;API_KEY&quot;);
-logger.Options.FormKeysToObfuscate.Add(&quot;secret_key&quot;);
-</code></pre></p>
+<p>Or include a search filter for the <em>Is Bot</em> field:</p>
+<p><img alt="" src="../images/search-by-isbot.png" /></p>
+<p>By reversing the filter, you see a list of log messages NOT generated by a bot, which can make it easier to get an overview of "real" errors.</p>
+<h2 id="hide-or-ignore-log-messages-generated-by-bots">Hide or ignore log messages generated by bots</h2>
+<p>By using the <code>isBot</code> field in Hide and Ignore filters, you can let elmah.io automatically hide or ignore future log messages generated by bots. Be aware that creating ignore filters based on the <code>isBot</code> field is only available for users on the Enterprise plan.</p>
+<p>To create a new filter, navigate to the <em>Rules</em> tab on log settings, and click the <em>Add a new rule</em> button. Input a query including the <code>isBot</code> field and select either the <em>Hide</em> or <em>Ignore</em> action:</p>
+<p><img alt="" src="../images/new-isbot-rule.png" /></p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
