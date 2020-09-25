@@ -405,68 +405,7 @@
           <div class="main-content-body">
 
             <h1 id="export-data-from-elmahio-to-json">Export data from elmah.io to JSON</h1>
-<p>If you want to export data from elmah.io, we support this through the <a href="https://github.com/elmahio/Elmah.Io.Exporter" target="_blank" rel="noopener noreferrer">Elmah.Io.Export tool</a>. The tool is available on GitHub and should be built on an OS of your choice (the tool is implemented in .NET Core).</p>
-<p>To export all data from a log, run the tool with the minimum number of parameters:</p>
-<p> <pre><code class=powershell>dotnet Elmah.Io.Export.dll -ApiKey c7e049966ddf450f8ce6aeded7b581d0 -LogId 9f01ca78-174a-4a96-9f84-a336917a9deb
-</code></pre></p>
-<blockquote>
-<p>Be sure to use an API key with the <em>Messages</em> &gt; <em>Read</em> permission enabled.</p>
-</blockquote>
-<p>The following switches are available:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-ApiKey</td>
-<td><span class="fa fa-check"></span></td>
-<td></td>
-<td>Your API key needed to access your subscription (<a href="https://docs.elmah.io/where-is-my-api-key/">where is my API key?</a>).</td>
-</tr>
-<tr>
-<td>-LogId</td>
-<td><span class="fa fa-check"></span></td>
-<td></td>
-<td>The ID of the log you want to export from (<a href="https://docs.elmah.io/where-is-my-log-id/">where is my log ID?</a>).</td>
-</tr>
-<tr>
-<td>-Filename</td>
-<td></td>
-<td><code>Export-{ticks}.json</code></td>
-<td>Name of the output file.</td>
-</tr>
-<tr>
-<td>-DateFrom</td>
-<td></td>
-<td><code>DateTime.Min</code></td>
-<td>Date and time in ISO8601 to export messages from.</td>
-</tr>
-<tr>
-<td>-DateTo</td>
-<td></td>
-<td><code>DateTime.Max</code></td>
-<td>Date and time in ISO8601 to export messages to.</td>
-</tr>
-<tr>
-<td>-Query</td>
-<td></td>
-<td></td>
-<td>A lucene query to filter messages by. See <a href="https://docs.elmah.io/query-messages-using-full-text-search/">Query messages using full-text search</a> for details.</td>
-</tr>
-<tr>
-<td>-IncludeHeaders</td>
-<td></td>
-<td><code>false</code></td>
-<td>Indicates if the output should include headers like cookies and server variables (runs slower).</td>
-</tr>
-</tbody>
-</table>
+<p>If you want to export data from elmah.io, we support this through the <a href="/cli-overview/">elmah.io CLI</a>. The tool is available as a .NET global tool as well as on GitHub. Check out the <a href="/cli-export/">export</a> command for more details.</p>
 
             <br/>
             <p><small><em>This article was brought to you by the elmah.io team. elmah.io is the best error management system for .NET web applications. We monitor your website, alert you when errors start happening and help you fix errors fast.</em></small></p>
