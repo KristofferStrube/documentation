@@ -408,7 +408,10 @@
 <div class="toc">
 <ul>
 <li><a href="#logging-to-elmahio-from-blazor">Logging to elmah.io from Blazor</a><ul>
-<li><a href="#blazor-server-app">Blazor Server App</a></li>
+<li><a href="#blazor-server-app">Blazor Server App</a><ul>
+<li><a href="#include-details-from-the-http-context">Include details from the HTTP context</a></li>
+</ul>
+</li>
 <li><a href="#blazor-webassembly-app-wasm">Blazor WebAssembly App (wasm)</a></li>
 </ul>
 </li>
@@ -484,6 +487,32 @@ namespace MyBlazorApp
     }
 }
 </code></pre></p>
+<h3 id="include-details-from-the-http-context">Include details from the HTTP context</h3>
+<p><code>Microsoft.Extensions.Logging</code> doesn't know that it is running inside a web server. That is why <code>Elmah.Io.Extensions.Logging</code> doesn't include HTTP contextual information like URL and status code as default. To do so, install the <code>Elmah.Io.AspNetCore.ExtensionsLogging</code> NuGet package:</p>
+<div class=md-fenced-code-tabs id=tab-tab-group-4><ul class="nav nav-tabs"><li class=nav-item><a class="nav-link active" href=#tab-group-4-0_powershell-panel role=tab id=tab-group-4-0_powershell-tab data-toggle=tab data-lang=powershell aria-controls=tab-group-4-0_powershell-panel aria-selected=true>Package Manager</a></li><li class=nav-item><a class="nav-link " href=#tab-group-4-1_cmd-panel role=tab id=tab-group-4-1_cmd-tab data-toggle=tab data-lang=cmd aria-controls=tab-group-4-1_cmd-panel aria-selected=false>.NET CLI</a></li><li class=nav-item><a class="nav-link " href=#tab-group-4-2_xml-panel role=tab id=tab-group-4-2_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-4-2_xml-panel aria-selected=false>PackageReference</a></li><li class=nav-item><a class="nav-link " href=#tab-group-4-3_xml-panel role=tab id=tab-group-4-3_xml-tab data-toggle=tab data-lang=xml aria-controls=tab-group-4-3_xml-panel aria-selected=false>Paket CLI</a></li></ul><div class=tab-content><div id=tab-group-4-0_powershell-panel class="tab-pane show active" role=tabpanel aria-labelledby=tab-group-4-0_powershell-tab><pre><code class=powershell>Install-Package Elmah.Io.AspNetCore.ExtensionsLogging
+</code></pre></div><div id=tab-group-4-1_cmd-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-4-1_cmd-tab><pre><code class=cmd>dotnet add package Elmah.Io.AspNetCore.ExtensionsLogging
+</code></pre></div><div id=tab-group-4-2_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-4-2_xml-tab><pre><code class=xml>&lt;PackageReference Include=&quot;Elmah.Io.AspNetCore.ExtensionsLogging&quot; Version=&quot;3.*&quot; /&gt;
+</code></pre></div><div id=tab-group-4-3_xml-panel class="tab-pane " role=tabpanel aria-labelledby=tab-group-4-3_xml-tab><pre><code class=xml>paket add Elmah.Io.AspNetCore.ExtensionsLogging
+</code></pre></div></div></div>
+
+<p>And add the following code to the <code>Configure</code> method in the <code>Startup.cs</code> file:</p>
+<p> <pre><code class=csharp>app.UseElmahIoExtensionsLogging();
+</code></pre></p>
+<p>Make sure to call this method just before the call to <code>UseEndpoints</code>. This will include some of the information you are looking for.</p>
+<p>There's a problem when running Blazor Server where you will see some of the URLs logged as part of errors on elmah.io having the value <code>/_blazor</code>. This is because Blazor doesn't work like traditional websites where the client requests the server and returns an HTML or JSON response. When navigating the UI, parts of the UI are loaded through SignalR, which causes the URL to be <code>/_blazor</code>. Unfortunately, we haven't found a good way to fix this globally. You can include the current URL on manual log statements by injecting a <code>NavigationManager</code> in the top of your <code>.razor</code> file:</p>
+<p> <pre><code class=csharp>@inject NavigationManager navigationManager
+</code></pre></p>
+<p>Then wrap your logging code in a new scope:</p>
+<p> <pre><code class=csharp>Uri.TryCreate(navigationManager.Uri, UriKind.Absolute, out Uri url);
+using (Logger.BeginScope(new Dictionary&lt;string, object&gt; 
+{
+    { &quot;url&quot;, url.AbsolutePath }
+}))
+{
+    logger.LogError(exception, &quot;An error happened&quot;);
+}
+</code></pre></p>
+<p>The code uses the current URL from the injected <code>NavigationManager</code> object.</p>
 <h2 id="blazor-webassembly-app-wasm">Blazor WebAssembly App (wasm)</h2>
 <blockquote>
 <p>Please notice that the code for Blazor WebAssembly App is highly experimental.</p>
